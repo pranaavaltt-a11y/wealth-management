@@ -5,6 +5,9 @@ import { loanSchema } from '@/lib/validation/schemas';
 import { apiError, ok, parseId } from '@/lib/api';
 import { z } from 'zod';
 
+// Reads the session cookie, so it can never be prerendered at build time.
+export const dynamic = 'force-dynamic';
+
 interface Ctx { params: { id: string } }
 
 export async function GET(_req: NextRequest, { params }: Ctx) {

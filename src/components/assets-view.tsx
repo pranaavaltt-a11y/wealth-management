@@ -5,11 +5,12 @@ import { useRouter } from 'next/navigation';
 import { api, ApiError } from '@/lib/client';
 import { Card, Empty, ErrorNote } from '@/components/ui';
 import { formatINR, formatDate, formatPct, titleCase } from '@/lib/format';
-import { ASSET_TYPES } from '@/lib/validation/schemas';
+import { ASSET_TYPES, DEFAULT_LIQUIDITY } from '@/lib/validation/schemas';
 
 interface Asset {
   id: number; name: string; assetType: string; purchaseValue: number; currentValue: number;
   purchaseDate: string; valuationDate: string; notes: string | null; gain: number; gainPct: number;
+  liquidity: 'liquid' | 'illiquid';
 }
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -113,6 +114,14 @@ export function AssetsView({ initial }: { initial: Asset[] }) {
               <input id="a-vd" name="valuationDate" type="date" className="input tnum"
                      defaultValue={editing?.valuationDate ?? today()} />
             </div>
+            <div>
+              <label className="label" htmlFor="a-liq">Liquidity</label>
+              <select id="a-liq" name="liquidity" className="select"
+                      defaultValue={editing?.liquidity ?? DEFAULT_LIQUIDITY.gold}>
+                <option value="liquid">Liquid — realisable in days</option>
+                <option value="illiquid">Illiquid — locked or slow to sell</option>
+              </select>
+            </div>
             <div className="sm:col-span-2 lg:col-span-3">
               <label className="label" htmlFor="a-notes">Notes</label>
               <input id="a-notes" name="notes" className="input" defaultValue={editing?.notes ?? ''} />
@@ -137,7 +146,7 @@ export function AssetsView({ initial }: { initial: Asset[] }) {
             <table className="table">
               <thead>
                 <tr>
-                  <th>Asset</th><th>Class</th>
+                  <th>Asset</th><th>Class</th><th>Liquidity</th>
                   <th className="text-right">Invested</th><th className="text-right">Current</th>
                   <th className="text-right">Gain</th><th>Valued</th><th />
                 </tr>
@@ -150,6 +159,11 @@ export function AssetsView({ initial }: { initial: Asset[] }) {
                       {a.notes && <div className="text-[11px] text-fg-faint">{a.notes}</div>}
                     </td>
                     <td className="text-fg-muted">{titleCase(a.assetType)}</td>
+                    <td>
+                      <span className={`badge ${
+                        a.liquidity === 'liquid' ? 'border-info text-info' : 'border-line-strong text-fg-faint'
+                      }`}>{a.liquidity}</span>
+                    </td>
                     <td className="tnum text-right text-fg-muted">{formatINR(a.purchaseValue, { decimals: false })}</td>
                     <td className="tnum text-right">{formatINR(a.currentValue, { decimals: false })}</td>
                     <td className={`tnum text-right ${a.gain >= 0 ? 'text-positive' : 'text-negative'}`}>

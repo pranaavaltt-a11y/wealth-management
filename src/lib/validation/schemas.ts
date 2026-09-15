@@ -38,9 +38,18 @@ export const loginSchema = z.object({
   password: z.string().min(1),
 });
 
+export const LIQUIDITY = ['liquid', 'illiquid'] as const;
+
+/** Sensible default per class; the user can still override it on the form. */
+export const DEFAULT_LIQUIDITY: Record<string, 'liquid' | 'illiquid'> = {
+  cash: 'liquid', fd: 'liquid', equity: 'liquid', mutual_fund: 'liquid', gold: 'liquid',
+  property: 'illiquid', epf: 'illiquid', ppf: 'illiquid', vehicle: 'illiquid', other: 'illiquid',
+};
+
 export const assetSchema = z.object({
   name: z.string().trim().min(1).max(160),
   assetType: z.enum(ASSET_TYPES),
+  liquidity: z.enum(LIQUIDITY).optional(),
   purchaseValue: moneyOrZero,
   currentValue: moneyOrZero,
   purchaseDate: isoDate,

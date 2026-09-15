@@ -15,12 +15,12 @@ statement imports, per-asset-type valuation history, cached news).
 
 ---
 
-## Current status — Phase 1 complete
+## Current status — Phase 2 complete
 
 | Phase | Scope | State |
 |---|---|---|
 | **1 — Foundation** | Auth & roles, asset CRUD, loan CRUD + generated EMI schedule, manual income/expense ledger | ✅ Built & tested |
-| 2 — Analytics | Net worth chart, allocation chart, payoff progress, upcoming dues view | ◻ Next |
+| **2 — Analytics** | Net worth trend, allocation chart, payoff progress, upcoming EMI dues, reporting views | ✅ Built & tested |
 | 3 — Import & documents | CSV bank import, receipt OCR, auto-categorisation, document vault | ◻ |
 | 4 — Smart features | Prepayment simulator, what-if projection, credit score, product recommender, news feed | ◻ |
 | 5 — Polish | FY reporting, PDF statement, EMI reminders | ◻ |
@@ -28,6 +28,10 @@ statement imports, per-asset-type valuation history, cached news).
 Phase 2's **net worth snapshot trigger** was pulled forward into Phase 1,
 because assets and loans are meaningless without something computing net worth
 from them.
+
+Phase 2 also closes three gaps against the course requirements: `ALTER`
+statements, SQL `VIEW`s, and a `HAVING` clause — see
+[Course requirement coverage](#course-requirement-coverage).
 
 ---
 
@@ -292,7 +296,41 @@ COUNT(e.id)        FILTER (WHERE e.status = 'paid')     AS paid_count,
 MIN(e.due_date)    FILTER (WHERE e.status <> 'paid')    AS next_due_date
 ```
 
-### 6. Indexing
+### 6. Views
+
+Six reporting views in `005_alters_and_views.sql`. The aggregation lives in the
+database, so one definition of "what allocation means" is shared by the
+dashboard, the API and any future report.
+
+| View | What it answers | Notable SQL |
+|---|---|---|
+| `v_net_worth_summary` | Live solvency per user | Two derived tables `LEFT JOIN`ed to `users`, so a user with no assets or loans still returns zeros rather than no row |
+| `v_upcoming_emi_dues` | The reminder feed | `CASE` bucketing into overdue / this week / this month / upcoming; reads through the partial index |
+| `v_asset_allocation` | Portfolio mix | `SUM(SUM(...)) OVER (PARTITION BY user_id)` for each class's share |
+| `v_loan_payoff_progress` | One row per loan | Five `FILTER`ed aggregates collapsing up to 480 installment rows |
+| `v_monthly_cashflow` | Income vs expense by month | `SUM(...) OVER (PARTITION BY user_id ORDER BY month)` running total |
+| `v_category_spend` | Spend mix within a month | Share-of-month via a partitioned window |
+| `v_recurring_expenses` | Standing monthly commitments | **`HAVING COUNT(DISTINCT month) >= 3`** |
+
+`v_recurring_expenses` is where `HAVING` genuinely belongs: the filter is on an
+aggregate over each group (*"appeared in at least three distinct months"*),
+which `WHERE` cannot express because `WHERE` runs before rows are grouped.
+
+### 7. Schema evolution (`ALTER`)
+
+`005` alters the Phase 1 schema rather than rewriting it:
+
+- `ALTER TABLE assets ADD COLUMN liquidity` (new `asset_liquidity` enum), then a
+  backfill `UPDATE`, so the dashboard can compute emergency-fund coverage —
+  how many months of typical spending the liquid assets would cover.
+- `ALTER TABLE assets ADD CONSTRAINT assets_valuation_not_in_future`, added by
+  name so it can be dropped and re-added independently of the `CREATE TABLE`.
+- `DROP TRIGGER` / `CREATE TRIGGER` to narrow `trg_emi_net_worth`. Phase 2
+  introduced the `pending -> overdue` transition, which does not change
+  outstanding principal, so the trigger now fires only when a transition
+  actually involves a payment.
+
+### 8. Indexing
 
 Every index in `002_indexes.sql` is annotated with the exact query that
 justifies it. Two are worth calling out:
@@ -311,7 +349,7 @@ justifies it. Two are worth calling out:
 Also: composite `(user_id, asset_type)` and `(user_id, txn_date DESC)` so the
 per-user filter and the sort/rollup are served by one index.
 
-### 7. MongoDB
+### 9. MongoDB
 
 `asset_valuation_history` exists in Mongo, not Postgres, because the metadata
 that matters differs completely per asset class:
@@ -324,6 +362,80 @@ equity   → { units: 250, nav: 1684.40, folio: 'HDFC/2020/…' }
 
 Modelling that relationally means either a wide sparse table or an EAV mess.
 Aggregation pipelines over these documents arrive in Phases 3–4.
+
+---
+
+## Course requirement coverage
+
+Against the *DBMS Level 3 Project Requirements* brief:
+
+| § | Requirement | Status |
+|---|---|---|
+| 3 | Two database paradigms — **Option 1: SQL + NoSQL** | ✅ PostgreSQL + MongoDB. (Option 2's vector database is an *alternative* to NoSQL, not an additional requirement.) |
+| 5 | DDL: `CREATE`, `ALTER`, `DROP`, keys, constraints, indexes, views | ✅ All present as of `005` |
+| 6 | DML with `JOIN`, `GROUP BY`, `HAVING`, `ORDER BY`, aggregates, subqueries | ✅ All present |
+| 7 | ≥ 4 advanced features | ✅ **6**: transactions, stored functions, triggers, views, indexing, window functions |
+| 8 | Vector / semantic search | ➖ Optional; deliberately not used — see below |
+| 9–11 | Next.js interface, API layer, env config, auth with ≥ 2 roles | ✅ |
+| 12–13 | Validation at the database level, no plaintext secrets | ✅ |
+
+**On the vector database.** §3 offers SQL + NoSQL *or* SQL + Vector; this project
+takes the first. §8 recommends embeddings only for unstructured, text-heavy
+data. ArthaTrack's data is overwhelmingly numeric and relational — amounts,
+rates, dates, schedules — and its one text-heavy collection (cached news, Phase
+4) is served by tag and category filters. Adding embeddings would be technology
+for its own sake, which §18 explicitly warns against.
+
+Still outstanding, and tracked separately from the code: the formal ER diagram
+and the project report (§4, §14), and per-member commit history (§2, §15).
+
+---
+
+## Charts
+
+Three chart forms, each chosen for the job the data does:
+
+| Chart | Form | Why |
+|---|---|---|
+| Net worth trend | Line + area, **single series** | Change over time. One series needs no legend — the title names it. |
+| Assets vs liabilities | Line, two series | Its own panel rather than a third line on the chart above (see below). |
+| Asset allocation | **Horizontal stacked bar** | Part-to-whole. A donut is unreadable past ~6 segments and this has up to ten, with long names like "Mutual Fund". |
+| Income vs expense | Grouped bar | Magnitude comparison across two signed series. |
+
+### The palette is validated, not eyeballed
+
+Chart colours resolve from the same CSS variables the rest of the UI uses, so a
+category is the same colour in the chart, the legend and the table. The
+categorical order was **searched for and machine-verified** across both themes:
+
+| Palette | Worst CVD ΔE | Worst normal-vision ΔE | Contrast |
+|---|---|---|---|
+| Categorical (7 hues), dark | 9.7 (deutan) | 20.9 | pass |
+| Categorical (7 hues), light | 10.0 (deutan) | 21.5 | pass |
+| Assets ↔ liabilities (blue/red) | 12.2 | 25.3 | pass |
+| Income ↔ expense (green/red) | 9.7 | 22.0 | pass |
+
+Three findings worth recording, because they changed the design:
+
+1. **Eight categorical hues are not achievable in Gruvbox.** The full bright set
+   fails the normal-vision floor (yellow ↔ green at ΔE 10.2 — indistinguishable
+   even with full colour vision). The palette is capped at seven; an eighth
+   class folds into a reserved grey "Other" bucket rather than getting a
+   generated hue.
+2. **No Gruvbox trio passes**, which is why net worth is *not* overlaid on
+   assets and liabilities. Orange ↔ red measures ΔE 8.4 in light mode. The chart
+   was split into two stacked panels — small multiples — so no panel carries
+   more than two series.
+3. **Two checks are knowingly unmet**, both inherent to the requested aesthetic
+   rather than fixable by reordering: the chroma floor (Gruvbox blue is
+   deliberately desaturated — that muted quality *is* the palette) and, in dark
+   mode, the lightness band. Because separation sits in the 8–12 range rather
+   than comfortably above it, **secondary encoding is mandatory**: every chart
+   renders a legend, segments carry direct percentage labels, and the numbers
+   are always available as a table. Colour is never the only channel.
+
+Colour follows the entity, never its rank — a filter that changes which asset
+classes are present never repaints the survivors.
 
 ---
 
@@ -415,3 +527,18 @@ financial advice and holds no real account credentials.
   with a field-level error before reaching the database.
 - With MongoDB unreachable, asset creation still succeeds; the failure is
   cached for a minute so requests do not stall on connection timeouts.
+
+### Phase 2
+
+- All six views return correct data; `v_loan_payoff_progress` shows tenure and
+  principal progress diverging as expected (HDFC home loan: 35.8% of the tenure
+  elapsed but only 18.6% of the principal repaid).
+- `fn_mark_overdue_emis()` flips past-due installments: un-paying two seeded
+  installments produced `markedOverdue: 2`, moved both into the `overdue`
+  urgency band at −14 days, and surfaced the count in the payoff view.
+- The dashboard reads entirely through the views; seven independent queries run
+  concurrently on separate pool connections.
+- Charts verified by screenshot in both themes. Three defects were found that
+  way and fixed: two different asset groups rendering the same grey, an axis
+  printing "₹2L" twice at different heights, and the net worth/liabilities
+  lines being visually inseparable in light mode.

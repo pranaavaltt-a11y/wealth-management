@@ -3,6 +3,9 @@ import { requireUser } from '@/lib/auth/session';
 import { getLoan, getSchedule } from '@/lib/db/loans';
 import { apiError, ok, parseId } from '@/lib/api';
 
+// Reads the session cookie, so it can never be prerendered at build time.
+export const dynamic = 'force-dynamic';
+
 export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const user = await requireUser();

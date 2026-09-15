@@ -4,6 +4,9 @@ import { listTransactions, createTransaction } from '@/lib/db/transactions';
 import { transactionSchema } from '@/lib/validation/schemas';
 import { apiError, ok } from '@/lib/api';
 
+// Reads the session cookie, so it can never be prerendered at build time.
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
   try {
     const user = await requireUser();

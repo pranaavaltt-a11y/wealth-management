@@ -135,7 +135,13 @@ async function main() {
         [rahul.id, name, type, Math.round(pv * 0.4), Math.round(cv * 0.4), date],
       );
     }
-    console.log(`  assets: ${ASSETS.length} + ${ASSETS.slice(3, 8).length}`);
+    // Liquidity defaults to 'illiquid'; mark the classes that can actually be
+    // realised quickly, so the emergency-fund metric has something to work with.
+    await client.query(
+      `UPDATE assets SET liquidity = 'liquid'
+        WHERE asset_type IN ('cash', 'fd', 'equity', 'mutual_fund', 'gold')`,
+    );
+    console.log(`  assets: ${ASSETS.length} + ${ASSETS.slice(3, 8).length}, liquidity classified`);
 
     // ---------------------------------------------------- loans + schedules
     for (const [lender, type, principal, rate, itype, tenure, start] of LOANS) {

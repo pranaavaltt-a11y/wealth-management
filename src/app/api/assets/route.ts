@@ -6,6 +6,9 @@ import { recordValuation } from '@/lib/services/valuation-service';
 import { assetSchema } from '@/lib/validation/schemas';
 import { apiError, ok } from '@/lib/api';
 
+// Reads the session cookie, so it can never be prerendered at build time.
+export const dynamic = 'force-dynamic';
+
 /** Advisors may read a client's data only if that client is assigned to them. */
 async function scopedUserId(req: NextRequest) {
   const user = await requireUser();

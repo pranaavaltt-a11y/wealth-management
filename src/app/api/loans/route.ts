@@ -4,6 +4,9 @@ import { listLoans, createLoan } from '@/lib/db/loans';
 import { loanSchema } from '@/lib/validation/schemas';
 import { apiError, ok } from '@/lib/api';
 
+// Reads the session cookie, so it can never be prerendered at build time.
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const user = await requireUser();

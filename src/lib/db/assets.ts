@@ -1,5 +1,5 @@
 import { query, queryOne, num } from './postgres';
-import type { AssetInput } from '@/lib/validation/schemas';
+import { DEFAULT_LIQUIDITY, type AssetInput } from '@/lib/validation/schemas';
 
 export interface AssetRow {
   id: number;
@@ -11,6 +11,7 @@ export interface AssetRow {
   purchase_date: string;
   valuation_date: string;
   notes: string | null;
+  liquidity: 'liquid' | 'illiquid';
 }
 
 export interface Asset {
@@ -22,6 +23,7 @@ export interface Asset {
   purchaseDate: string;
   valuationDate: string;
   notes: string | null;
+  liquidity: 'liquid' | 'illiquid';
   gain: number;
   gainPct: number;
 }
@@ -38,6 +40,7 @@ function toAsset(r: AssetRow): Asset {
     purchaseDate: r.purchase_date,
     valuationDate: r.valuation_date,
     notes: r.notes,
+    liquidity: r.liquidity,
     gain: current - purchase,
     gainPct: purchase > 0 ? ((current - purchase) / purchase) * 100 : 0,
   };
@@ -46,7 +49,7 @@ function toAsset(r: AssetRow): Asset {
 export async function listAssets(userId: number): Promise<Asset[]> {
   const rows = await query<AssetRow>(
     `SELECT id, user_id, name, asset_type, purchase_value, current_value,
-            purchase_date, valuation_date, notes
+            purchase_date, valuation_date, notes, liquidity
        FROM assets
       WHERE user_id = $1
       ORDER BY current_value DESC, name`,
@@ -58,7 +61,7 @@ export async function listAssets(userId: number): Promise<Asset[]> {
 export async function getAsset(userId: number, id: number): Promise<Asset | null> {
   const row = await queryOne<AssetRow>(
     `SELECT id, user_id, name, asset_type, purchase_value, current_value,
-            purchase_date, valuation_date, notes
+            purchase_date, valuation_date, notes, liquidity
        FROM assets
       WHERE id = $1 AND user_id = $2`,
     [id, userId],
@@ -69,13 +72,14 @@ export async function getAsset(userId: number, id: number): Promise<Asset | null
 export async function createAsset(userId: number, input: AssetInput): Promise<Asset> {
   const rows = await query<AssetRow>(
     `INSERT INTO assets (user_id, name, asset_type, purchase_value, current_value,
-                         purchase_date, valuation_date, notes)
-     VALUES ($1, $2, $3, $4, $5, $6, COALESCE($7::date, CURRENT_DATE), $8)
+                         purchase_date, valuation_date, notes, liquidity)
+     VALUES ($1, $2, $3, $4, $5, $6, COALESCE($7::date, CURRENT_DATE), $8, $9)
      RETURNING id, user_id, name, asset_type, purchase_value, current_value,
-               purchase_date, valuation_date, notes`,
+               purchase_date, valuation_date, notes, liquidity`,
     [
       userId, input.name, input.assetType, input.purchaseValue, input.currentValue,
       input.purchaseDate, input.valuationDate ?? null, input.notes || null,
+      input.liquidity ?? DEFAULT_LIQUIDITY[input.assetType] ?? 'illiquid',
     ],
   );
   return toAsset(rows[0]);
@@ -90,13 +94,15 @@ export async function updateAsset(userId: number, id: number, input: AssetInput)
             current_value  = $6,
             purchase_date  = $7,
             valuation_date = COALESCE($8::date, CURRENT_DATE),
-            notes          = $9
+            notes          = $9,
+            liquidity      = $10
       WHERE id = $1 AND user_id = $2
       RETURNING id, user_id, name, asset_type, purchase_value, current_value,
-                purchase_date, valuation_date, notes`,
+                purchase_date, valuation_date, notes, liquidity`,
     [
       id, userId, input.name, input.assetType, input.purchaseValue, input.currentValue,
       input.purchaseDate, input.valuationDate ?? null, input.notes || null,
+      input.liquidity ?? DEFAULT_LIQUIDITY[input.assetType] ?? 'illiquid',
     ],
   );
   return rows[0] ? toAsset(rows[0]) : null;
