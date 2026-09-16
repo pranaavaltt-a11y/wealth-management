@@ -3,34 +3,43 @@
 @tailwind utilities;
 
 /* ===========================================================================
-   ArthaTrack design tokens — Gruvbox, warm and flat.
-   Light is the default; [data-theme="dark"] on <html> swaps the palette.
-   Charts read these same variables, so a category is the same colour in the
-   table and in the pie.
+   WealthWise design tokens.
+
+   A calm, low-glare palette: warm paper in light mode, soft charcoal in dark,
+   with muted earth accents. Nothing shouts — a money app you look at every day
+   should not be tiring, and red should mean "this needs attention", not alarm.
+
+   Light/dark is one `data-theme` swap on <html>. Charts read these same
+   variables, so a category is the same colour in the table and in the chart.
+   The seven accent hues were machine-validated for colour-blind separation in
+   both themes; see src/lib/chart-colors.ts for the measurements.
    =========================================================================== */
 
 :root {
-  /* ---- Gruvbox light (bg / bg1 / bg2 / fg) ---- */
-  --bg:          #fbf1c7;
-  --bg-soft:     #f2e5bc;
-  --bg-raised:   #f9f5d7;
-  --bg-inset:    #ebdbb2;
-  --fg:          #3c3836;
-  --fg-muted:    #665c54;
-  --fg-faint:    #928374;
-  --line:        #d5c4a1;
-  --line-strong: #bdae93;
+  /* ---- warm paper ---- */
+  --bg:          #f7f4ee;
+  --bg-soft:     #f2eee6;
+  --bg-raised:   #fbf9f5;
+  --bg-inset:    #eae5da;
+  --fg:          #3a3733;
+  --fg-muted:    #6b655c;
+  --fg-faint:    #948d82;
+  --line:        #e4ded2;
+  --line-strong: #d2cabb;
 
-  /* Light-mode accents: the "faded" Gruvbox set, which holds up on cream. */
-  --accent:       #af3a03;   /* faded orange  */
-  --accent-hover: #d65d0e;
-  --accent-fg:    #fbf1c7;
-  --positive:     #79740e;   /* faded green   */
-  --negative:     #9d0006;   /* faded red     */
-  --warning:      #b57614;   /* faded yellow  */
-  --info:         #076678;   /* faded blue    */
-  --purple:       #8f3f71;
-  --aqua:         #427b58;
+  /* Light-mode accents: deeper steps, so they hold up on a pale ground. */
+  --accent:       #b0663a;   /* clay   — primary actions      */
+  --accent-hover: #8f5028;
+  --accent-fg:    #fbf9f5;
+  --positive:     #5f8449;   /* sage   — income, gains        */
+  --negative:     #8e3c3c;   /* rose   — expense, overdue     */
+  --warning:      #9c7620;   /* amber  — due soon             */
+  --info:         #3f6a92;   /* dusk   — informational        */
+  --purple:       #59447a;   /* lilac                         */
+  --aqua:         #2c635f;   /* teal                          */
+
+  --ring: rgba(176, 102, 58, 0.28);
+  --shadow-soft: 0 1px 2px rgba(58, 55, 51, 0.04), 0 1px 3px rgba(58, 55, 51, 0.03);
 
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -39,98 +48,119 @@
 }
 
 [data-theme='dark'] {
-  /* ---- Gruvbox dark (bg0 / bg0_s / bg1 / fg) ---- */
-  --bg:          #282828;
-  --bg-soft:     #32302f;
-  --bg-raised:   #3c3836;
-  --bg-inset:    #1d2021;
-  --fg:          #ebdbb2;
-  --fg-muted:    #bdae93;
-  --fg-faint:    #928374;
-  --line:        #504945;
-  --line-strong: #665c54;
+  /* ---- soft charcoal, very slightly green so it reads warm, not blue ---- */
+  --bg:          #1e2225;
+  --bg-soft:     #23282b;
+  --bg-raised:   #262b2e;
+  --bg-inset:    #191d20;
+  --fg:          #e8e4dc;
+  --fg-muted:    #b3ada3;
+  --fg-faint:    #857f76;
+  --line:        #343a3e;
+  --line-strong: #464d52;
 
-  /* Dark-mode accents: the "bright" Gruvbox set. */
-  --accent:       #fe8019;
-  --accent-hover: #fabd2f;
-  --accent-fg:    #282828;
-  --positive:     #b8bb26;
-  --negative:     #fb4934;
-  --warning:      #fabd2f;
-  --info:         #83a598;
-  --purple:       #d3869b;
-  --aqua:         #8ec07c;
+  /* Dark-mode accents: lighter steps of the same hues. */
+  --accent:       #e09b6b;
+  --accent-hover: #eab183;
+  --accent-fg:    #1e2225;
+  --positive:     #a6c48a;
+  --negative:     #c96c6c;
+  --warning:      #e8c878;
+  --info:         #8fb2d0;
+  --purple:       #9885bb;
+  --aqua:         #5a9490;
+
+  --ring: rgba(224, 155, 107, 0.30);
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.20), 0 1px 3px rgba(0, 0, 0, 0.14);
 
   color-scheme: dark;
 }
 
 * { border-color: var(--line); }
 
+html { scroll-behavior: smooth; }
+
 body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* Numbers are tabular monospace everywhere — the ledger feel, and columns of
-   rupee figures actually line up. */
-.tnum { font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+/* Amounts are tabular monospace throughout: columns of rupee figures line up,
+   and digits do not shift width as values change. */
+.tnum {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.015em;
+}
 
 @layer components {
-  /* Flat surfaces with a real border instead of a shadow. */
   .card {
-    @apply border bg-bg-raised p-4;
+    @apply rounded-lg border p-4;
+    background: var(--bg-raised);
     border-color: var(--line);
+    box-shadow: var(--shadow-soft);
   }
   .card-head {
-    @apply mb-3 flex items-center justify-between border-b pb-2 text-xs font-semibold uppercase tracking-widest;
+    @apply mb-3 flex items-center justify-between border-b pb-2 text-[11px] font-semibold uppercase tracking-[0.12em];
     color: var(--fg-faint);
     border-color: var(--line);
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 border px-3 py-1.5 text-sm font-medium
-           transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 rounded-md border px-3 py-1.5 text-sm font-medium
+           transition-all duration-150 disabled:cursor-not-allowed disabled:opacity-45;
     border-color: var(--line-strong);
     color: var(--fg);
+    background: transparent;
   }
-  .btn:hover:not(:disabled) { background: var(--bg-inset); }
+  .btn:hover:not(:disabled) { background: var(--bg-inset); border-color: var(--fg-faint); }
+  .btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--ring); }
+
   .btn-primary {
     background: var(--accent);
     border-color: var(--accent);
     color: var(--accent-fg);
   }
   .btn-primary:hover:not(:disabled) { background: var(--accent-hover); border-color: var(--accent-hover); }
-  .btn-danger { color: var(--negative); border-color: var(--negative); }
-  .btn-danger:hover:not(:disabled) { background: var(--negative); color: var(--bg); }
+
+  .btn-danger { color: var(--negative); border-color: var(--line-strong); }
+  .btn-danger:hover:not(:disabled) { background: var(--negative); border-color: var(--negative); color: var(--bg-raised); }
 
   .input, .select {
-    @apply w-full border bg-bg px-2.5 py-1.5 text-sm outline-none transition-colors;
+    @apply w-full rounded-md border px-2.5 py-1.5 text-sm outline-none transition-all duration-150;
+    background: var(--bg);
     border-color: var(--line-strong);
     color: var(--fg);
   }
-  .input:focus, .select:focus { border-color: var(--accent); }
-  .label { @apply mb-1 block text-xs font-medium uppercase tracking-wider; color: var(--fg-muted); }
+  .input:focus, .select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--ring); }
+  .input::placeholder { color: var(--fg-faint); }
+
+  .label { @apply mb-1 block text-[11px] font-medium uppercase tracking-[0.08em]; color: var(--fg-muted); }
   .field-error { @apply mt-1 text-xs; color: var(--negative); }
 
-  /* Data-dense table: tight rows, hairline separators, no zebra striping. */
+  /* Data-dense but unhurried: roomy rows, hairline separators, no zebra. */
   .table { @apply w-full border-collapse text-sm; }
   .table thead th {
-    @apply border-b px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wider;
+    @apply border-b px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-[0.08em];
     color: var(--fg-faint);
     border-color: var(--line-strong);
   }
-  .table tbody td { @apply border-b px-3 py-1.5; border-color: var(--line); }
+  .table tbody td { @apply border-b px-3 py-2; border-color: var(--line); }
+  .table tbody tr { transition: background-color 120ms ease; }
   .table tbody tr:hover { background: var(--bg-soft); }
+  .table tbody tr:last-child td { border-bottom: 0; }
 
   .badge {
-    @apply inline-block border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider;
+    @apply inline-block rounded border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.06em];
   }
 }
 
-/* Scrollbars that match the palette rather than the OS default. */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: var(--bg-soft); }
-::-webkit-scrollbar-thumb { background: var(--line-strong); border: 2px solid var(--bg-soft); }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 99px; border: 3px solid var(--bg); }
 ::-webkit-scrollbar-thumb:hover { background: var(--fg-faint); }
+
+::selection { background: var(--ring); }

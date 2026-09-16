@@ -59,9 +59,14 @@ export function ChartEmpty({ children }: { children: React.ReactNode }) {
 export function axisMoney(value: number): string {
   const abs = Math.abs(value);
   const sign = value < 0 ? '-' : '';
-  // Trailing zeros are dropped, so a round tick reads "₹90L" rather than
-  // "₹90.0L", while the decimals that actually disambiguate two ticks stay.
-  const trim = (n: number, dp: number) => n.toFixed(dp).replace(/\.?0+$/, '');
+  // Trailing zeros after the decimal point are dropped, so a round tick reads
+  // "₹90L" rather than "₹90.0L", while decimals that disambiguate two ticks
+  // stay. The `includes('.')` guard matters: without it the same regex eats the
+  // trailing zero of a whole number and renders ₹50k as "₹5k".
+  const trim = (n: number, dp: number) => {
+    const s = n.toFixed(dp);
+    return s.includes('.') ? s.replace(/\.?0+$/, '') : s;
+  };
   if (abs >= 1e7) return `${sign}₹${trim(abs / 1e7, 2)}Cr`;
   if (abs >= 1e5) return `${sign}₹${trim(abs / 1e5, 1)}L`;
   if (abs >= 1e3) return `${sign}₹${trim(abs / 1e3, 0)}k`;

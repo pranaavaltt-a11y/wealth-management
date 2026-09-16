@@ -21,7 +21,7 @@ types.setTypeParser(types.builtins.DATE, (v) => v);
  * Next.js dev mode re-evaluates modules on every hot reload, which would leak a
  * new pool each time — so the pool is stashed on globalThis in development.
  */
-const globalForPg = globalThis as unknown as { __arthaPool?: Pool };
+const globalForPg = globalThis as unknown as { __wwPool?: Pool };
 
 function createPool(): Pool {
   const connectionString = process.env.DATABASE_URL;
@@ -36,8 +36,8 @@ function createPool(): Pool {
   });
 }
 
-export const pool: Pool = globalForPg.__arthaPool ?? createPool();
-if (process.env.NODE_ENV !== 'production') globalForPg.__arthaPool = pool;
+export const pool: Pool = globalForPg.__wwPool ?? createPool();
+if (process.env.NODE_ENV !== 'production') globalForPg.__wwPool = pool;
 
 /** Run a parameterised query. Never interpolate user input into `text`. */
 export async function query<T extends QueryResultRow = QueryResultRow>(

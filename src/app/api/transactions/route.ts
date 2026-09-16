@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
       from: p.get('from') ?? undefined,
       to: p.get('to') ?? undefined,
       category: p.get('category') ?? undefined,
+      search: p.get('search') ?? undefined,
       limit: p.get('limit') ? Math.min(Number(p.get('limit')), 500) : undefined,
     });
     return ok({ transactions });

@@ -10,39 +10,32 @@ import { useTheme } from '@/components/theme-provider';
  * ---------------------------------------------------------------------------
  * PALETTE VALIDATION
  *
- * The categorical order below is not a taste call — it was searched for and
- * verified with the data-viz palette validator across BOTH themes:
+ * The categorical ORDER below is not a taste call. It was searched for
+ * exhaustively and measured with the data-viz palette validator in both
+ * themes, because a muted palette is exactly where adjacent hues stop being
+ * separable:
  *
- *   dark  (surface #3c3836): CVD ΔE 9.7 (deutan), normal-vision ΔE 20.9, contrast PASS
- *   light (surface #f9f5d7): CVD ΔE 10.0 (deutan), normal-vision ΔE 21.5, contrast PASS
+ *   dark  (surface #262b2e): CVD ΔE 10.1 (deutan), normal-vision ΔE 18.3, contrast PASS
+ *   light (surface #fbf9f5): CVD ΔE  9.8 (deutan), normal-vision ΔE 18.3, contrast PASS
  *
- * Two checks are knowingly not met, and both are inherent to Gruvbox rather
- * than fixable by reordering:
- *
- *   - Chroma floor. Gruvbox blue (#83a598, C=0.042) and aqua are deliberately
- *     desaturated — that muted quality *is* the palette. Mitigated by the
- *     mandatory secondary encoding below.
- *   - Lightness band (dark mode only). Gruvbox's "bright" set sits above the
- *     band on a dark surface. Its neutral variants fall within the band but
- *     drop CVD separation below the floor, so brightness was traded for
- *     distinguishability — the check that actually affects readability.
- *
- * Because CVD separation sits in the 8–12 range rather than comfortably above,
- * SECONDARY ENCODING IS MANDATORY on every chart using this palette: a legend
- * is always rendered, segments carry direct labels, and the underlying numbers
- * are always available as a table. Colour is never the only channel.
+ * One check is knowingly not met: the chroma floor. These hues are deliberately
+ * desaturated — the calm, low-glare quality *is* the design. Because separation
+ * therefore sits around ΔE 10 rather than comfortably above it, SECONDARY
+ * ENCODING IS MANDATORY on every chart: a legend is always rendered, segments
+ * carry direct labels, and the numbers are always available as a table. Colour
+ * is never the only channel.
  *
  * The eighth+ series is NOT a generated hue — it folds into "Other" (grey).
  * ---------------------------------------------------------------------------
  */
 export const CATEGORICAL_TOKENS = [
-  '--accent',    // orange
-  '--info',      // blue
-  '--warning',   // yellow
-  '--purple',    // purple
-  '--positive',  // green
-  '--negative',  // red
-  '--aqua',      // aqua
+  '--positive',  // sage
+  '--purple',    // lilac
+  '--accent',    // clay
+  '--aqua',      // teal
+  '--warning',   // amber
+  '--info',      // dusk blue
+  '--negative',  // rose
 ] as const;
 
 /** Reserved slot for the folded "Other" bucket — never a categorical hue. */
@@ -106,13 +99,13 @@ export function useChartColors(): ChartColors | null {
  * its rank in the current result set.
  */
 const ASSET_SLOT: Record<string, number> = {
-  property: 0,      // orange
-  mutual_fund: 1,   // blue
-  gold: 2,          // yellow
-  equity: 3,        // purple
-  epf: 4,           // green
-  ppf: 5,           // red
-  fd: 6,            // aqua
+  property: 2,      // clay  — the largest holding gets the brand hue
+  mutual_fund: 5,   // dusk
+  gold: 4,          // amber
+  equity: 1,        // lilac
+  epf: 0,           // sage
+  ppf: 6,           // rose
+  fd: 3,            // teal
   // cash, vehicle and other fold into the reserved grey slot.
 };
 
@@ -133,14 +126,15 @@ export function hasAssetSlot(assetType: string): boolean {
 
 /**
  * Validated two-series pairs for the non-categorical charts. Each was checked
- * with the palette validator across both themes using --pairs all:
+ * with the palette validator across both themes using --pairs all, taking the
+ * worse of the two modes:
  *
- *   assets / liabilities  blue↔red    CVD ΔE 12.2  normal-vision ΔE 25.3  PASS
- *   income / expense      green↔red   CVD ΔE  9.7  normal-vision ΔE 22.0  PASS
+ *   assets / liabilities  dusk↔rose   CVD ΔE 13.2  normal-vision ΔE 18.3  PASS
+ *   income / expense      sage↔rose   CVD ΔE  9.9  normal-vision ΔE 20.1  PASS
  *
- * A third line on either chart is NOT available: no Gruvbox trio clears the
- * normal-vision floor in both themes, which is why the net worth series lives
- * in its own panel rather than being overlaid on assets and liabilities.
+ * A third line on either chart is still NOT available at this saturation,
+ * which is why the net worth series keeps its own panel rather than being
+ * overlaid on assets and liabilities.
  */
 export const VALIDATED_PAIRS = {
   assetsVsLiabilities: ['info', 'negative'] as const,

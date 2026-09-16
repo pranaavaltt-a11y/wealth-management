@@ -10,6 +10,8 @@ const LINKS = [
   { href: '/assets',       label: 'Assets' },
   { href: '/loans',        label: 'Loans' },
   { href: '/transactions', label: 'Ledger' },
+  { href: '/import',       label: 'Import' },
+  { href: '/vault',        label: 'Vault' },
 ];
 
 export function AppNav({ user }: { user: { name: string; role: string } }) {
@@ -26,7 +28,7 @@ export function AppNav({ user }: { user: { name: string; role: string } }) {
     <header className="border-b bg-bg-soft">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-2.5">
         <Link href="/dashboard" className="tnum text-lg font-bold text-accent">
-          ArthaTrack
+          WealthWise
         </Link>
 
         <nav className="flex items-center gap-1">

@@ -35,6 +35,7 @@ export interface TxnFilter {
   from?: string;
   to?: string;
   category?: string;
+  search?: string;
   limit?: number;
 }
 
@@ -42,6 +43,12 @@ export interface TxnFilter {
  * Filtered ledger. Optional filters are applied as `($n IS NULL OR col = $n)`
  * so one prepared statement serves every combination — no string concatenation
  * and therefore no injection surface.
+ *
+ * `search` runs against the generated `search_vector` tsvector (GIN-indexed,
+ * migration 006) rather than a LIKE '%...%' scan, so it matches word stems:
+ * "pharmacy" finds "Pharmacies". websearch_to_tsquery is used instead of
+ * to_tsquery because it accepts whatever a human types without throwing a
+ * syntax error on a stray quote or operator.
  */
 export async function listTransactions(userId: number, f: TxnFilter = {}): Promise<Transaction[]> {
   const rows = await query<Record<string, string | null>>(
@@ -52,9 +59,15 @@ export async function listTransactions(userId: number, f: TxnFilter = {}): Promi
         AND ($3::date IS NULL OR txn_date >= $3::date)
         AND ($4::date IS NULL OR txn_date <= $4::date)
         AND ($5::text IS NULL OR category ILIKE $5)
-      ORDER BY txn_date DESC, id DESC
-      LIMIT $6`,
-    [userId, f.type ?? null, f.from ?? null, f.to ?? null, f.category ?? null, f.limit ?? 200],
+        AND ($6::text IS NULL OR search_vector @@ websearch_to_tsquery('english', $6))
+      ORDER BY
+        -- Best matches first when searching; newest first otherwise.
+        CASE WHEN $6::text IS NULL THEN 0
+             ELSE ts_rank(search_vector, websearch_to_tsquery('english', $6)) END DESC,
+        txn_date DESC, id DESC
+      LIMIT $7`,
+    [userId, f.type ?? null, f.from ?? null, f.to ?? null, f.category ?? null,
+     f.search || null, f.limit ?? 200],
   );
   return rows.map(toTxn);
 }

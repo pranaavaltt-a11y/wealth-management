@@ -41,7 +41,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4">
       <div className="mb-6">
-        <h1 className="tnum text-3xl font-bold text-accent">ArthaTrack</h1>
+        <h1 className="tnum text-3xl font-bold text-accent">WealthWise</h1>
         <p className="mt-1 text-sm text-fg-muted">
           {isSignup ? 'Create your account.' : 'Net worth, loans and expenses — in one ledger.'}
         </p>

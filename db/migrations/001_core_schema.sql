@@ -1,5 +1,5 @@
 -- =============================================================================
--- 001_core_schema.sql — ArthaTrack relational core
+-- 001_core_schema.sql — WealthWise relational core
 -- Postgres 16. All money is NUMERIC(15,2) (never float: no binary rounding
 -- drift on rupee amounts). All rates are NUMERIC(5,2) percent per annum.
 -- =============================================================================
@@ -149,4 +149,4 @@ CREATE TABLE IF NOT EXISTS credit_score_history (
   UNIQUE (user_id, computed_date)
 );
 COMMENT ON TABLE credit_score_history IS
-  'Simulated in-app credit score derived from ArthaTrack repayment data. Not a credit bureau score.';
+  'Simulated in-app credit score derived from WealthWise repayment data. Not a credit bureau score.';

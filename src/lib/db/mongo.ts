@@ -12,8 +12,8 @@ import { MongoClient, type Db } from 'mongodb';
  * keeps Phase 1 usable on a Postgres-only machine.
  */
 const globalForMongo = globalThis as unknown as {
-  __arthaMongo?: Promise<MongoClient>;
-  __arthaMongoDownUntil?: number;
+  __wwMongo?: Promise<MongoClient>;
+  __wwMongoDownUntil?: number;
 };
 
 /** How long to stop attempting connections after a failure. */
@@ -30,8 +30,8 @@ function connect(): Promise<MongoClient> {
 }
 
 export async function getDb(): Promise<Db> {
-  const client = await (globalForMongo.__arthaMongo ??= connect());
-  return client.db(process.env.MONGODB_DB ?? 'arthatrack');
+  const client = await (globalForMongo.__wwMongo ??= connect());
+  return client.db(process.env.MONGODB_DB ?? 'wealthwise');
 }
 
 /**
@@ -43,16 +43,16 @@ export async function getDb(): Promise<Db> {
  */
 export async function tryGetDb(): Promise<Db | null> {
   if (!isMongoConfigured()) return null;
-  if (globalForMongo.__arthaMongoDownUntil && Date.now() < globalForMongo.__arthaMongoDownUntil) {
+  if (globalForMongo.__wwMongoDownUntil && Date.now() < globalForMongo.__wwMongoDownUntil) {
     return null;
   }
   try {
     const db = await getDb();
-    globalForMongo.__arthaMongoDownUntil = undefined;
+    globalForMongo.__wwMongoDownUntil = undefined;
     return db;
   } catch {
-    globalForMongo.__arthaMongoDownUntil = Date.now() + RETRY_COOLDOWN_MS;
-    globalForMongo.__arthaMongo = undefined;   // let the next attempt reconnect
+    globalForMongo.__wwMongoDownUntil = Date.now() + RETRY_COOLDOWN_MS;
+    globalForMongo.__wwMongo = undefined;   // let the next attempt reconnect
     return null;
   }
 }

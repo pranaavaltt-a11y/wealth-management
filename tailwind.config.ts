@@ -1,7 +1,7 @@
 import type { Config } from 'tailwindcss';
 
 /**
- * ArthaTrack design system — Gruvbox-derived.
+ * WealthWise design system.
  * Every colour is exposed as a CSS variable (see src/app/globals.css) so that
  * light/dark mode is a single `data-theme` swap on <html>, and so charts can
  * read the exact same tokens the UI uses.
@@ -43,8 +43,8 @@ const config: Config = {
         sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         mono: ['var(--font-mono)', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
-      borderRadius: { DEFAULT: '2px', md: '3px', lg: '4px' },
-      boxShadow: { none: 'none' },
+      borderRadius: { DEFAULT: '4px', md: '6px', lg: '8px', xl: '12px' },
+      boxShadow: { soft: 'var(--shadow-soft)' },
     },
   },
   plugins: [],

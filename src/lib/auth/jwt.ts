@@ -11,7 +11,7 @@ export interface SessionClaims {
   role: 'individual' | 'advisor';
 }
 
-export const SESSION_COOKIE = 'artha_session';
+export const SESSION_COOKIE = 'ww_session';
 
 function secretKey(): Uint8Array {
   const secret = process.env.JWT_SECRET;
@@ -26,14 +26,14 @@ export async function signSession(claims: SessionClaims): Promise<string> {
     .setProtectedHeader({ alg: 'HS256' })
     .setSubject(claims.sub)
     .setIssuedAt()
-    .setIssuer('arthatrack')
+    .setIssuer('wealthwise')
     .setExpirationTime(process.env.JWT_EXPIRES_IN ?? '7d')
     .sign(secretKey());
 }
 
 export async function verifySession(token: string): Promise<SessionClaims | null> {
   try {
-    const { payload } = await jwtVerify(token, secretKey(), { issuer: 'arthatrack' });
+    const { payload } = await jwtVerify(token, secretKey(), { issuer: 'wealthwise' });
     if (!payload.sub) return null;
     return {
       sub: payload.sub,

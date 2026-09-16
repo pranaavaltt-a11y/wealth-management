@@ -95,25 +95,25 @@ async function main() {
 
     console.log('· clearing previous demo users');
     await client.query(
-      `DELETE FROM users WHERE email IN ('priya@arthatrack.dev','rahul@arthatrack.dev','advisor@arthatrack.dev')`,
+      `DELETE FROM users WHERE email IN ('priya@wealthwise.dev','rahul@wealthwise.dev','advisor@wealthwise.dev')`,
     );
 
     // ---------------------------------------------------------------- users
     const { rows: [advisor] } = await client.query<{ id: number }>(
       `INSERT INTO users (name, email, password_hash, role, pan_number)
-       VALUES ('Ananya Krishnan', 'advisor@arthatrack.dev', $1, 'advisor', 'AKRPS9182C')
+       VALUES ('Ananya Krishnan', 'advisor@wealthwise.dev', $1, 'advisor', 'AKRPS9182C')
        RETURNING id`,
       [hash],
     );
     const { rows: [priya] } = await client.query<{ id: number }>(
       `INSERT INTO users (name, email, password_hash, role, pan_number, advisor_id)
-       VALUES ('Priya Sharma', 'priya@arthatrack.dev', $1, 'individual', 'ABCPS1234K', $2)
+       VALUES ('Priya Sharma', 'priya@wealthwise.dev', $1, 'individual', 'ABCPS1234K', $2)
        RETURNING id`,
       [hash, advisor.id],
     );
     const { rows: [rahul] } = await client.query<{ id: number }>(
       `INSERT INTO users (name, email, password_hash, role, pan_number, advisor_id)
-       VALUES ('Rahul Menon', 'rahul@arthatrack.dev', $1, 'individual', 'BXYPM5678L', $2)
+       VALUES ('Rahul Menon', 'rahul@wealthwise.dev', $1, 'individual', 'BXYPM5678L', $2)
        RETURNING id`,
       [hash, advisor.id],
     );
@@ -257,9 +257,9 @@ async function main() {
 
     await client.query('COMMIT');
     console.log(`\nSeed complete. Log in with any of:`);
-    console.log(`  priya@arthatrack.dev   / ${PASSWORD}   (individual, full portfolio)`);
-    console.log(`  rahul@arthatrack.dev   / ${PASSWORD}   (individual, smaller portfolio)`);
-    console.log(`  advisor@arthatrack.dev / ${PASSWORD}   (advisor for both)`);
+    console.log(`  priya@wealthwise.dev   / ${PASSWORD}   (individual, full portfolio)`);
+    console.log(`  rahul@wealthwise.dev   / ${PASSWORD}   (individual, smaller portfolio)`);
+    console.log(`  advisor@wealthwise.dev / ${PASSWORD}   (advisor for both)`);
   } catch (err) {
     await client.query('ROLLBACK');
     throw err;

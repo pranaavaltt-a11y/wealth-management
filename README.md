@@ -1,4 +1,4 @@
-# ArthaTrack
+# WealthWise
 
 Personal net worth, loan and expense manager for the Indian market.
 
@@ -7,7 +7,7 @@ relational core (users, assets, loans, EMI schedules, ledger, snapshots) and
 **MongoDB** holds the schema-flexible material (uploaded documents, raw bank
 statement imports, per-asset-type valuation history, cached news).
 
-> **Simulated financial data.** ArthaTrack does not connect to any credit
+> **Simulated financial data.** WealthWise does not connect to any credit
 > bureau, bank API, or payment gateway. The credit score module (Phase 4) is a
 > metric *derived from this application's own repayment records* — it is not a
 > CIBIL/Experian/Equifax score. "Mark EMI paid" records a payment in this
@@ -15,13 +15,13 @@ statement imports, per-asset-type valuation history, cached news).
 
 ---
 
-## Current status — Phase 2 complete
+## Current status — Phase 3 complete
 
 | Phase | Scope | State |
 |---|---|---|
 | **1 — Foundation** | Auth & roles, asset CRUD, loan CRUD + generated EMI schedule, manual income/expense ledger | ✅ Built & tested |
 | **2 — Analytics** | Net worth trend, allocation chart, payoff progress, upcoming EMI dues, reporting views | ✅ Built & tested |
-| 3 — Import & documents | CSV bank import, receipt OCR, auto-categorisation, document vault | ◻ |
+| **3 — Import & documents** | CSV bank import, rule-based auto-categorisation, document vault, ledger full-text search | ✅ Built & tested (receipt OCR pending a decision — see below) |
 | 4 — Smart features | Prepayment simulator, what-if projection, credit score, product recommender, news feed | ◻ |
 | 5 — Polish | FY reporting, PDF statement, EMI reminders | ◻ |
 
@@ -53,9 +53,9 @@ cp .env.example .env
 Edit `.env`:
 
 ```ini
-DATABASE_URL=postgresql://user:password@127.0.0.1:5432/arthatrack
+DATABASE_URL=postgresql://user:password@127.0.0.1:5432/wealthwise
 MONGODB_URI=mongodb://127.0.0.1:27017      # optional
-MONGODB_DB=arthatrack
+MONGODB_DB=wealthwise
 JWT_SECRET=<at least 32 random characters>  # openssl rand -base64 48
 JWT_EXPIRES_IN=7d
 ```
@@ -66,7 +66,7 @@ No credential is ever hard-coded; every one is read from the environment.
 ### 2. Create the database and run migrations
 
 ```bash
-createdb arthatrack
+createdb wealthwise
 npm run db:migrate          # applies db/migrations/*.sql in order
 ```
 
@@ -91,9 +91,9 @@ products.
 
 | Login | Password | Role |
 |---|---|---|
-| `priya@arthatrack.dev` | `password123` | Individual — full portfolio |
-| `rahul@arthatrack.dev` | `password123` | Individual — smaller portfolio |
-| `advisor@arthatrack.dev` | `password123` | Advisor for both |
+| `priya@wealthwise.dev` | `password123` | Individual — full portfolio |
+| `rahul@wealthwise.dev` | `password123` | Individual — smaller portfolio |
+| `advisor@wealthwise.dev` | `password123` | Advisor for both |
 
 `npm run db:reset` does a reset migrate + seed in one step.
 
@@ -349,7 +349,43 @@ justifies it. Two are worth calling out:
 Also: composite `(user_id, asset_type)` and `(user_id, txn_date DESC)` so the
 per-user filter and the sort/rollup are served by one index.
 
-### 9. MongoDB
+### 8b. Rule-based categorisation (Phase 3)
+
+Keyword rules live in `categorization_rules`, not in application code, so a
+user can add one without a redeploy and matching is a query rather than a loop
+in TypeScript.
+
+`fn_categorize(user_id, description)` resolves a bank narration to a category.
+Precedence is encoded in the ORDER BY: the user's own rule beats every system
+rule, then explicit priority, then the longest keyword — so "BIG BAZAAR" beats
+a bare "BIG", and "SWIGGY" (priority 10) beats a catch-all like "UPI" (900).
+
+`user_id NULL` means a system rule shared by everyone. A plain
+`UNIQUE (user_id, keyword)` would not work, because NULL never equals NULL and
+duplicate system rules would slip through — so two *partial* unique indexes
+enforce the intent on each half.
+
+### 9. Full-text search
+
+Ledger search matches word stems, not substrings: searching "pharmacy" finds
+"Pharmacies", and `LIKE '%...%'` could never use an index anyway.
+
+```sql
+ALTER TABLE transactions ADD COLUMN search_vector tsvector
+  GENERATED ALWAYS AS (
+    setweight(to_tsvector('english', coalesce(description, '')), 'A') ||
+    setweight(to_tsvector('english', coalesce(category, '')),   'B')
+  ) STORED;
+CREATE INDEX idx_txn_search ON transactions USING GIN (search_vector);
+```
+
+A **STORED generated column** keeps the vector in sync automatically — no
+trigger to forget and no way for the index to drift from the row. Description
+is weighted above category so a merchant name outranks an incidental category
+match. Queries use `websearch_to_tsquery`, which accepts whatever a human types
+(quoted phrases, `or`, `-`) without throwing a syntax error on a stray quote.
+
+### 10. MongoDB
 
 `asset_valuation_history` exists in Mongo, not Postgres, because the metadata
 that matters differs completely per asset class:
@@ -374,20 +410,42 @@ Against the *DBMS Level 3 Project Requirements* brief:
 | 3 | Two database paradigms — **Option 1: SQL + NoSQL** | ✅ PostgreSQL + MongoDB. (Option 2's vector database is an *alternative* to NoSQL, not an additional requirement.) |
 | 5 | DDL: `CREATE`, `ALTER`, `DROP`, keys, constraints, indexes, views | ✅ All present as of `005` |
 | 6 | DML with `JOIN`, `GROUP BY`, `HAVING`, `ORDER BY`, aggregates, subqueries | ✅ All present |
-| 7 | ≥ 4 advanced features | ✅ **6**: transactions, stored functions, triggers, views, indexing, window functions |
+| 7 | ≥ 4 advanced features | ✅ **8**: transactions, stored functions, triggers, views, indexing, window functions, full-text search, NoSQL aggregation |
 | 8 | Vector / semantic search | ➖ Optional; deliberately not used — see below |
 | 9–11 | Next.js interface, API layer, env config, auth with ≥ 2 roles | ✅ |
 | 12–13 | Validation at the database level, no plaintext secrets | ✅ |
 
 **On the vector database.** §3 offers SQL + NoSQL *or* SQL + Vector; this project
 takes the first. §8 recommends embeddings only for unstructured, text-heavy
-data. ArthaTrack's data is overwhelmingly numeric and relational — amounts,
+data. WealthWise's data is overwhelmingly numeric and relational — amounts,
 rates, dates, schedules — and its one text-heavy collection (cached news, Phase
 4) is served by tag and category filters. Adding embeddings would be technology
 for its own sake, which §18 explicitly warns against.
 
 Still outstanding, and tracked separately from the code: the formal ER diagram
 and the project report (§4, §14), and per-member commit history (§2, §15).
+
+### MongoDB in this environment
+
+Everything Mongo-backed — raw statement staging, the document vault, the
+aggregation rollups — is written against the real driver, but could not be
+executed here: the sandbox's egress proxy allows only npm, PyPI and crates, so
+`fastdl.mongodb.org` and the Ubuntu MongoDB repositories are both unreachable.
+
+The Postgres half of every feature is fully verified. The Mongo half needs a
+local `mongod`:
+
+```bash
+docker run -d -p 27017:27017 --name wealthwise-mongo mongo:7
+# MONGODB_URI=mongodb://127.0.0.1:27017 is already in .env.example
+npm run dev
+```
+
+With Mongo absent the app degrades deliberately rather than breaking: imports
+still complete (the preview reports `raw rows staged in Mongo: unavailable`),
+valuation history is skipped, and the vault shows an explicit "MongoDB is not
+reachable" panel rather than an empty list that would imply the user has no
+documents.
 
 ---
 
@@ -410,29 +468,27 @@ categorical order was **searched for and machine-verified** across both themes:
 
 | Palette | Worst CVD ΔE | Worst normal-vision ΔE | Contrast |
 |---|---|---|---|
-| Categorical (7 hues), dark | 9.7 (deutan) | 20.9 | pass |
-| Categorical (7 hues), light | 10.0 (deutan) | 21.5 | pass |
-| Assets ↔ liabilities (blue/red) | 12.2 | 25.3 | pass |
-| Income ↔ expense (green/red) | 9.7 | 22.0 | pass |
+| Categorical (7 hues), dark | 10.1 (deutan) | 18.3 | pass |
+| Categorical (7 hues), light | 9.8 (deutan) | 18.3 | pass |
+| Assets ↔ liabilities (dusk/rose) | 13.2 | 18.3 | pass |
+| Income ↔ expense (sage/rose) | 9.9 | 20.1 | pass |
 
 Three findings worth recording, because they changed the design:
 
-1. **Eight categorical hues are not achievable in Gruvbox.** The full bright set
-   fails the normal-vision floor (yellow ↔ green at ΔE 10.2 — indistinguishable
-   even with full colour vision). The palette is capped at seven; an eighth
-   class folds into a reserved grey "Other" bucket rather than getting a
-   generated hue.
-2. **No Gruvbox trio passes**, which is why net worth is *not* overlaid on
-   assets and liabilities. Orange ↔ red measures ΔE 8.4 in light mode. The chart
-   was split into two stacked panels — small multiples — so no panel carries
-   more than two series.
-3. **Two checks are knowingly unmet**, both inherent to the requested aesthetic
-   rather than fixable by reordering: the chroma floor (Gruvbox blue is
-   deliberately desaturated — that muted quality *is* the palette) and, in dark
-   mode, the lightness band. Because separation sits in the 8–12 range rather
-   than comfortably above it, **secondary encoding is mandatory**: every chart
-   renders a legend, segments carry direct percentage labels, and the numbers
-   are always available as a table. Colour is never the only channel.
+1. **Seven hues is the ceiling at this saturation.** An eighth pushes the
+   worst adjacent pair below the normal-vision floor — indistinguishable even
+   with full colour vision. The palette is capped at seven; an eighth class
+   folds into a reserved grey "Other" bucket rather than getting a generated
+   hue.
+2. **No trio passes**, which is why net worth is *not* overlaid on assets and
+   liabilities. The chart is split into two stacked panels — small multiples —
+   so no panel carries more than two series.
+3. **The chroma floor is knowingly unmet.** These hues are deliberately
+   desaturated; the calm, low-glare quality *is* the design. Because separation
+   therefore sits around ΔE 10 rather than comfortably above it, **secondary
+   encoding is mandatory**: every chart renders a legend, segments carry direct
+   percentage labels, and the numbers are always available as a table. Colour
+   is never the only channel.
 
 Colour follows the entity, never its rank — a filter that changes which asset
 classes are present never repaints the survivors.
@@ -467,27 +523,33 @@ classes are present never repaints the survivors.
 
 ## Design system
 
-Custom Gruvbox-derived palette — no default shadcn or Tailwind colours.
+A calm, low-glare palette built for a screen someone looks at every day. Warm
+paper in light mode, soft charcoal in dark, muted earth accents throughout —
+nothing shouts, and red means "this needs attention" rather than alarm. No
+default shadcn or Tailwind colours.
 
 Tokens are CSS variables in `src/app/globals.css`, so light/dark is a single
 `data-theme` swap on `<html>`, and `src/lib/chart-colors.ts` resolves the same
-variables at runtime — a category is the same colour in the table, the chart and
-the legend, in both themes.
+variables at runtime — a category is the same colour in the table, the chart
+and the legend, in both themes.
 
 | Role | Dark | Light |
 |---|---|---|
-| Background / raised | `#282828` / `#3c3836` | `#fbf1c7` / `#f9f5d7` |
-| Text | `#ebdbb2` | `#3c3836` |
-| Primary action | `#fe8019` | `#af3a03` |
-| Positive / income | `#b8bb26` | `#79740e` |
-| Negative / expense | `#fb4934` | `#9d0006` |
-| Warning / due soon | `#fabd2f` | `#b57614` |
-| Informational | `#83a598` | `#076678` |
+| Background / raised | `#1e2225` / `#262b2e` | `#f7f4ee` / `#fbf9f5` |
+| Text | `#e8e4dc` | `#3a3733` |
+| Primary action — clay | `#e09b6b` | `#b0663a` |
+| Positive / income — sage | `#a6c48a` | `#5f8449` |
+| Negative / expense — rose | `#c96c6c` | `#8e3c3c` |
+| Warning / due soon — amber | `#e8c878` | `#9c7620` |
+| Informational — dusk | `#8fb2d0` | `#3f6a92` |
+| Lilac | `#9885bb` | `#59447a` |
+| Teal | `#5a9490` | `#2c635f` |
 
-Inter for UI text, **JetBrains Mono with `tabular-nums` for every rupee figure**,
-so columns of amounts line up. Flat surfaces, hairline borders, no shadows or
-gradients — a ledger, not a SaaS dashboard. Amounts use Indian digit grouping
-(`₹92,00,000`, `₹1.04 Cr`), not thousands separators.
+Inter for UI text, **JetBrains Mono with `tabular-nums` for every rupee
+figure**, so columns of amounts line up and digits do not shift width as values
+change. Rounded corners, hairline borders and very soft shadows — present
+enough to separate surfaces, never heavy. Amounts use Indian digit grouping
+(`₹92,00,000`, `₹1.06 Cr`), not thousands separators.
 
 Theme choice persists to `localStorage`, and an inline script in
 `src/app/layout.tsx` applies it before first paint so there is no flash of the
@@ -497,7 +559,7 @@ wrong theme.
 
 ## Simulated vs. real
 
-| Feature | Reality | What ArthaTrack does |
+| Feature | Reality | What WealthWise does |
 |---|---|---|
 | Credit score | Requires a licensed bureau (CIBIL/Experian/Equifax) | Computes a 300–900 score **from this app's own EMI payment history**, stored in `credit_score_history` with its factor breakdown. Labelled as derived everywhere it appears. |
 | "Mark EMI paid" | Requires a payment gateway / bank mandate | Records the payment in this ledger. No money moves. |
@@ -506,7 +568,7 @@ wrong theme.
 | Loan products | Requires lender partnerships | Static seeded catalogue of publicly-advertised rates. |
 | News feed | A public news API | Fetched and cached; rate-impact estimates are indicative, not advice. |
 
-ArthaTrack is a personal-finance *record-keeping and analysis* tool. It gives no
+WealthWise is a personal-finance *record-keeping and analysis* tool. It gives no
 financial advice and holds no real account credentials.
 
 ---
@@ -542,3 +604,31 @@ financial advice and holds no real account credentials.
   way and fixed: two different asset groups rendering the same grey, an axis
   printing "₹2L" twice at different heights, and the net worth/liabilities
   lines being visually inseparable in light mode.
+
+### Phase 3
+
+- The CSV parser handles both a HDFC export (three junk preamble lines before
+  the header, `Withdrawal Amt.`/`Deposit Amt.`, `dd/mm/yy`, commas *inside*
+  quoted narrations, and Indian digit grouping like `"1,65,000.00"`) and an
+  ICICI export (`Debit`/`Credit`, `yyyy-mm-dd`). Columns are matched by header
+  name, not position.
+- Invalid rows are rejected rather than silently coerced: `31/02/26` is caught
+  (the `Date` constructor would roll it into March) and a row with no
+  description is skipped, both with a reason shown to the user.
+- Auto-categorisation assigned 9 of 10 rows correctly from the seeded system
+  rules; the tenth was an invented merchant and correctly landed as
+  `Uncategorized`. Adding a user rule for it and re-running
+  `fn_recategorize_user` moved exactly 1 row.
+- Rule precedence verified: with a personal `AMAZON → Business Expense` rule,
+  user 2 gets "Business Expense" while user 3 still gets the system rule
+  "Shopping".
+- Atomic import verified: first commit inserted 10; re-committing the identical
+  file inserted 0 and reported 10 duplicates, blocked by the unique index
+  rather than by application logic. Reverting the batch removed exactly 10.
+- Full-text search verified for stemming (`pharmacy` → "Apollo Pharmacy") and
+  quoted phrases (`"indian oil"` matches both a seeded row and an imported one).
+- One real bug was found and fixed during testing: `fn_recategorize_user` used
+  `UPDATE ... FROM LATERAL` referencing the update target, which Postgres
+  rejects. Migration `007` replaces it with a correlated subquery. The route
+  was also hardened so a failed retroactive sweep can no longer lose the rule
+  that was just created.

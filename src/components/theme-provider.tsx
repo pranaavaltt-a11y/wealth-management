@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 type Theme = 'light' | 'dark';
-const STORAGE_KEY = 'artha-theme';
+const STORAGE_KEY = 'wealthwise-theme';
 
 const ThemeContext = createContext<{ theme: Theme; toggle: () => void }>({
   theme: 'dark',

@@ -25,6 +25,8 @@ export function TransactionsView({ initial }: { initial: Txn[] }) {
   const router = useRouter();
   const [txns, setTxns] = useState(initial);
   const [filter, setFilter] = useState('all');
+  const [search, setSearch] = useState('');
+  const [searching, setSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
@@ -50,6 +52,26 @@ export function TransactionsView({ initial }: { initial: Txn[] }) {
     }
   }
 
+  /**
+   * Search runs server-side against the GIN-indexed tsvector, not by filtering
+   * the rows already loaded — so it matches word stems and reaches the whole
+   * ledger, not just the most recent 200 rows held in memory.
+   */
+  async function runSearch(e: React.FormEvent) {
+    e.preventDefault();
+    setSearching(true); setError(null);
+    try {
+      const qs = new URLSearchParams({ limit: '200' });
+      if (search.trim()) qs.set('search', search.trim());
+      const res = await api.get<{ transactions: Txn[] }>(`/api/transactions?${qs}`);
+      setTxns(res.transactions);
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Search failed.');
+    } finally {
+      setSearching(false);
+    }
+  }
+
   async function remove(id: number) {
     try {
       await api.del(`/api/transactions/${id}`);
@@ -71,6 +93,31 @@ export function TransactionsView({ initial }: { initial: Txn[] }) {
       </div>
 
       <ErrorNote message={error} />
+
+      <Card title="Search the ledger">
+        <form onSubmit={runSearch} className="flex flex-wrap items-end gap-2">
+          <div className="grow">
+            <label className="label" htmlFor="q">Full-text search</label>
+            <input id="q" value={search} onChange={(e) => setSearch(e.target.value)}
+                   className="input" placeholder='e.g. pharmacy, "school fee", swiggy' />
+          </div>
+          <button type="submit" disabled={searching} className="btn btn-primary">
+            {searching ? 'Searching…' : 'Search'}
+          </button>
+          {search && (
+            <button type="button" className="btn"
+                    onClick={() => { setSearch(''); setTimeout(() => { void runSearch(new Event('submit') as unknown as React.FormEvent); }, 0); }}>
+              Clear
+            </button>
+          )}
+        </form>
+        <p className="mt-2 text-[11px] text-fg-faint">
+          Matches word stems against a generated <span className="tnum">tsvector</span> column
+          (description weighted above category), backed by a GIN index — not a{' '}
+          <span className="tnum">LIKE &apos;%…%&apos;</span> scan. Quoted phrases and{' '}
+          <span className="tnum">or</span> / <span className="tnum">-</span> operators work.
+        </p>
+      </Card>
 
       <Card title="Record an entry">
         <form onSubmit={add} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
