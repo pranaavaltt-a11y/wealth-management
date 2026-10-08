@@ -1,0 +1,131 @@
+WealthWise — automated test results
+Run: 2026-10-08 07:15 UTC · Node v22.22.2 · PostgreSQL 16.13
+
+== Unit tests (npm run test:unit) ==
+▶ CSV reader (RFC 4180)
+  ✔ keeps commas inside quoted fields (2.28411ms)
+  ✔ unescapes doubled quotes (0.225043ms)
+  ✔ handles CRLF line endings and drops blank lines (0.213329ms)
+✔ CSV reader (RFC 4180) (3.91099ms)
+▶ date parsing
+  ✔ reads day-first Indian dates (0.822879ms)
+  ✔ expands two-digit years (0.185537ms)
+  ✔ accepts ISO dates (0.181207ms)
+  ✔ rejects 31 February instead of rolling into March (0.173801ms)
+  ✔ rejects garbage (0.391543ms)
+✔ date parsing (2.194572ms)
+▶ amount parsing
+  ✔ strips Indian digit grouping (0.287514ms)
+  ✔ strips the rupee sign and CR/DR suffixes (0.286944ms)
+  ✔ treats a dash as empty (0.103604ms)
+✔ amount parsing (0.850499ms)
+▶ header detection
+  ✔ skips bank preamble lines and maps columns by alias (0.386456ms)
+✔ header detection (0.478196ms)
+▶ statement normalisation
+  ✔ classifies debits as expense and credits as income (0.14801ms)
+  ✔ drops a duplicate row within the same file (0.153263ms)
+  ✔ skips an invalid date with a reason (0.103541ms)
+  ✔ produces a stable dedupe hash that ignores whitespace and case (0.391065ms)
+  ✔ refuses a file with no recognisable header (0.518832ms)
+✔ statement normalisation (1.50674ms)
+▶ receipt field extraction
+  ✔ finds the merchant, skipping header noise (2.701255ms)
+  ✔ takes Grand Total over Sub Total (0.547011ms)
+  ✔ reads the date and the GSTIN (0.220804ms)
+  ✔ reads month-name dates (0.725571ms)
+  ✔ does not mistake "Total items" for the amount (0.544754ms)
+  ✔ falls back to the largest amount when there is no total line (0.385063ms)
+✔ receipt field extraction (6.549206ms)
+▶ news classification
+  ✔ detects a repo hike with direction and size (1.96219ms)
+  ✔ detects a cut as negative (0.602066ms)
+  ✔ returns null when no change is stated (0.218012ms)
+  ✔ categorises monetary policy as rates (0.475933ms)
+  ✔ parses RSS items, unescaping entities and CDATA (0.623646ms)
+✔ news classification (4.361812ms)
+ℹ tests 28
+ℹ suites 7
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 636.325719
+
+== Database integration tests (npm run test:db, against wealthwise_test) ==
+▶ statement import
+  ✔ categorises rows through fn_categorize, leaving unknowns Uncategorized (36.172205ms)
+  ✔ commits atomically, and re-importing the same file inserts nothing (15.52378ms)
+  ✔ rolls back the whole batch if any row violates a constraint (9.514924ms)
+  ✔ reverting a batch removes exactly its rows (6.945997ms)
+✔ statement import (69.737687ms)
+▶ categorisation rules
+  ✔ a user's own rule beats the system rule, for that user only (8.991699ms)
+  ✔ a duplicate system rule is refused by the partial unique index (2.431729ms)
+  ✔ fn_recategorize_user applies a new rule retroactively (23.83912ms)
+✔ categorisation rules (36.309949ms)
+▶ full-text search
+  ✔ matches word stems through the GIN-indexed tsvector (5.454149ms)
+  ✔ the planner can use idx_txn_search (3.098784ms)
+✔ full-text search (9.29388ms)
+▶ integrity constraints (CHECK / NOT NULL / UNIQUE)
+  ✔ rejects a non-positive transaction amount (23514) (32.392476ms)
+  ✔ rejects an interest rate above 60% (21.141468ms)
+  ✔ rejects a malformed PAN (14.834577ms)
+  ✔ rejects a paid installment with no paid_date (35.360102ms)
+  ✔ rejects a duplicate email (23505) (24.945ms)
+✔ integrity constraints (CHECK / NOT NULL / UNIQUE) (130.570843ms)
+▶ EMI functions
+  ✔ fn_calculate_emi matches the reducing-balance formula (14.99305ms)
+  ✔ handles a zero-interest loan without dividing by zero (1.583982ms)
+  ✔ generated principal components sum exactly to the principal, ending at 0.00 (35.07784ms)
+  ✔ refuses to regenerate a schedule once an installment is paid (WW409) (24.985861ms)
+✔ EMI functions (77.899784ms)
+▶ atomic EMI payment
+  ✔ flips the installment, writes the ledger row and lowers outstanding by the principal part (52.182576ms)
+  ✔ refuses to pay the same installment twice (23.86283ms)
+  ✔ refuses to pay another user's installment (19.441006ms)
+  ✔ closes the loan when the final installment is paid (16.09797ms)
+✔ atomic EMI payment (112.095315ms)
+▶ net worth trigger
+  ✔ adding an asset refreshes today's snapshot (5.438872ms)
+  ✔ a new loan appears as a liability (15.557888ms)
+✔ net worth trigger (21.352321ms)
+▶ credit score
+  ✔ stays within 300–900 and records its factors (81.787529ms)
+  ✔ an overdue installment lowers the score (49.240022ms)
+  ✔ the statement-level trigger rescores once when many EMIs are paid in one UPDATE (24.498074ms)
+✔ credit score (157.014235ms)
+▶ prepayment
+  ✔ reduce_tenure saves more interest than reduce_emi, and both schedules end at 0.00 (53.040233ms)
+  ✔ rejects a prepayment larger than the outstanding balance (WW422) (18.396691ms)
+  ✔ sp_apply_prepayment funded from an asset leaves net worth unchanged (60.033988ms)
+  ✔ an under-funded prepayment rolls back completely (29.634156ms)
+  ✔ refuses to prepay another user's loan (WW404) (22.487282ms)
+✔ prepayment (184.529725ms)
+▶ recommendation engine
+  ✔ marks a product ineligible with a reason when the score is below its minimum (36.179912ms)
+✔ recommendation engine (36.555219ms)
+▶ what-if projection
+  ✔ at 0% growth, closing a loan gains exactly its remaining interest (38.496632ms)
+✔ what-if projection (38.718946ms)
+▶ financial year reporting
+  ✔ 31 March belongs to the previous FY, 1 April starts the next (1.70643ms)
+  ✔ v_fy_summary splits transactions across the boundary (7.158212ms)
+✔ financial year reporting (9.197266ms)
+▶ views
+  ✔ v_recurring_expenses keeps only categories seen in 3+ distinct months (HAVING) (5.705028ms)
+  ✔ v_net_worth_summary returns a zero row for a user with nothing yet (3.320007ms)
+✔ views (9.430728ms)
+▶ EMI reminders
+  ✔ are generated for an overdue installment, once (17.493154ms)
+✔ EMI reminders (17.753965ms)
+ℹ tests 39
+ℹ suites 14
+ℹ pass 39
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2189.249408

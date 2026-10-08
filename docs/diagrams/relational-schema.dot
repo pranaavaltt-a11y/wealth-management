@@ -1,0 +1,30 @@
+digraph relational_schema {
+  graph [rankdir=LR, splines=spline, nodesep=0.45, ranksep=1.3, fontname="DejaVu Sans", bgcolor="white", pad=0.3];
+  node  [shape=record, fontname="Courier", fontsize=10, color="#3a3733", fontcolor="#3a3733",
+         style=filled, fillcolor="#fbf9f5"];
+  edge  [color="#6b655c", penwidth=1.1, arrowsize=0.9];
+  users [label="USERS|<id> id : bigint  [PK]\l|<name> name : text NN\l|<email> email : text NN  [UQ]\l|<password_hash> password_hash : text NN\l|<role> role : user_role NN\l|<pan_number> pan_number : char(10)  [UQ]\l|<advisor_id> advisor_id : bigint  [FK]\l|<created_at> created_at : timestamptz NN\l"];
+  assets [label="ASSETS|<id> id : bigint  [PK]\l|<user_id> user_id : bigint NN  [FK]\l|<name> name : text NN\l|<asset_type> asset_type : asset_type NN\l|<purchase_value> purchase_value : numeric(15,2) NN\l|<current_value> current_value : numeric(15,2) NN\l|<purchase_date> purchase_date : date NN\l|<valuation_date> valuation_date : date NN\l|<notes> notes : text\l|<created_at> created_at : timestamptz NN\l|<liquidity> liquidity : asset_liquidity NN\l"];
+  loans [label="LOANS|<id> id : bigint  [PK]\l|<user_id> user_id : bigint NN  [FK]\l|<loan_type> loan_type : loan_type NN\l|<lender> lender : text NN\l|<principal> principal : numeric(15,2) NN\l|<interest_rate> interest_rate : numeric(5,2) NN\l|<interest_type> interest_type : interest_type NN\l|<tenure_months> tenure_months : integer NN\l|<start_date> start_date : date NN\l|<status> status : loan_status NN\l|<created_at> created_at : timestamptz NN\l"];
+  emi_schedule [label="EMI_SCHEDULE|<id> id : bigint  [PK]\l|<loan_id> loan_id : bigint NN  [FK]\l|<installment_no> installment_no : integer NN\l|<due_date> due_date : date NN\l|<emi_amount> emi_amount : numeric(15,2) NN\l|<principal_component> principal_component : numeric(15,2) NN\l|<interest_component> interest_component : numeric(15,2) NN\l|<closing_balance> closing_balance : numeric(15,2) NN\l|<status> status : emi_status NN\l|<paid_date> paid_date : date\l"];
+  loan_prepayments [label="LOAN_PREPAYMENTS|<id> id : bigint  [PK]\l|<loan_id> loan_id : bigint NN  [FK]\l|<amount> amount : numeric(15,2) NN\l|<after_installment> after_installment : integer NN\l|<mode> mode : text NN\l|<balance_before> balance_before : numeric(15,2) NN\l|<balance_after> balance_after : numeric(15,2) NN\l|<interest_saved> interest_saved : numeric(15,2) NN\l|<prepaid_on> prepaid_on : date NN\l|<created_at> created_at : timestamptz NN\l"];
+  transactions [label="TRANSACTIONS|<id> id : bigint  [PK]\l|<user_id> user_id : bigint NN  [FK]\l|<txn_type> txn_type : txn_type NN\l|<amount> amount : numeric(15,2) NN\l|<txn_date> txn_date : date NN\l|<category> category : text NN\l|<description> description : text\l|<source> source : txn_source NN\l|<related_asset_id> related_asset_id : bigint  [FK]\l|<related_loan_id> related_loan_id : bigint  [FK]\l|<import_hash> import_hash : text\l|<created_at> created_at : timestamptz NN\l|<import_batch_id> import_batch_id : text\l|<search_vector> search_vector : tsvector\l"];
+  net_worth_snapshots [label="NET_WORTH_SNAPSHOTS|<id> id : bigint  [PK]\l|<user_id> user_id : bigint NN  [FK]\l|<snapshot_date> snapshot_date : date NN\l|<total_assets> total_assets : numeric(15,2) NN\l|<total_liabilities> total_liabilities : numeric(15,2) NN\l|<net_worth> net_worth : numeric(15,2) NN\l|<created_at> created_at : timestamptz NN\l"];
+  credit_score_history [label="CREDIT_SCORE_HISTORY|<id> id : bigint  [PK]\l|<user_id> user_id : bigint NN  [FK]\l|<score> score : integer NN\l|<computed_date> computed_date : date NN\l|<factors_json> factors_json : jsonb NN\l|<created_at> created_at : timestamptz NN\l"];
+  loan_products [label="LOAN_PRODUCTS|<id> id : bigint  [PK]\l|<lender> lender : text NN\l|<product_name> product_name : text NN\l|<loan_type> loan_type : loan_type NN\l|<interest_rate_min> interest_rate_min : numeric(5,2) NN\l|<interest_rate_max> interest_rate_max : numeric(5,2) NN\l|<min_credit_score> min_credit_score : integer NN\l|<max_tenure_months> max_tenure_months : integer NN\l|<min_amount> min_amount : numeric(15,2) NN\l|<max_amount> max_amount : numeric(15,2) NN\l|<processing_fee_pct> processing_fee_pct : numeric(5,2) NN\l|<is_active> is_active : boolean NN\l"];
+  categorization_rules [label="CATEGORIZATION_RULES|<id> id : bigint  [PK]\l|<user_id> user_id : bigint  [FK]\l|<keyword> keyword : text NN\l|<category> category : text NN\l|<txn_type> txn_type : txn_type NN\l|<priority> priority : integer NN\l|<is_active> is_active : boolean NN\l|<created_at> created_at : timestamptz NN\l"];
+  notifications [label="NOTIFICATIONS|<id> id : bigint  [PK]\l|<user_id> user_id : bigint NN  [FK]\l|<kind> kind : text NN\l|<title> title : text NN\l|<body> body : text NN\l|<installment_id> installment_id : bigint  [FK]\l|<due_date> due_date : date\l|<is_read> is_read : boolean NN\l|<created_at> created_at : timestamptz NN\l"];
+  users:advisor_id -> users:id [dir=both, arrowtail=crowodot, arrowhead=teeodot];
+  assets:user_id -> users:id [dir=both, arrowtail=crowodot, arrowhead=teetee];
+  loans:user_id -> users:id [dir=both, arrowtail=crowodot, arrowhead=teetee];
+  emi_schedule:loan_id -> loans:id [dir=both, arrowtail=crowodot, arrowhead=teetee];
+  transactions:user_id -> users:id [dir=both, arrowtail=crowodot, arrowhead=teetee];
+  transactions:related_asset_id -> assets:id [dir=both, arrowtail=crowodot, arrowhead=teeodot];
+  transactions:related_loan_id -> loans:id [dir=both, arrowtail=crowodot, arrowhead=teeodot];
+  net_worth_snapshots:user_id -> users:id [dir=both, arrowtail=crowodot, arrowhead=teetee];
+  credit_score_history:user_id -> users:id [dir=both, arrowtail=crowodot, arrowhead=teetee];
+  categorization_rules:user_id -> users:id [dir=both, arrowtail=crowodot, arrowhead=teeodot];
+  loan_prepayments:loan_id -> loans:id [dir=both, arrowtail=crowodot, arrowhead=teetee];
+  notifications:user_id -> users:id [dir=both, arrowtail=crowodot, arrowhead=teetee];
+  notifications:installment_id -> emi_schedule:id [dir=both, arrowtail=crowodot, arrowhead=teeodot];
+}

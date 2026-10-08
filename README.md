@@ -8,30 +8,38 @@ relational core (users, assets, loans, EMI schedules, ledger, snapshots) and
 statement imports, per-asset-type valuation history, cached news).
 
 > **Simulated financial data.** WealthWise does not connect to any credit
-> bureau, bank API, or payment gateway. The credit score module (Phase 4) is a
+> bureau, bank API, or payment gateway. The credit score is a
 > metric *derived from this application's own repayment records* — it is not a
 > CIBIL/Experian/Equifax score. "Mark EMI paid" records a payment in this
 > ledger; it does not move money. See [Simulated vs. real](#simulated-vs-real).
 
 ---
 
-## Current status — Phase 3 complete
+## Status — complete
+
+All five phases are built and tested: **67 automated tests, all passing.**
 
 | Phase | Scope | State |
 |---|---|---|
-| **1 — Foundation** | Auth & roles, asset CRUD, loan CRUD + generated EMI schedule, manual income/expense ledger | ✅ Built & tested |
-| **2 — Analytics** | Net worth trend, allocation chart, payoff progress, upcoming EMI dues, reporting views | ✅ Built & tested |
-| **3 — Import & documents** | CSV bank import, rule-based auto-categorisation, document vault, ledger full-text search | ✅ Built & tested (receipt OCR pending a decision — see below) |
-| 4 — Smart features | Prepayment simulator, what-if projection, credit score, product recommender, news feed | ◻ |
-| 5 — Polish | FY reporting, PDF statement, EMI reminders | ◻ |
+| **1 — Foundation** | Auth and roles, assets, loans with generated EMI schedules, manual ledger | ✅ |
+| **2 — Analytics** | Net worth trend, allocation, payoff progress, upcoming dues, reporting views | ✅ |
+| **3 — Import & documents** | Bank CSV import, receipt OCR, rule-based categorisation, document vault, full-text search | ✅ |
+| **4 — Smart features** | Prepayment simulator, what-if projection, derived credit score, loan recommendations, news with rate impact | ✅ |
+| **5 — Polish** | Financial-year reports, PDF net worth statement, EMI reminders | ✅ |
 
-Phase 2's **net worth snapshot trigger** was pulled forward into Phase 1,
-because assets and loans are meaningless without something computing net worth
-from them.
+### Deliverables
 
-Phase 2 also closes three gaps against the course requirements: `ALTER`
-statements, SQL `VIEW`s, and a `HAVING` clause — see
-[Course requirement coverage](#course-requirement-coverage).
+| Document | What it is |
+|---|---|
+| [`docs/PROJECT_REPORT.md`](docs/PROJECT_REPORT.md) · [PDF](docs/PROJECT_REPORT.pdf) | The project report: problem, objectives, scope, requirements, ER diagram, schema, DB justification, implementation, queries, architecture, screenshots, testing, conclusion |
+| [`docs/diagrams/er-conceptual.svg`](docs/diagrams/er-conceptual.svg) | Conceptual ER diagram, Chen notation |
+| [`docs/diagrams/relational-schema.svg`](docs/diagrams/relational-schema.svg) | Relational schema, every column, crow's-foot FKs, generated from the live catalogue |
+| [`docs/DATA_DICTIONARY.md`](docs/DATA_DICTIONARY.md) | Every table, column, constraint and index, generated from the live catalogue |
+| [`docs/test-results.txt`](docs/test-results.txt) | Full output of the test suite |
+| [`docs/screenshots/`](docs/screenshots/) | Every page, light and dark |
+
+Regenerate the diagrams and data dictionary after a schema change with
+`npm run docs:generate`.
 
 ---
 
@@ -103,6 +111,8 @@ products.
 npm run dev          # http://localhost:3000
 npm run build && npm start
 npm run typecheck
+npm test             # 28 unit + 39 database tests, against a separate wealthwise_test DB
+npm run docs:generate   # re-derive the diagrams and data dictionary from the live schema
 ```
 
 ---
@@ -160,61 +170,23 @@ reason.
 
 ## Database schema
 
-```
-                        ┌───────────────────────┐
-                        │        users          │
-                        │ id PK                 │
-                        │ name, email UQ        │
-                        │ password_hash         │
-                        │ role  (individual|    │
-                        │        advisor)       │
-                        │ pan_number UQ         │
-                        │ advisor_id FK ────────┼──┐ self-reference:
-                        │ created_at            │◄─┘ advisor → clients
-                        └───────────┬───────────┘
-        ┌───────────────┬───────────┼───────────────┬────────────────┐
-        │               │           │               │                │
-        ▼               ▼           ▼               ▼                ▼
-┌───────────────┐ ┌───────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────────────┐
-│    assets     │ │   loans   │ │ transactions │ │ net_worth_   │ │ credit_score_history │
-│ id PK         │ │ id PK     │ │ id PK        │ │  snapshots   │ │ id PK                │
-│ user_id FK    │ │ user_id FK│ │ user_id FK   │ │ id PK        │ │ user_id FK           │
-│ asset_type    │ │ loan_type │ │ txn_type     │ │ user_id FK   │ │ score  300..900      │
-│ purchase_value│ │ lender    │ │ amount  >0   │ │ snapshot_date│ │ computed_date        │
-│ current_value │ │ principal │ │ txn_date     │ │ total_assets │ │ factors_json  JSONB  │
-│ purchase_date │ │ int_rate  │ │ category     │ │ total_liabs  │ │ UQ(user,date)        │
-│ valuation_date│ │ int_type  │ │ source       │ │ net_worth    │ └──────────────────────┘
-└───────┬───────┘ │ tenure_mo │ │ related_     │ │ UQ(user,date)│
-        │         │ start_date│ │  asset_id FK ├─┘              │ ┌──────────────────────┐
-        │         │ status    │ │  loan_id  FK ├───┐            │ │    loan_products     │
-        │         └─────┬─────┘ │ import_hash  │   │            │ │ id PK                │
-        │               │       └──────────────┘   │            │ │ lender, product_name │
-        │               ▼                          │            │ │ loan_type            │
-        │      ┌────────────────────┐              │            │ │ rate_min .. rate_max │
-        │      │   emi_schedule     │◄─────────────┘            │ │ min_credit_score     │
-        │      │ id PK              │                           │ │ max_tenure_months    │
-        │      │ loan_id FK CASCADE │                           │ │ min/max_amount       │
-        │      │ installment_no     │                           │ │ processing_fee_pct   │
-        │      │ due_date           │  UQ(loan_id,              │ │ (reference data —    │
-        │      │ emi_amount         │      installment_no)      │ │  no user FK)         │
-        │      │ principal_component│                           │ └──────────────────────┘
-        │      │ interest_component │                           │
-        │      │ closing_balance    │                           │
-        │      │ status, paid_date  │                           │
-        │      └────────────────────┘                           │
-        │                                                       │
-        └───── MongoDB ─────────────────────────────────────────┘
-               asset_valuation_history { userId, assetId, valuationDate,
-                                         value, typeSpecificMetadata {…} }
-               documents               { userId, refType, refId, fileUrl, tags[] }
-               raw_imports             { userId, sourceBank, rawRows[], matchStatus }
-               news_articles           { headline, source, category, tags[], body }
-```
+**Conceptual (Chen notation)** — weak entities and identifying relationships
+are drawn with double borders, derived attributes with dashed ellipses.
 
-Cardinality: `users 1—N assets`, `users 1—N loans`, `loans 1—N emi_schedule`,
-`users 1—N transactions` (each optionally referencing one asset **or** one loan),
-`users 1—N net_worth_snapshots` (one per day), `users 1—N credit_score_history`.
-`loan_products` stands alone as reference data.
+![ER diagram](docs/diagrams/er-conceptual.svg)
+
+**Relational** — generated from the live database by `npm run docs:generate`.
+
+![Relational schema](docs/diagrams/relational-schema.svg)
+
+11 tables · 11 views · 14 functions · 1 procedure · 8 triggers · 35 indexes ·
+41 CHECK constraints · 13 foreign keys · 9 enum types. Column-level detail is in
+the [data dictionary](docs/DATA_DICTIONARY.md).
+
+MongoDB holds four collections: `raw_imports`, `asset_valuation_history`,
+`documents` and `news_articles`. Their document shapes and the reason each is a
+document rather than a row are in §7 and §9.4 of the
+[report](docs/PROJECT_REPORT.md#7-database-choice-and-justification).
 
 ### Design decisions worth defending
 
@@ -401,6 +373,23 @@ Aggregation pipelines over these documents arrive in Phases 3–4.
 
 ---
 
+### 11. Phase 4–5 database features (migration 008)
+
+| Feature | Object | What is worth noticing |
+|---|---|---|
+| Prepayment simulator | `fn_simulate_prepayment` | Solves for the new tenure, `n = −ln(1 − B·r/E) / ln(1+r)`; read-only |
+| Prepayment, applied | **`sp_apply_prepayment` (PROCEDURE, `CALL`)** | Row locks with `FOR UPDATE`; debits the source asset so net worth does not move; `INOUT` result |
+| Credit score | `fn_compute_credit_score` | Five weighted factors, 300–900, evaluable *as of* any past date; never presented as a bureau score |
+| Score maintenance | **Statement-level triggers with transition tables** | `REFERENCING OLD TABLE … NEW TABLE`: paying 24 EMIs in one UPDATE rescores once, not 24 times |
+| Recommendations | `fn_recommend_loan_products` | CROSS JOIN of profile × catalogue; rate interpolated in band by score; FOIR ≤ 50%; weighted rank |
+| What-if projection | `fn_project_net_worth` | `generate_series` + `LATERAL`; at 0% growth the gain equals the remaining interest exactly |
+| FY reporting | `fn_fy_start_year` + **expression index** | IMMUTABLE function, indexed; `EXPLAIN` confirms the FY filter uses it |
+| Reminders | `notifications` + `fn_generate_emi_reminders` | Partial unique index makes generation idempotent |
+| Integrity guard | `fn_generate_emi_schedule` | Refuses (`WW409`) to rebuild a schedule that has payments |
+
+Custom SQLSTATEs of the form `WWnnn` carry an HTTP status, so a business-rule
+violation raised in plpgsql reaches the user as a clear 404/409/422, not a 500.
+
 ## Course requirement coverage
 
 Against the *DBMS Level 3 Project Requirements* brief:
@@ -408,12 +397,15 @@ Against the *DBMS Level 3 Project Requirements* brief:
 | § | Requirement | Status |
 |---|---|---|
 | 3 | Two database paradigms — **Option 1: SQL + NoSQL** | ✅ PostgreSQL + MongoDB. (Option 2's vector database is an *alternative* to NoSQL, not an additional requirement.) |
+| 4 | ER diagram converted to a relational schema; NoSQL data model documented | ✅ [Chen ER](docs/diagrams/er-conceptual.svg), [schema](docs/diagrams/relational-schema.svg), [report §5–§9](docs/PROJECT_REPORT.md) |
 | 5 | DDL: `CREATE`, `ALTER`, `DROP`, keys, constraints, indexes, views | ✅ All present as of `005` |
 | 6 | DML with `JOIN`, `GROUP BY`, `HAVING`, `ORDER BY`, aggregates, subqueries | ✅ All present |
-| 7 | ≥ 4 advanced features | ✅ **8**: transactions, stored functions, triggers, views, indexing, window functions, full-text search, NoSQL aggregation |
+| 7 | ≥ 4 advanced features | ✅ **9**: transactions, stored functions, a stored procedure, triggers (incl. statement-level with transition tables), views, indexing (partial, expression, GIN), window functions, full-text search, NoSQL aggregation |
 | 8 | Vector / semantic search | ➖ Optional; deliberately not used — see below |
 | 9–11 | Next.js interface, API layer, env config, auth with ≥ 2 roles | ✅ |
 | 12–13 | Validation at the database level, no plaintext secrets | ✅ |
+| 14 | Documentation | ✅ [Project report](docs/PROJECT_REPORT.md) covers all 14 listed items |
+| 16 | Test cases | ✅ 67 automated tests — `npm test` |
 
 **On the vector database.** §3 offers SQL + NoSQL *or* SQL + Vector; this project
 takes the first. §8 recommends embeddings only for unstructured, text-heavy
@@ -422,8 +414,9 @@ rates, dates, schedules — and its one text-heavy collection (cached news, Phas
 4) is served by tag and category filters. Adding embeddings would be technology
 for its own sake, which §18 explicitly warns against.
 
-Still outstanding, and tracked separately from the code: the formal ER diagram
-and the project report (§4, §14), and per-member commit history (§2, §15).
+**One item is the team's to complete:** §2 and §15 require each member's
+contribution to be visible in the commit history. Fill in §15 of the report and
+make sure each member commits their own work under their own Git identity.
 
 ### MongoDB in this environment
 
@@ -566,14 +559,21 @@ wrong theme.
 | Bank statement import | Requires an account aggregator (RBI AA framework) | User uploads a CSV they downloaded themselves. |
 | Asset valuations | Requires market data feeds | User-entered, with history retained. |
 | Loan products | Requires lender partnerships | Static seeded catalogue of publicly-advertised rates. |
-| News feed | A public news API | Fetched and cached; rate-impact estimates are indicative, not advice. |
+| News feed | A news provider | The RBI press-release RSS feed (official, free, no key), cached in MongoDB. Without Mongo or network access, clearly labelled *illustrative* sample articles are shown instead. Rate-impact figures are indicative, not advice. |
 
 WealthWise is a personal-finance *record-keeping and analysis* tool. It gives no
 financial advice and holds no real account credentials.
 
 ---
 
-## Verified behaviour (Phase 1)
+## Verified behaviour
+
+The authoritative record is the automated suite (`npm test`, 67 tests,
+[results](docs/test-results.txt)) and §13 of the
+[report](docs/PROJECT_REPORT.md#13-testing). The notes below are the
+phase-by-phase verification log kept while building.
+
+### Phase 1
 
 - EMI maths matches the standard reducing-balance formula; generated principal
   components sum to exactly the principal.
@@ -632,3 +632,21 @@ financial advice and holds no real account credentials.
   rejects. Migration `007` replaces it with a correlated subquery. The route
   was also hardened so a failed retroactive sweep can no longer lose the rule
   that was just created.
+
+### Phases 4–5
+
+- ₹5L prepayment on the seeded home loan: saves ₹8.51L interest and 29 months
+  in reduce-tenure mode, versus ₹3.27L in reduce-EMI mode; both simulated
+  schedules end at exactly ₹0.00.
+- Applying ₹3L funded from an FD left net worth unchanged to the paisa; an
+  under-funded attempt failed with nothing written.
+- A +25 bps repo change raises the seeded user's floating-rate EMIs by ₹665.37
+  a month (about ₹96,295 over the remaining tenure).
+- Receipt OCR on a pharmacy bill: 94% confidence in 1.5 s, with merchant, total
+  (Grand Total, not Sub Total), date and GSTIN all correct. Confirming the
+  same receipt twice returns 201, then 409.
+- Defects found and fixed in this phase: prepayment creating net worth from
+  nothing; projection overstating the gain after a reduce-tenure prepayment; a
+  form `step` that made valid amounts unsubmittable; PDF footers spawning blank
+  pages; and a projection chart that was unreadable at scale (now plots the
+  difference).
