@@ -127,3 +127,25 @@ export async function monthlySummary(userId: number, monthStart: string) {
     byCategory: byCategory.map((r) => ({ category: r.category, total: num(r.total), pct: num(r.pct) })),
   };
 }
+
+/**
+ * Records a confirmed receipt as an expense.
+ *
+ * Reuses the import dedupe machinery: the receipt gets an import_hash over
+ * (date, amount, merchant), so the partial unique index on
+ * (user_id, import_hash) refuses the same receipt being confirmed twice.
+ * Returns null on that conflict.
+ */
+export async function createReceiptTransaction(userId: number, input: {
+  amount: number; txnDate: string; merchant: string; category: string; importHash: string;
+}): Promise<Transaction | null> {
+  const rows = await query<Record<string, string | null>>(
+    `INSERT INTO transactions (user_id, txn_type, amount, txn_date, category, description,
+                               source, import_hash)
+     VALUES ($1, 'expense', $2, $3, $4, $5, 'receipt', $6)
+     ON CONFLICT (user_id, import_hash) WHERE import_hash IS NOT NULL DO NOTHING
+     RETURNING ${TXN_COLS}`,
+    [userId, input.amount, input.txnDate, input.category, input.merchant, input.importHash],
+  );
+  return rows[0] ? toTxn(rows[0]) : null;
+}

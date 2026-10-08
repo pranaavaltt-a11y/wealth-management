@@ -214,6 +214,25 @@ async function main() {
         txnCount++;
       }
     }
+    // Rahul: a younger salary, so his affordability (FOIR) is actually tested
+    // by the recommendation engine rather than skipped for lack of income.
+    for (let m = 11; m >= 0; m--) {
+      const month = monthsBack(m);
+      await client.query(
+        `INSERT INTO transactions (user_id, txn_type, amount, txn_date, category, description, source)
+         VALUES ($1, 'income', $2, $3, 'Salary', 'Monthly salary credit — TCS', 'manual')`,
+        [rahul.id, Math.round(92_000 * (0.98 + Math.random() * 0.04)), shiftDay(month, 1)],
+      );
+      for (const [category, base, description] of EXPENSES.slice(0, 7)) {
+        await client.query(
+          `INSERT INTO transactions (user_id, txn_type, amount, txn_date, category, description, source)
+           VALUES ($1, 'expense', $2, $3, $4, $5, 'manual')`,
+          [rahul.id, Math.round(base * 0.55 * (0.8 + Math.random() * 0.45)),
+           shiftDay(month, 3 + Math.floor(Math.random() * 24)), category, description],
+        );
+      }
+      txnCount += 8;
+    }
     console.log(`  transactions: ${txnCount}`);
 
     // ------------------------------------------------------- loan_products
@@ -254,6 +273,46 @@ async function main() {
       }
     }
     console.log('  net worth snapshots: 13 months backfilled per user');
+
+    // Rahul gets a less tidy repayment record, so the credit score, reminders
+    // and overdue paths all have something real to show: one EMI paid nine
+    // days late, and the most recent one still unpaid.
+    await client.query(
+      `UPDATE emi_schedule e SET paid_date = e.due_date + 9
+         FROM loans l
+        WHERE e.loan_id = l.id AND l.user_id = $1 AND e.status = 'paid'
+          AND e.installment_no = 6`,
+      [rahul.id],
+    );
+    await client.query(
+      `UPDATE emi_schedule e SET status = 'pending', paid_date = NULL
+         FROM loans l
+        WHERE e.loan_id = l.id AND l.user_id = $1
+          AND e.installment_no = (SELECT MAX(e2.installment_no) FROM emi_schedule e2
+                                   WHERE e2.loan_id = e.loan_id AND e2.status = 'paid')`,
+      [rahul.id],
+    );
+    await client.query('SELECT fn_mark_overdue_emis($1)', [rahul.id]);
+
+    // A year of month-end credit scores. fn_compute_credit_score evaluates only
+    // the data visible on each as-of date, so this is a genuine history, not a
+    // flat line copied backwards.
+    for (const uid of [priya.id, rahul.id]) {
+      for (let m = 12; m >= 1; m--) {
+        await client.query(
+          `SELECT fn_compute_credit_score($1,
+             (date_trunc('month', CURRENT_DATE) - ($2 || ' months')::INTERVAL)::date)`,
+          [uid, m],
+        );
+      }
+      await client.query('SELECT fn_compute_credit_score($1)', [uid]);
+      await client.query('SELECT fn_generate_emi_reminders($1)', [uid]);
+    }
+    const { rows: scores } = await client.query<{ name: string; score: number }>(
+      `SELECT u.name, c.score FROM credit_score_history c JOIN users u ON u.id = c.user_id
+        WHERE c.computed_date = CURRENT_DATE ORDER BY u.id`,
+    );
+    console.log(`  credit scores: ${scores.map((r) => `${r.name} ${r.score}`).join(', ')} (13 months each)`);
 
     await client.query('COMMIT');
     console.log(`\nSeed complete. Log in with any of:`);

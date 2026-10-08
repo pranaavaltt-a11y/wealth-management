@@ -55,6 +55,11 @@ const BADGE_TONE: Record<string, string> = {
   loan: 'text-warning border-warning',
   fixed: 'text-fg-muted border-line-strong',
   floating: 'text-warning border-warning',
+  eligible: 'text-positive border-positive',
+  ineligible: 'text-fg-faint border-line-strong',
+  duplicate: 'text-fg-faint border-line-strong',
+  receipt: 'text-purple border-purple',
+  sample: 'text-warning border-warning',
 };
 
 export function Badge({ value }: { value: string }) {

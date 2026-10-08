@@ -23,7 +23,17 @@ export function apiError(err: unknown): NextResponse {
   }
 
   // Postgres constraint violations become friendly 409/422s instead of 500s.
-  const pg = err as { code?: string; constraint?: string; detail?: string };
+  const pg = err as { code?: string; constraint?: string; detail?: string; message?: string; hint?: string };
+
+  // Our own stored procedures raise SQLSTATEs of the form WWnnn, where nnn is
+  // the HTTP status to return. The message was written by us in the
+  // migration, so it is safe to show the user verbatim.
+  if (pg?.code && /^WW\d{3}$/.test(pg.code)) {
+    return NextResponse.json(
+      { error: pg.message, hint: pg.hint },
+      { status: Number(pg.code.slice(2)) },
+    );
+  }
   if (pg?.code === '23505') {
     return NextResponse.json({ error: 'That record already exists.' }, { status: 409 });
   }

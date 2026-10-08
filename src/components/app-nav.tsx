@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { ThemeToggle } from '@/components/theme-provider';
 import { api } from '@/lib/client';
+import { NotificationBell } from '@/components/notification-bell';
 
 const LINKS = [
   { href: '/dashboard',    label: 'Dashboard' },
@@ -12,6 +13,9 @@ const LINKS = [
   { href: '/transactions', label: 'Ledger' },
   { href: '/import',       label: 'Import' },
   { href: '/vault',        label: 'Vault' },
+  { href: '/insights',     label: 'Insights' },
+  { href: '/reports',      label: 'Reports' },
+  { href: '/news',         label: 'News' },
 ];
 
 export function AppNav({ user }: { user: { name: string; role: string } }) {
@@ -31,14 +35,14 @@ export function AppNav({ user }: { user: { name: string; role: string } }) {
           WealthWise
         </Link>
 
-        <nav className="flex items-center gap-1">
-          {LINKS.map((l) => {
+        <nav className="flex flex-wrap items-center gap-1">
+          {(user.role === 'advisor' ? [{ href: '/advisor', label: 'Clients' }, ...LINKS] : LINKS).map((l) => {
             const active = pathname === l.href || pathname.startsWith(`${l.href}/`);
             return (
               <Link
                 key={l.href}
                 href={l.href}
-                className={`border px-2.5 py-1 text-sm transition-colors ${
+                className={`rounded-md border px-2.5 py-1 text-sm transition-colors ${
                   active
                     ? 'border-accent text-accent'
                     : 'border-transparent text-fg-muted hover:border-line hover:text-fg'
@@ -55,6 +59,7 @@ export function AppNav({ user }: { user: { name: string; role: string } }) {
             {user.name}
             {user.role === 'advisor' && <span className="ml-1.5 badge border-purple text-purple">advisor</span>}
           </span>
+          <NotificationBell />
           <ThemeToggle />
           <button onClick={logout} className="btn px-2 py-1 text-xs">
             Sign out
