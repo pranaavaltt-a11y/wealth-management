@@ -1,0 +1,98 @@
+# PES1UG24AM387 - DBMS Lab 09 - Task 2: Redis Lab (PromptPal)
+PING
+ECHO "PES1UG24AM387"
+
+# Q1
+FLUSHDB
+MSET quota:u1 20 quota:u2 50
+MGET quota:u1 quota:u2
+
+# Q2
+FLUSHDB
+RPUSH conv:101 "Hello" "Hi! How can I help?"
+LRANGE conv:101 0 -1
+LPUSH conv:101 "SYSTEM: be concise"
+LRANGE conv:101 0 -1
+
+# Q3
+FLUSHDB
+HSET user:1 name "Meera" plan "free" credits "10"
+HGET user:1 plan
+HGETALL user:1
+HINCRBY user:1 credits 50
+HLEN user:1
+
+# Q4
+FLUSHDB
+SET otp:u1 "483920" EX 120
+SET quota:u1 "20"
+INCRBY quota:u1 -3
+SET status:u1 "Online"
+APPEND status:u1 " (busy)"
+MGET otp:u1 quota:u1 quota:u99
+
+# Q5
+FLUSHDB
+SADD beta:gpt-next u1 u2 u3
+SMEMBERS beta:gpt-next
+SISMEMBER beta:gpt-next u3
+SADD beta:gpt-next u2 u4
+SCARD beta:gpt-next
+SREM beta:gpt-next u4
+
+# Q6
+FLUSHDB
+ZADD leaderboard:tokens 500 ava 800 ben 300 cara
+ZCARD leaderboard:tokens
+ZREVRANGE leaderboard:tokens 0 -1
+ZINCRBY leaderboard:tokens 700 cara
+ZREVRANGE leaderboard:tokens 0 -1 WITHSCORES
+
+# Q7
+FLUSHDB
+RPUSH tickets "T1" "T2" "T3"
+LPUSH tickets "URGENT-1"
+LRANGE tickets 0 -1
+LPOP tickets
+RPOP tickets
+RPUSH tickets "T4" "T5"
+LTRIM tickets 0 1
+LRANGE tickets 0 -1
+
+# Q8
+FLUSHDB
+HSET user:2 name "Ravi" plan "pro" credits "100"
+HINCRBY user:2 credits -30
+HINCRBY user:2 messages 1
+HDEL user:2 plan
+HEXISTS user:2 plan
+HLEN user:2
+HGETALL user:2
+
+# Q9
+FLUSHDB
+ZADD leaderboard:tokens 500 ava 800 ben 300 cara 600 dev
+ZCARD leaderboard:tokens
+ZREVRANGE leaderboard:tokens 0 -1
+ZINCRBY leaderboard:tokens 400 ava
+ZREVRANK leaderboard:tokens ava
+ZRANK leaderboard:tokens cara
+ZREM leaderboard:tokens ben
+ZREVRANGE leaderboard:tokens 0 -1 WITHSCORES
+
+# Q10
+FLUSHDB
+# 1. String
+SET otp:u5 "7781" EX 60
+# 2. List
+RPUSH conv:5 "Hi"
+# 3. Hash
+HSET user:5 name "Neha" plan "free"
+# 4. Set
+SADD beta:gpt-next u5
+# 5. Sorted Set
+ZADD leaderboard:tokens 250 u5
+# 6. Repeat part 4
+SADD beta:gpt-next u5
+# 7. List operation on a Hash key
+RPUSH user:5 "hello"
