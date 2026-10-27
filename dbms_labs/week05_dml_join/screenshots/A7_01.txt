@@ -4,11 +4,11 @@
 +------------+------------+--------------+----------+--------------+
 |          8 |          1 | 2026-06-01   | 45000.00 | Online       |
 +------------+------------+--------------+----------+--------------+
-1 row in set (0.002 sec)
+1 row in set (0.003 sec)
 
 (PES1UG24AM387@root) [smart_hostel]> DELETE FROM payment
     -> WHERE Payment_ID NOT IN (SELECT Payment_ID FROM receipt);
-Query OK, 1 row affected (0.002 sec)
+Query OK, 1 row affected (0.006 sec)
 
 (PES1UG24AM387@root) [smart_hostel]> SELECT * FROM payment;
 +------------+------------+--------------+----------+--------------+

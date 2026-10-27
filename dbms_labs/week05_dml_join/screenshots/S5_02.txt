@@ -31,7 +31,7 @@
 | DOB         | date        | NO   |     | NULL    |       |
 | Email       | varchar(60) | NO   | UNI | NULL    |       |
 +-------------+-------------+------+-----+---------+-------+
-7 rows in set (0.001 sec)
+7 rows in set (0.002 sec)
 
 (PES1UG24AM387@root) [smart_hostel]> DESC student_phone;
 +--------------+-------------+------+-----+---------+-------+

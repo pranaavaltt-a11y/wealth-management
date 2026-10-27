@@ -1,7 +1,7 @@
 (PES1UG24AM387@root) [smart_hostel]> UPDATE allocation
     -> SET Check_out_Date = '2026-08-20'
     -> WHERE Student_ID = 3 AND Hostel_ID = 1 AND Room_Number = 102 AND Check_ou t_Date IS NULL;
-Query OK, 1 row affected (0.004 sec)
+Query OK, 1 row affected (0.002 sec)
 Rows matched: 1  Changed: 1  Warnings: 0
 
 (PES1UG24AM387@root) [smart_hostel]> UPDATE bed

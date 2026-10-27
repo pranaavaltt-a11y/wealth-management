@@ -7,7 +7,7 @@
 | Operating_Hours | varchar(30) | YES  |     | 24x7    |       |
 | Hostel_ID       | int(11)     | NO   | MUL | NULL    |       |
 +-----------------+-------------+------+-----+---------+-------+
-4 rows in set (0.001 sec)
+4 rows in set (0.003 sec)
 
 (PES1UG24AM387@root) [smart_hostel]> DESC uses;
 +-------------+---------+------+-----+---------+-------+
@@ -31,4 +31,4 @@
 | Check_in_Date   | date    | NO   |     | NULL    |       |
 | Check_out_Date  | date    | YES  |     | NULL    |       |
 +-----------------+---------+------+-----+---------+-------+
-7 rows in set (0.001 sec)
+7 rows in set (0.002 sec)

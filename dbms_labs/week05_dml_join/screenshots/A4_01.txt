@@ -1,5 +1,5 @@
 (PES1UG24AM387@root) [smart_hostel]> UPDATE staff SET Salary = Salary * 1.10 WHE RE Designation = 'Warden';
-Query OK, 3 rows affected (0.002 sec)
+Query OK, 3 rows affected (0.003 sec)
 Rows matched: 3  Changed: 3  Warnings: 0
 
 (PES1UG24AM387@root) [smart_hostel]> SELECT Staff_ID, Staff_Name, Designation, S alary FROM staff WHERE Designation = 'Warden';

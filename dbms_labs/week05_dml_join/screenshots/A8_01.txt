@@ -15,6 +15,6 @@
 | Aditya Verma  | Student |
 | Neha Kulkarni | Student |
 +---------------+---------+
-5 rows in set (0.001 sec)
+5 rows in set (0.002 sec)
 
 (PES1UG24AM387@root) [smart_hostel]> 

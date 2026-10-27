@@ -7,14 +7,14 @@
     ->     (6, 'Ishita', 'P', 'Bansal', 'F', '2005-05-09', 'ishita.bansal@pes.ed u'),
     ->     (7, 'Arjun', NULL, 'Reddy', 'M', '2005-02-27', 'arjun.reddy@pes.edu') ,
     ->     (8, 'Meera', 'S', 'Pillai', 'F', '2004-12-12', 'meera.pillai@pes.edu' );
-Query OK, 8 rows affected (0.002 sec)
+Query OK, 8 rows affected (0.003 sec)
 Records: 8  Duplicates: 0  Warnings: 0
 
 (PES1UG24AM387@root) [smart_hostel]> INSERT INTO student_phone (Student_ID, Phon e_Number) VALUES
     ->     (1, '9876500001'), (1, '9876500011'), (2, '9876500002'), (3, '9876500 003'),
     ->     (4, '9876500004'), (4, '9876500014'), (5, '9876500005'), (6, '9876500 006'),
     ->     (7, '9876500007'), (8, '9876500008');
-Query OK, 10 rows affected (0.004 sec)
+Query OK, 10 rows affected (0.001 sec)
 Records: 10  Duplicates: 0  Warnings: 0
 
 (PES1UG24AM387@root) [smart_hostel]> INSERT INTO facility (Facility_ID, Facility _Name, Operating_Hours, Hostel_ID) VALUES
@@ -23,7 +23,7 @@ Records: 10  Duplicates: 0  Warnings: 0
     ->     (3, 'Gym', '05:00-22:00', 2),
     ->     (4, 'Study Room', '24 Hours', 2),
     ->     (5, 'Common Room', '08:00-23:00', 3);
-Query OK, 5 rows affected (0.003 sec)
+Query OK, 5 rows affected (0.002 sec)
 Records: 5  Duplicates: 0  Warnings: 0
 
 (PES1UG24AM387@root) [smart_hostel]> INSERT INTO uses (Student_ID, Facility_ID,  Usage_Date) VALUES

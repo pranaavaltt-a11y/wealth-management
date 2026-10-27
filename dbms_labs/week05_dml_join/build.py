@@ -1,5 +1,5 @@
-"""Run PES1UG24AM387_Lab04_DML_Join.sql in an interactive mysql client (pty),
-save real terminal screenshots per step, and build PES1UG24AM387_Lab04_DML_Join.pdf.
+"""Run PES1UG24AM387_Lab05_DML_Join.sql in an interactive mysql client (pty),
+save real terminal screenshots per step, and build PES1UG24AM387_Lab05_DML_Join.pdf.
 
 Usage: python3 build.py   (needs a running MySQL/MariaDB server, reportlab, Pillow)
 """
@@ -21,7 +21,7 @@ from reportlab.platypus import (Image, KeepTogether, PageBreak, Paragraph, Prefo
 
 HERE = Path(__file__).parent
 SRN = "PES1UG24AM387"
-SQL = HERE / f"{SRN}_Lab04_DML_Join.sql"
+SQL = HERE / f"{SRN}_Lab05_DML_Join.sql"
 SHOTS = HERE / "screenshots"
 PROMPT_RE = re.compile(r"(\(PES1UG24AM387@[^)]*\) \[[^\]]*\]> |MariaDB \[[^\]]*\]> |mysql> )$")
 MAX_LINES = 46
@@ -133,10 +133,10 @@ def build_pdf(steps):
     body = ParagraphStyle("b", parent=ss["BodyText"], fontSize=10, leading=13)
     code = ParagraphStyle("c", parent=ss["Code"], fontSize=8.2, leading=10,
                           backColor="#f3f3f3", borderPadding=4, leftIndent=4)
-    doc = SimpleDocTemplate(str(HERE / f"{SRN}_Lab04_DML_Join.pdf"), pagesize=A4,
+    doc = SimpleDocTemplate(str(HERE / f"{SRN}_Lab05_DML_Join.pdf"), pagesize=A4,
                             leftMargin=1.5 * cm, rightMargin=1.5 * cm,
                             topMargin=1.4 * cm, bottomMargin=1.4 * cm,
-                            title=f"{SRN} Lab04 DML Join")
+                            title=f"{SRN} Lab05 DML Join")
     W, H = A4[0] - 3 * cm, A4[1] - 2.8 * cm
 
     def shot(name, max_h):
@@ -146,13 +146,13 @@ def build_pdf(steps):
         return img
 
     story = [Spacer(1, 3 * cm),
-             Paragraph("Database Management Systems - Week 5", ss["Title"]),
+             Paragraph("Database Management Systems - Lab 05", ss["Title"]),
              Paragraph("DML and Join SQL Queries", ss["Heading2"]),
              Paragraph("Smart Hostel Management System - A Case Study", ss["Heading3"]),
              Spacer(1, 1 * cm), Paragraph(f"<b>SRN:</b> {SRN}", body), Spacer(1, 0.3 * cm),
              Paragraph("Contents: (1) schema creation screenshots, (2) inserted data "
                        "screenshots, (3) Part A questions 1-10 and Part B questions 1-12, each "
-                       f"with its SQL query and output. SQL file: {SRN}_Lab04_DML_Join.sql.", body)]
+                       f"with its SQL query and output. SQL file: {SRN}_Lab05_DML_Join.sql.", body)]
     sections = {"P": "Task 1 : Database Preparation - Schema creation",
                 "D1": "Task 1 : Inserted data",
                 "A1": "Task 2 : Part A - DML and Set Operations",

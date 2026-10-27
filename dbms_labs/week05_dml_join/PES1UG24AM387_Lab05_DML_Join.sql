@@ -1,5 +1,5 @@
 -- =====================================================================
--- DBMS Week 5 : DML and Join SQL Queries
+-- DBMS Lab 05 (Week 5) : DML and Join SQL Queries
 -- Smart Hostel Management System
 -- SRN : PES1UG24AM387
 -- =====================================================================

@@ -11,6 +11,6 @@
 |           4 | Study Room    | 24 Hours        | Blue Ridge Hostel |
 |           5 | Common Room   | 08:00-23:00     | Lake View Hostel  |
 +-------------+---------------+-----------------+-------------------+
-5 rows in set (0.001 sec)
+5 rows in set (0.002 sec)
 
 (PES1UG24AM387@root) [smart_hostel]> 

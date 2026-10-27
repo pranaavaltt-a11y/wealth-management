@@ -20,14 +20,14 @@ Records: 8  Duplicates: 0  Warnings: 0
     ->     (6, 6, '2026-01-14', 48000, 'Online'),
     ->     (7, 7, '2026-01-15', 40000, 'Cash'),
     ->     (8, 1, '2026-06-01', 45000, 'Online');
-Query OK, 8 rows affected (0.002 sec)
+Query OK, 8 rows affected (0.001 sec)
 Records: 8  Duplicates: 0  Warnings: 0
 
 (PES1UG24AM387@root) [smart_hostel]> INSERT INTO receipt (Receipt_ID, Payment_ID , Receipt_Date) VALUES
     ->     (1, 1, '2026-01-10'), (2, 2, '2026-01-11'), (3, 3, '2026-01-12'),
     ->     (4, 4, '2026-01-10'), (5, 5, '2026-01-13'), (6, 6, '2026-01-14'),
     ->     (7, 7, '2026-01-15');
-Query OK, 7 rows affected (0.003 sec)
+Query OK, 7 rows affected (0.002 sec)
 Records: 7  Duplicates: 0  Warnings: 0
 
 (PES1UG24AM387@root) [smart_hostel]> 

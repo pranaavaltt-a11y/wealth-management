@@ -14,8 +14,8 @@
 | Laundry Room  | Aditya Verma   | 2026-01-21 |
 | Study Room    | Ishita Bansal  | 2026-01-22 |
 | Study Room    | Sanya Malhotra | 2026-01-25 |
-| WiFi Lounge   | Neha Kulkarni  | 2026-01-20 |
 | WiFi Lounge   | Aditya Verma   | 2026-01-20 |
+| WiFi Lounge   | Neha Kulkarni  | 2026-01-20 |
 | WiFi Lounge   | Rohan Shetty   | 2026-01-22 |
 | WiFi Lounge   | Kabir Oberoi   | 2026-08-22 |
 +---------------+----------------+------------+

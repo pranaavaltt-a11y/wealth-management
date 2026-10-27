@@ -12,6 +12,6 @@
 |           4 | Study Room    |          2 |
 |           5 | Common Room   |          2 |
 +-------------+---------------+------------+
-5 rows in set (0.001 sec)
+5 rows in set (0.002 sec)
 
 (PES1UG24AM387@root) [smart_hostel]> 
