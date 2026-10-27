@@ -1,0 +1,42 @@
+(PES1UG24AM387@root@localhost)[smart_hostel]> ALTER TABLE facility_usage DROP FOREIGN KEY fk_usage_student;
+Query OK, 0 rows affected (0.005 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> ALTER TABLE facility_usage DROP FOREIGN KEY fk_usage_facility;
+Query OK, 0 rows affected (0.006 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> ALTER TABLE facility_usage DROP PRIMARY KEY;
+Query OK, 0 rows affected (0.009 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> DESC facility_usage;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| Student_ID  | varchar(15) | NO   |     | NULL    |       |
+| Facility_ID | varchar(10) | NO   | MUL | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+2 rows in set (0.001 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> DROP TABLE facility_usage;
+Query OK, 0 rows affected (0.007 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> SHOW TABLES;
++------------------------+
+| Tables_in_smart_hostel |
++------------------------+
+| allocation             |
+| facility               |
+| hostel                 |
+| payment                |
+| receipt                |
+| room                   |
+| room_bed               |
+| staff                  |
+| student_phone          |
+| students               |
++------------------------+
+10 rows in set (0.001 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> 

@@ -1,0 +1,17 @@
+(PES1UG24AM387@root@localhost)[smart_hostel]> ALTER TABLE staff DROP COLUMN Position;
+Query OK, 0 rows affected (0.006 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> DESC staff;
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| Staff_ID      | varchar(10)   | NO   | PRI | NULL    |       |
+| Name          | varchar(50)   | NO   |     | NULL    |       |
+| Salary        | decimal(10,2) | NO   |     | NULL    |       |
+| Hostel_ID     | varchar(10)   | NO   | MUL | NULL    |       |
+| Supervisor_ID | varchar(10)   | YES  | MUL | NULL    |       |
++---------------+---------------+------+-----+---------+-------+
+5 rows in set (0.001 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> 

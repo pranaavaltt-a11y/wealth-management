@@ -1,0 +1,35 @@
+(PES1UG24AM387@root@localhost)[smart_hostel]> DESC student;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| Student_ID    | varchar(15) | NO   | PRI | NULL    |       |
+| First_Name    | varchar(30) | NO   |     | NULL    |       |
+| Middle_Name   | varchar(30) | YES  |     | NULL    |       |
+| Last_Name     | varchar(30) | NO   |     | NULL    |       |
+| Gender        | char(1)     | NO   |     | NULL    |       |
+| Date_of_Birth | date        | NO   |     | NULL    |       |
+| Email_Address | varchar(50) | NO   | UNI | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+7 rows in set (0.001 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> DESC student_phone;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| Student_ID   | varchar(15) | NO   | PRI | NULL    |       |
+| Phone_Number | varchar(15) | NO   | PRI | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+2 rows in set (0.001 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> DESC allocation;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| Student_ID      | varchar(15) | NO   | PRI | NULL    |       |
+| Hostel_ID       | varchar(10) | NO   | PRI | NULL    |       |
+| Room_Number     | varchar(10) | NO   | PRI | NULL    |       |
+| Allocation_Date | date        | NO   |     | NULL    |       |
+| Check_in_Date   | date        | YES  |     | NULL    |       |
+| Check_out_Date  | date        | YES  |     | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+6 rows in set (0.001 sec)

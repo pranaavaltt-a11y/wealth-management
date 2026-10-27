@@ -1,0 +1,46 @@
+(PES1UG24AM387@root@localhost)[smart_hostel]> SELECT TABLE_NAME, CONSTRAINT_NAME, CONSTRAINT_TYPE
+    -> FROM information_schema.TABLE_CONSTRAINTS
+    -> WHERE CONSTRAINT_SCHEMA = 'smart_hostel'
+    -> ORDER BY TABLE_NAME, CONSTRAINT_TYPE, CONSTRAINT_NAME;
++----------------+-------------------------+-----------------+
+| TABLE_NAME     | CONSTRAINT_NAME         | CONSTRAINT_TYPE |
++----------------+-------------------------+-----------------+
+| allocation     | chk_alloc_checkin       | CHECK           |
+| allocation     | chk_alloc_checkout      | CHECK           |
+| allocation     | fk_alloc_room           | FOREIGN KEY     |
+| allocation     | fk_alloc_student        | FOREIGN KEY     |
+| allocation     | PRIMARY                 | PRIMARY KEY     |
+| facility       | fk_facility_hostel      | FOREIGN KEY     |
+| facility       | PRIMARY                 | PRIMARY KEY     |
+| facility       | uq_facility_hostel_name | UNIQUE          |
+| facility_usage | fk_usage_facility       | FOREIGN KEY     |
+| facility_usage | fk_usage_student        | FOREIGN KEY     |
+| facility_usage | PRIMARY                 | PRIMARY KEY     |
+| hostel         | chk_hostel_capacity     | CHECK           |
+| hostel         | PRIMARY                 | PRIMARY KEY     |
+| hostel         | uq_hostel_name          | UNIQUE          |
+| payment        | chk_payment_amount      | CHECK           |
+| payment        | chk_payment_type        | CHECK           |
+| payment        | fk_payment_student      | FOREIGN KEY     |
+| payment        | PRIMARY                 | PRIMARY KEY     |
+| receipt        | fk_receipt_payment      | FOREIGN KEY     |
+| receipt        | PRIMARY                 | PRIMARY KEY     |
+| receipt        | uq_receipt_payment      | UNIQUE          |
+| room           | chk_room_floor          | CHECK           |
+| room           | fk_room_hostel          | FOREIGN KEY     |
+| room           | PRIMARY                 | PRIMARY KEY     |
+| room_bed       | chk_bed_availability    | CHECK           |
+| room_bed       | fk_bed_room             | FOREIGN KEY     |
+| room_bed       | PRIMARY                 | PRIMARY KEY     |
+| staff          | chk_staff_salary        | CHECK           |
+| staff          | fk_staff_hostel         | FOREIGN KEY     |
+| staff          | PRIMARY                 | PRIMARY KEY     |
+| student        | chk_student_gender      | CHECK           |
+| student        | PRIMARY                 | PRIMARY KEY     |
+| student        | uq_student_email        | UNIQUE          |
+| student_phone  | fk_phone_student        | FOREIGN KEY     |
+| student_phone  | PRIMARY                 | PRIMARY KEY     |
++----------------+-------------------------+-----------------+
+35 rows in set (0.004 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> 

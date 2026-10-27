@@ -1,0 +1,18 @@
+(PES1UG24AM387@root@localhost)[smart_hostel]> ALTER TABLE staff RENAME COLUMN Designation TO Position;
+Query OK, 0 rows affected (0.008 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> DESC staff;
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| Staff_ID      | varchar(10)   | NO   | PRI | NULL    |       |
+| Name          | varchar(50)   | NO   |     | NULL    |       |
+| Salary        | decimal(10,2) | NO   |     | NULL    |       |
+| Position      | varchar(30)   | NO   |     | Cleaner |       |
+| Hostel_ID     | varchar(10)   | NO   | MUL | NULL    |       |
+| Supervisor_ID | varchar(10)   | YES  | MUL | NULL    |       |
++---------------+---------------+------+-----+---------+-------+
+6 rows in set (0.001 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> 

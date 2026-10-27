@@ -1,0 +1,40 @@
+(PES1UG24AM387@root@localhost)[smart_hostel]> CREATE TABLE facility (
+    ->     Facility_ID      VARCHAR(10) NOT NULL,
+    ->     Facility_Name    VARCHAR(40) NOT NULL,
+    ->     Operating_Hours  VARCHAR(30) NOT NULL DEFAULT '06:00-22:00',
+    ->     Hostel_ID        VARCHAR(10) NOT NULL,
+    ->     CONSTRAINT pk_facility PRIMARY KEY (Facility_ID),
+    ->     CONSTRAINT uq_facility_hostel_name UNIQUE (Hostel_ID, Facility_Name),
+    ->     CONSTRAINT fk_facility_hostel FOREIGN KEY (Hostel_ID)
+    ->         REFERENCES hostel (Hostel_ID) ON DELETE CASCADE
+    -> );
+Query OK, 0 rows affected, 1 warning (0.005 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> CREATE TABLE facility_usage (
+    ->     Student_ID   VARCHAR(15) NOT NULL,
+    ->     Facility_ID  VARCHAR(10) NOT NULL,
+    ->     CONSTRAINT pk_facility_usage PRIMARY KEY (Student_ID, Facility_ID),
+    ->     CONSTRAINT fk_usage_student FOREIGN KEY (Student_ID)
+    ->         REFERENCES student (Student_ID) ON DELETE CASCADE,
+    ->     CONSTRAINT fk_usage_facility FOREIGN KEY (Facility_ID)
+    ->         REFERENCES facility (Facility_ID) ON DELETE CASCADE
+    -> );
+Query OK, 0 rows affected, 1 warning (0.006 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> SHOW TABLES;
++------------------------+
+| Tables_in_smart_hostel |
++------------------------+
+| allocation             |
+| facility               |
+| facility_usage         |
+| hostel                 |
+| payment                |
+| receipt                |
+| room                   |
+| room_bed               |
+| staff                  |
+| student                |
+| student_phone          |
++------------------------+
+11 rows in set (0.001 sec)

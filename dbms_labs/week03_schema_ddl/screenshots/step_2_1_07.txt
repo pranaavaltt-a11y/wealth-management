@@ -1,0 +1,41 @@
+(PES1UG24AM387@root@localhost)[smart_hostel]> DESC payment;
++--------------+---------------+------+-----+---------+-------+
+| Field        | Type          | Null | Key | Default | Extra |
++--------------+---------------+------+-----+---------+-------+
+| Payment_ID   | varchar(15)   | NO   | PRI | NULL    |       |
+| Payment_Date | date          | NO   |     | NULL    |       |
+| Amount       | decimal(10,2) | NO   |     | NULL    |       |
+| Payment_Type | varchar(20)   | NO   |     | UPI     |       |
+| Student_ID   | varchar(15)   | NO   | MUL | NULL    |       |
++--------------+---------------+------+-----+---------+-------+
+5 rows in set (0.001 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> DESC receipt;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| Receipt_ID   | varchar(15) | NO   | PRI | NULL    |       |
+| Receipt_Date | date        | NO   |     | NULL    |       |
+| Payment_ID   | varchar(15) | NO   | UNI | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+3 rows in set (0.002 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> DESC facility;
++-----------------+-------------+------+-----+-------------+-------+
+| Field           | Type        | Null | Key | Default     | Extra |
++-----------------+-------------+------+-----+-------------+-------+
+| Facility_ID     | varchar(10) | NO   | PRI | NULL        |       |
+| Facility_Name   | varchar(40) | NO   |     | NULL        |       |
+| Operating_Hours | varchar(30) | NO   |     | 06:00-22:00 |       |
+| Hostel_ID       | varchar(10) | NO   | MUL | NULL        |       |
++-----------------+-------------+------+-----+-------------+-------+
+4 rows in set (0.001 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> DESC facility_usage;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| Student_ID  | varchar(15) | NO   | PRI | NULL    |       |
+| Facility_ID | varchar(10) | NO   | PRI | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+2 rows in set (0.001 sec)

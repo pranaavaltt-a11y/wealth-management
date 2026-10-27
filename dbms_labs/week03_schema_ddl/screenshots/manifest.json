@@ -1,0 +1,79 @@
+[
+  {
+    "step": "0",
+    "title": "Set the mysql prompt",
+    "images": [
+      "step_0_01.png"
+    ]
+  },
+  {
+    "step": "2.1",
+    "title": "Create the database and the tables (PK, NOT NULL, UNIQUE,",
+    "images": [
+      "step_2_1_01.png",
+      "step_2_1_02.png",
+      "step_2_1_03.png",
+      "step_2_1_04.png",
+      "step_2_1_05.png",
+      "step_2_1_06.png",
+      "step_2_1_07.png",
+      "step_2_1_08.png"
+    ]
+  },
+  {
+    "step": "2.2",
+    "title": "Add a new attribute as the first column of FACILITY, with a default",
+    "images": [
+      "step_2_2_01.png"
+    ]
+  },
+  {
+    "step": "2.3",
+    "title": "Add the foreign key missed in CREATE TABLE:",
+    "images": [
+      "step_2_3_01.png"
+    ]
+  },
+  {
+    "step": "2.4",
+    "title": "Rename Designation to Position in STAFF",
+    "images": [
+      "step_2_4_01.png"
+    ]
+  },
+  {
+    "step": "2.5",
+    "title": "Change Gender from CHAR to ENUM",
+    "images": [
+      "step_2_5_01.png"
+    ]
+  },
+  {
+    "step": "2.6",
+    "title": "Drop the column Position from STAFF",
+    "images": [
+      "step_2_6_01.png"
+    ]
+  },
+  {
+    "step": "2.7",
+    "title": "Change the size of Email_Address in STUDENT (50 -> 100)",
+    "images": [
+      "step_2_7_01.png"
+    ]
+  },
+  {
+    "step": "2.8",
+    "title": "Rename table student to students",
+    "images": [
+      "step_2_8_01.png"
+    ]
+  },
+  {
+    "step": "2.9",
+    "title": "Drop one table (facility_usage) after dropping its constraints",
+    "images": [
+      "step_2_9_01.png"
+    ]
+  }
+]

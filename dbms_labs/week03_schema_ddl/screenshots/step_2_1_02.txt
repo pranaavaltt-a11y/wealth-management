@@ -1,0 +1,34 @@
+(PES1UG24AM387@root@localhost)[smart_hostel]> CREATE TABLE room_bed (
+    ->     Hostel_ID     VARCHAR(10) NOT NULL,
+    ->     Room_Number   VARCHAR(10) NOT NULL,
+    ->     Bed_Number    INT         NOT NULL,
+    ->     Availability  VARCHAR(12) NOT NULL DEFAULT 'Available',
+    ->     CONSTRAINT pk_room_bed PRIMARY KEY (Hostel_ID, Room_Number, Bed_Number),
+    ->     CONSTRAINT chk_bed_availability CHECK (Availability IN ('Available', 'Occupied')),
+    ->     CONSTRAINT fk_bed_room FOREIGN KEY (Hostel_ID, Room_Number)
+    ->         REFERENCES room (Hostel_ID, Room_Number) ON DELETE CASCADE
+    -> );
+Query OK, 0 rows affected, 1 warning (0.005 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> CREATE TABLE student (
+    ->     Student_ID     VARCHAR(15) NOT NULL,
+    ->     First_Name     VARCHAR(30) NOT NULL,
+    ->     Middle_Name    VARCHAR(30) NULL,
+    ->     Last_Name      VARCHAR(30) NOT NULL,
+    ->     Gender         CHAR(1)     NOT NULL,
+    ->     Date_of_Birth  DATE        NOT NULL,
+    ->     Email_Address  VARCHAR(50) NOT NULL,
+    ->     CONSTRAINT pk_student PRIMARY KEY (Student_ID),
+    ->     CONSTRAINT uq_student_email UNIQUE (Email_Address),
+    ->     CONSTRAINT chk_student_gender CHECK (Gender IN ('M', 'F', 'O'))
+    -> );
+Query OK, 0 rows affected, 1 warning (0.006 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> CREATE TABLE student_phone (
+    ->     Student_ID    VARCHAR(15) NOT NULL,
+    ->     Phone_Number  VARCHAR(15) NOT NULL,
+    ->     CONSTRAINT pk_student_phone PRIMARY KEY (Student_ID, Phone_Number),
+    ->     CONSTRAINT fk_phone_student FOREIGN KEY (Student_ID)
+    ->         REFERENCES student (Student_ID) ON DELETE CASCADE
+    -> );
+Query OK, 0 rows affected, 1 warning (0.006 sec)

@@ -1,0 +1,19 @@
+(PES1UG24AM387@root@localhost)[smart_hostel]> ALTER TABLE student MODIFY COLUMN Gender ENUM('M', 'F', 'O') NOT NULL;
+Query OK, 0 rows affected (0.007 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> DESC student;
++---------------+-------------------+------+-----+---------+-------+
+| Field         | Type              | Null | Key | Default | Extra |
++---------------+-------------------+------+-----+---------+-------+
+| Student_ID    | varchar(15)       | NO   | PRI | NULL    |       |
+| First_Name    | varchar(30)       | NO   |     | NULL    |       |
+| Middle_Name   | varchar(30)       | YES  |     | NULL    |       |
+| Last_Name     | varchar(30)       | NO   |     | NULL    |       |
+| Gender        | enum('M','F','O') | NO   |     | NULL    |       |
+| Date_of_Birth | date              | NO   |     | NULL    |       |
+| Email_Address | varchar(50)       | NO   | UNI | NULL    |       |
++---------------+-------------------+------+-----+---------+-------+
+7 rows in set (0.001 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> 

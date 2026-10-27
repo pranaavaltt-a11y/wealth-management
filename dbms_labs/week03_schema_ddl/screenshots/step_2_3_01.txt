@@ -1,0 +1,42 @@
+(PES1UG24AM387@root@localhost)[smart_hostel]> ALTER TABLE staff
+    ->     ADD CONSTRAINT fk_staff_supervisor FOREIGN KEY (Supervisor_ID)
+    ->         REFERENCES staff (Staff_ID) ON DELETE SET NULL;
+Query OK, 0 rows affected (0.008 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> DESC staff;
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| Staff_ID      | varchar(10)   | NO   | PRI | NULL    |       |
+| Name          | varchar(50)   | NO   |     | NULL    |       |
+| Salary        | decimal(10,2) | NO   |     | NULL    |       |
+| Designation   | varchar(30)   | NO   |     | Cleaner |       |
+| Hostel_ID     | varchar(10)   | NO   | MUL | NULL    |       |
+| Supervisor_ID | varchar(10)   | YES  | MUL | NULL    |       |
++---------------+---------------+------+-----+---------+-------+
+6 rows in set (0.001 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> SELECT CONSTRAINT_NAME, TABLE_NAME, REFERENCED_TABLE_NAME, UPDATE_RULE, DELETE_RULE
+    -> FROM information_schema.REFERENTIAL_CONSTRAINTS
+    -> WHERE CONSTRAINT_SCHEMA = 'smart_hostel'
+    -> ORDER BY TABLE_NAME, CONSTRAINT_NAME;
++---------------------+----------------+-----------------------+-------------+-------------+
+| CONSTRAINT_NAME     | TABLE_NAME     | REFERENCED_TABLE_NAME | UPDATE_RULE | DELETE_RULE |
++---------------------+----------------+-----------------------+-------------+-------------+
+| fk_alloc_room       | allocation     | room                  | CASCADE     | RESTRICT    |
+| fk_alloc_student    | allocation     | student               | RESTRICT    | CASCADE     |
+| fk_facility_hostel  | facility       | hostel                | RESTRICT    | CASCADE     |
+| fk_usage_facility   | facility_usage | facility              | RESTRICT    | CASCADE     |
+| fk_usage_student    | facility_usage | student               | RESTRICT    | CASCADE     |
+| fk_payment_student  | payment        | student               | RESTRICT    | CASCADE     |
+| fk_receipt_payment  | receipt        | payment               | RESTRICT    | CASCADE     |
+| fk_room_hostel      | room           | hostel                | RESTRICT    | CASCADE     |
+| fk_bed_room         | room_bed       | room                  | RESTRICT    | CASCADE     |
+| fk_staff_hostel     | staff          | hostel                | CASCADE     | RESTRICT    |
+| fk_staff_supervisor | staff          | staff                 | RESTRICT    | SET NULL    |
+| fk_phone_student    | student_phone  | student               | RESTRICT    | CASCADE     |
++---------------------+----------------+-----------------------+-------------+-------------+
+12 rows in set (0.001 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> 

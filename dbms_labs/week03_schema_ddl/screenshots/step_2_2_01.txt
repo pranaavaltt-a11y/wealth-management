@@ -1,0 +1,18 @@
+(PES1UG24AM387@root@localhost)[smart_hostel]> ALTER TABLE facility
+    ->     ADD COLUMN Facility_Status VARCHAR(12) NOT NULL DEFAULT 'Active' FIRST;
+Query OK, 0 rows affected (0.005 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> DESC facility;
++-----------------+-------------+------+-----+-------------+-------+
+| Field           | Type        | Null | Key | Default     | Extra |
++-----------------+-------------+------+-----+-------------+-------+
+| Facility_Status | varchar(12) | NO   |     | Active      |       |
+| Facility_ID     | varchar(10) | NO   | PRI | NULL        |       |
+| Facility_Name   | varchar(40) | NO   |     | NULL        |       |
+| Operating_Hours | varchar(30) | NO   |     | 06:00-22:00 |       |
+| Hostel_ID       | varchar(10) | NO   | MUL | NULL        |       |
++-----------------+-------------+------+-----+-------------+-------+
+5 rows in set (0.001 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> 

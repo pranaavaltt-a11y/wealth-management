@@ -1,0 +1,44 @@
+(PES1UG24AM387@root@localhost)[smart_hostel]> DESC hostel;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| Hostel_ID   | varchar(10)  | NO   | PRI | NULL    |       |
+| Hostel_Name | varchar(50)  | NO   | UNI | NULL    |       |
+| Location    | varchar(100) | NO   |     | NULL    |       |
+| Capacity    | int(11)      | NO   |     | 100     |       |
++-------------+--------------+------+-----+---------+-------+
+4 rows in set (0.001 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> DESC staff;
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| Staff_ID      | varchar(10)   | NO   | PRI | NULL    |       |
+| Name          | varchar(50)   | NO   |     | NULL    |       |
+| Salary        | decimal(10,2) | NO   |     | NULL    |       |
+| Designation   | varchar(30)   | NO   |     | Cleaner |       |
+| Hostel_ID     | varchar(10)   | NO   | MUL | NULL    |       |
+| Supervisor_ID | varchar(10)   | YES  |     | NULL    |       |
++---------------+---------------+------+-----+---------+-------+
+6 rows in set (0.001 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> DESC room;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| Hostel_ID   | varchar(10) | NO   | PRI | NULL    |       |
+| Room_Number | varchar(10) | NO   | PRI | NULL    |       |
+| Floor       | int(11)     | NO   |     | 0       |       |
++-------------+-------------+------+-----+---------+-------+
+3 rows in set (0.001 sec)
+
+(PES1UG24AM387@root@localhost)[smart_hostel]> DESC room_bed;
++--------------+-------------+------+-----+-----------+-------+
+| Field        | Type        | Null | Key | Default   | Extra |
++--------------+-------------+------+-----+-----------+-------+
+| Hostel_ID    | varchar(10) | NO   | PRI | NULL      |       |
+| Room_Number  | varchar(10) | NO   | PRI | NULL      |       |
+| Bed_Number   | int(11)     | NO   | PRI | NULL      |       |
+| Availability | varchar(12) | NO   |     | Available |       |
++--------------+-------------+------+-----+-----------+-------+
+4 rows in set (0.001 sec)
