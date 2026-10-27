@@ -1,0 +1,34 @@
+(PES1UG24AM387@root) [smart_hostel]> DESC facility;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| Facility_ID     | int(11)     | NO   | PRI | NULL    |       |
+| Facility_Name   | varchar(40) | NO   |     | NULL    |       |
+| Operating_Hours | varchar(30) | YES  |     | 24x7    |       |
+| Hostel_ID       | int(11)     | NO   | MUL | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+4 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> DESC uses;
++-------------+---------+------+-----+---------+-------+
+| Field       | Type    | Null | Key | Default | Extra |
++-------------+---------+------+-----+---------+-------+
+| Student_ID  | int(11) | NO   | PRI | NULL    |       |
+| Facility_ID | int(11) | NO   | PRI | NULL    |       |
+| Usage_Date  | date    | NO   | PRI | NULL    |       |
++-------------+---------+------+-----+---------+-------+
+3 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> DESC allocation;
++-----------------+---------+------+-----+---------+-------+
+| Field           | Type    | Null | Key | Default | Extra |
++-----------------+---------+------+-----+---------+-------+
+| Allocation_ID   | int(11) | NO   | PRI | NULL    |       |
+| Student_ID      | int(11) | NO   | MUL | NULL    |       |
+| Hostel_ID       | int(11) | NO   | MUL | NULL    |       |
+| Room_Number     | int(11) | NO   |     | NULL    |       |
+| Allocation_Date | date    | NO   |     | NULL    |       |
+| Check_in_Date   | date    | NO   |     | NULL    |       |
+| Check_out_Date  | date    | YES  |     | NULL    |       |
++-----------------+---------+------+-----+---------+-------+
+7 rows in set (0.001 sec)

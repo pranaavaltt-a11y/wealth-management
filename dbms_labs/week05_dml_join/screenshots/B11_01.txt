@@ -1,0 +1,16 @@
+(PES1UG24AM387@root) [smart_hostel]> SELECT f.Facility_ID, f.Facility_Name, f.Op erating_Hours, h.Hostel_Name
+    -> FROM hostel h
+    -> RIGHT JOIN facility f ON f.Hostel_ID = h.Hostel_ID
+    -> ORDER BY f.Facility_ID;
++-------------+---------------+-----------------+-------------------+
+| Facility_ID | Facility_Name | Operating_Hours | Hostel_Name       |
++-------------+---------------+-----------------+-------------------+
+|           1 | WiFi Lounge   | 24 Hours        | Sunrise Hostel    |
+|           2 | Laundry Room  | 06:00-20:00     | Sunrise Hostel    |
+|           3 | Gym           | 05:00-22:00     | Blue Ridge Hostel |
+|           4 | Study Room    | 24 Hours        | Blue Ridge Hostel |
+|           5 | Common Room   | 08:00-23:00     | Lake View Hostel  |
++-------------+---------------+-----------------+-------------------+
+5 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

@@ -1,0 +1,19 @@
+(PES1UG24AM387@root) [smart_hostel]> SELECT st.Staff_ID, st.Staff_Name, st.Desig nation, h.Hostel_Name, h.Location
+    -> FROM staff st
+    -> INNER JOIN hostel h ON h.Hostel_ID = st.Hostel_ID
+    -> ORDER BY st.Staff_ID;
++----------+---------------+-------------+-------------------+--------------+
+| Staff_ID | Staff_Name    | Designation | Hostel_Name       | Location     |
++----------+---------------+-------------+-------------------+--------------+
+|        1 | Ramesh Iyer   | Warden      | Sunrise Hostel    | North Campus |
+|        2 | Sunil Kumar   | Security    | Sunrise Hostel    | North Campus |
+|        3 | Geeta Rao     | Cleaner     | Sunrise Hostel    | North Campus |
+|        4 | Anita Sharma  | Warden      | Blue Ridge Hostel | South Campus |
+|        5 | Mohan Das     | Security    | Blue Ridge Hostel | South Campus |
+|        6 | Priya Menon   | Maintenance | Blue Ridge Hostel | South Campus |
+|        7 | Kiran Bose    | Warden      | Lake View Hostel  | East Campus  |
+|        8 | Farhan Sheikh | Cleaner     | Lake View Hostel  | East Campus  |
++----------+---------------+-------------+-------------------+--------------+
+8 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

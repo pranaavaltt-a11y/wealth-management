@@ -1,0 +1,39 @@
+(PES1UG24AM387@root) [smart_hostel]> CREATE TABLE allocation (
+    ->     Allocation_ID    INT  NOT NULL,
+    ->     Student_ID       INT  NOT NULL,
+    ->     Hostel_ID        INT  NOT NULL,
+    ->     Room_Number      INT  NOT NULL,
+    ->     Allocation_Date  DATE NOT NULL,
+    ->     Check_in_Date    DATE NOT NULL,
+    ->     Check_out_Date   DATE NULL,
+    ->     CONSTRAINT pk_allocation PRIMARY KEY (Allocation_ID),
+    ->     CONSTRAINT fk_alloc_student FOREIGN KEY (Student_ID)
+    ->         REFERENCES student (Student_ID) ON DELETE CASCADE,
+    ->     CONSTRAINT fk_alloc_room FOREIGN KEY (Hostel_ID, Room_Number)
+    ->         REFERENCES room (Hostel_ID, Room_Number) ON DELETE CASCADE
+    -> );
+Query OK, 0 rows affected, 1 warning (0.007 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> CREATE TABLE payment (
+    ->     Payment_ID    INT           NOT NULL,
+    ->     Student_ID    INT           NOT NULL,
+    ->     Payment_Date  DATE          NOT NULL,
+    ->     Amount        DECIMAL(10,2) NOT NULL,
+    ->     Payment_Type  VARCHAR(20)   NOT NULL,
+    ->     CONSTRAINT pk_payment PRIMARY KEY (Payment_ID),
+    ->     CONSTRAINT chk_payment_amount CHECK (Amount > 0),
+    ->     CONSTRAINT fk_payment_student FOREIGN KEY (Student_ID) REFERENCES stu dent (Student_ID)
+    -> );
+Query OK, 0 rows affected, 1 warning (0.006 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> CREATE TABLE receipt (
+    ->     Receipt_ID    INT  NOT NULL,
+    ->     Payment_ID    INT  NOT NULL,
+    ->     Receipt_Date  DATE NOT NULL,
+    ->     CONSTRAINT pk_receipt PRIMARY KEY (Receipt_ID),
+    ->     CONSTRAINT uq_receipt_payment UNIQUE (Payment_ID),
+    ->     CONSTRAINT fk_receipt_payment FOREIGN KEY (Payment_ID) REFERENCES pay ment (Payment_ID)
+    -> );
+Query OK, 0 rows affected, 1 warning (0.007 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

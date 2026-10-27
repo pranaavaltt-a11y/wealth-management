@@ -1,0 +1,37 @@
+(PES1UG24AM387@root) [smart_hostel]> SELECT * FROM hostel;
++-----------+-------------------+--------------+----------+
+| Hostel_ID | Hostel_Name       | Location     | Capacity |
++-----------+-------------------+--------------+----------+
+|         1 | Sunrise Hostel    | North Campus |      120 |
+|         2 | Blue Ridge Hostel | South Campus |       90 |
+|         3 | Lake View Hostel  | East Campus  |       60 |
++-----------+-------------------+--------------+----------+
+3 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> SELECT * FROM staff;
++----------+---------------+----------+-------------+-----------+---------------+
+| Staff_ID | Staff_Name    | Salary   | Designation | Hostel_ID | Supervisor_ID |
++----------+---------------+----------+-------------+-----------+---------------+
+|        1 | Ramesh Iyer   | 45000.00 | Warden      |         1 |          NULL |
+|        2 | Sunil Kumar   | 22000.00 | Security    |         1 |             1 |
+|        3 | Geeta Rao     | 18000.00 | Cleaner     |         1 |             1 |
+|        4 | Anita Sharma  | 46000.00 | Warden      |         2 |          NULL |
+|        5 | Mohan Das     | 21000.00 | Security    |         2 |             4 |
+|        6 | Priya Menon   | 25000.00 | Maintenance |         2 |             4 |
+|        7 | Kiran Bose    | 44000.00 | Warden      |         3 |          NULL |
+|        8 | Farhan Sheikh | 17500.00 | Cleaner     |         3 |             7 |
++----------+---------------+----------+-------------+-----------+---------------+
+8 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> SELECT * FROM room;
++-----------+-------------+-------+
+| Hostel_ID | Room_Number | Floor |
++-----------+-------------+-------+
+|         1 |         101 |     1 |
+|         1 |         102 |     1 |
+|         1 |         201 |     2 |
+|         2 |         101 |     1 |
+|         2 |         102 |     1 |
+|         3 |         101 |     1 |
++-----------+-------------+-------+
+6 rows in set (0.001 sec)

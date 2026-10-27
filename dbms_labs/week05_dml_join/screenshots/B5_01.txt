@@ -1,0 +1,15 @@
+(PES1UG24AM387@root) [smart_hostel]> SELECT h.Hostel_ID, h.Hostel_Name, COUNT(a. Student_ID) AS Current_Residents
+    -> FROM hostel h
+    -> LEFT JOIN allocation a ON a.Hostel_ID = h.Hostel_ID AND a.Check_out_Date  IS NULL
+    -> GROUP BY h.Hostel_ID, h.Hostel_Name
+    -> ORDER BY h.Hostel_ID;
++-----------+-------------------+-------------------+
+| Hostel_ID | Hostel_Name       | Current_Residents |
++-----------+-------------------+-------------------+
+|         1 | Sunrise Hostel    |                 2 |
+|         2 | Blue Ridge Hostel |                 3 |
+|         3 | Lake View Hostel  |                 1 |
++-----------+-------------------+-------------------+
+3 rows in set (0.002 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

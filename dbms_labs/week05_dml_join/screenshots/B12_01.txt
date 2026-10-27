@@ -1,0 +1,20 @@
+(PES1UG24AM387@root) [smart_hostel]> SELECT s.First_Name, s.Last_Name, s.Email A S Email_Address, a.Room_Number
+    -> FROM student s
+    -> LEFT JOIN allocation a ON a.Student_ID = s.Student_ID AND a.Check_out_Dat e IS NULL
+    -> ORDER BY s.Student_ID;
++------------+-----------+------------------------+-------------+
+| First_Name | Last_Name | Email_Address          | Room_Number |
++------------+-----------+------------------------+-------------+
+| Aditya     | Verma     | aditya.verma@pes.edu   |         101 |
+| Neha       | Kulkarni  | neha.kulkarni@pes.edu  |         101 |
+| Rohan      | Shetty    | rohan.shetty@pes.edu   |        NULL |
+| Sanya      | Malhotra  | sanya.malhotra@pes.edu |         101 |
+| Vikram     | Nair      | vikram.nair@pes.edu    |         102 |
+| Ishita     | Bansal    | ishita.bansal@pes.edu  |         102 |
+| Arjun      | Reddy     | arjun.reddy@pes.edu    |         101 |
+| Meera      | Pillai    | meera.pillai@pes.edu   |        NULL |
+| Kabir      | Oberoi    | kabir.oberoi@pes.edu   |        NULL |
++------------+-----------+------------------------+-------------+
+9 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

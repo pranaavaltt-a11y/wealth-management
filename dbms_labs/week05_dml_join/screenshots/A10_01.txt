@@ -1,0 +1,12 @@
+(PES1UG24AM387@root) [smart_hostel]> SELECT Student_ID, First_Name, Last_Name FR OM student
+    -> EXCEPT
+    -> SELECT s.Student_ID, s.First_Name, s.Last_Name
+    -> FROM student s JOIN payment p ON p.Student_ID = s.Student_ID;
++------------+------------+-----------+
+| Student_ID | First_Name | Last_Name |
++------------+------------+-----------+
+|          8 | Meera      | Pillai    |
++------------+------------+-----------+
+1 row in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

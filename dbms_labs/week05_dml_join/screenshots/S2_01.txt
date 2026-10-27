@@ -1,0 +1,34 @@
+(PES1UG24AM387@root) [smart_hostel]> CREATE TABLE hostel (
+    ->     Hostel_ID    INT          NOT NULL,
+    ->     Hostel_Name  VARCHAR(50)  NOT NULL,
+    ->     Location     VARCHAR(100) NOT NULL,
+    ->     Capacity     INT          NOT NULL DEFAULT 0,
+    ->     CONSTRAINT pk_hostel PRIMARY KEY (Hostel_ID),
+    ->     CONSTRAINT chk_hostel_capacity CHECK (Capacity >= 0)
+    -> );
+Query OK, 0 rows affected, 1 warning (0.006 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> CREATE TABLE staff (
+    ->     Staff_ID       INT           NOT NULL,
+    ->     Staff_Name     VARCHAR(50)   NOT NULL,
+    ->     Salary         DECIMAL(10,2) NOT NULL,
+    ->     Designation    VARCHAR(30)   NOT NULL DEFAULT 'Support Staff',
+    ->     Hostel_ID      INT           NOT NULL,
+    ->     Supervisor_ID  INT           NULL,
+    ->     CONSTRAINT pk_staff PRIMARY KEY (Staff_ID),
+    ->     CONSTRAINT chk_staff_salary CHECK (Salary > 0),
+    ->     CONSTRAINT fk_staff_hostel FOREIGN KEY (Hostel_ID) REFERENCES hostel  (Hostel_ID),
+    ->     CONSTRAINT fk_staff_supervisor FOREIGN KEY (Supervisor_ID)
+    ->         REFERENCES staff (Staff_ID) ON DELETE SET NULL
+    -> );
+Query OK, 0 rows affected, 1 warning (0.007 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> CREATE TABLE room (
+    ->     Hostel_ID    INT NOT NULL,
+    ->     Room_Number  INT NOT NULL,
+    ->     Floor        INT NOT NULL DEFAULT 0,
+    ->     CONSTRAINT pk_room PRIMARY KEY (Hostel_ID, Room_Number),
+    ->     CONSTRAINT fk_room_hostel FOREIGN KEY (Hostel_ID)
+    ->         REFERENCES hostel (Hostel_ID) ON DELETE CASCADE
+    -> );
+Query OK, 0 rows affected, 1 warning (0.008 sec)

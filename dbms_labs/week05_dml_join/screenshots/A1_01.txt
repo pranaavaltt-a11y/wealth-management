@@ -1,0 +1,13 @@
+(PES1UG24AM387@root) [smart_hostel]> INSERT INTO student (Student_ID, First_Name , Middle_Name, Last_Name, Gender, DOB, Email)
+    -> VALUES (9, 'Kabir', 'S', 'Oberoi', 'M', '2005-08-19', 'kabir.oberoi@pes.e du');
+Query OK, 1 row affected (0.002 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> SELECT * FROM student WHERE Student_ID = 9; 
++------------+------------+-------------+-----------+--------+------------+----------------------+
+| Student_ID | First_Name | Middle_Name | Last_Name | Gender | DOB        | Email                |
++------------+------------+-------------+-----------+--------+------------+----------------------+
+|          9 | Kabir      | S           | Oberoi    | M      | 2005-08-19 | kabir.oberoi@pes.edu |
++------------+------------+-------------+-----------+--------+------------+----------------------+
+1 row in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

@@ -1,0 +1,13 @@
+(PES1UG24AM387@root) [smart_hostel]> CREATE TABLE bed (
+    ->     Hostel_ID    INT         NOT NULL,
+    ->     Room_Number  INT         NOT NULL,
+    ->     Bed_Number   INT         NOT NULL,
+    ->     Status       VARCHAR(10) NOT NULL DEFAULT 'Vacant',
+    ->     CONSTRAINT pk_bed PRIMARY KEY (Hostel_ID, Room_Number, Bed_Number),
+    ->     CONSTRAINT chk_bed_status CHECK (Status IN ('Occupied', 'Vacant')),
+    ->     CONSTRAINT fk_bed_room FOREIGN KEY (Hostel_ID, Room_Number)
+    ->         REFERENCES room (Hostel_ID, Room_Number) ON DELETE CASCADE
+    -> );
+Query OK, 0 rows affected, 1 warning (0.006 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

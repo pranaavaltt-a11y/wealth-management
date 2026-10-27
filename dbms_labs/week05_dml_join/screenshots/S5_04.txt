@@ -1,0 +1,23 @@
+(PES1UG24AM387@root) [smart_hostel]> DESC payment;
++--------------+---------------+------+-----+---------+-------+
+| Field        | Type          | Null | Key | Default | Extra |
++--------------+---------------+------+-----+---------+-------+
+| Payment_ID   | int(11)       | NO   | PRI | NULL    |       |
+| Student_ID   | int(11)       | NO   | MUL | NULL    |       |
+| Payment_Date | date          | NO   |     | NULL    |       |
+| Amount       | decimal(10,2) | NO   |     | NULL    |       |
+| Payment_Type | varchar(20)   | NO   |     | NULL    |       |
++--------------+---------------+------+-----+---------+-------+
+5 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> DESC receipt;
++--------------+---------+------+-----+---------+-------+
+| Field        | Type    | Null | Key | Default | Extra |
++--------------+---------+------+-----+---------+-------+
+| Receipt_ID   | int(11) | NO   | PRI | NULL    |       |
+| Payment_ID   | int(11) | NO   | UNI | NULL    |       |
+| Receipt_Date | date    | NO   |     | NULL    |       |
++--------------+---------+------+-----+---------+-------+
+3 rows in set (0.002 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

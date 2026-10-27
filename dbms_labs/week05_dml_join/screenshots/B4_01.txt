@@ -1,0 +1,12 @@
+(PES1UG24AM387@root) [smart_hostel]> SELECT s.Student_ID, s.First_Name, s.Last_N ame
+    -> FROM student s
+    -> LEFT JOIN uses u ON u.Student_ID = s.Student_ID
+    -> WHERE u.Student_ID IS NULL;
++------------+------------+-----------+
+| Student_ID | First_Name | Last_Name |
++------------+------------+-----------+
+|          8 | Meera      | Pillai    |
++------------+------------+-----------+
+1 row in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

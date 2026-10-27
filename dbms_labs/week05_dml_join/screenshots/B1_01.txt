@@ -1,0 +1,19 @@
+(PES1UG24AM387@root) [smart_hostel]> SELECT s.Student_ID, s.First_Name, s.Middle _Name, s.Last_Name, h.Hostel_Name, a.Room_Number
+    -> FROM student s
+    -> INNER JOIN allocation a ON a.Student_ID = s.Student_ID
+    -> INNER JOIN hostel h ON h.Hostel_ID = a.Hostel_ID
+    -> WHERE a.Check_out_Date IS NULL
+    -> ORDER BY s.Student_ID;
++------------+------------+-------------+-----------+-------------------+-------------+
+| Student_ID | First_Name | Middle_Name | Last_Name | Hostel_Name       | Room_Number |
++------------+------------+-------------+-----------+-------------------+-------------+
+|          1 | Aditya     | NULL        | Verma     | Sunrise Hostel    |         101 |
+|          2 | Neha       | R           | Kulkarni  | Sunrise Hostel    |         101 |
+|          4 | Sanya      | K           | Malhotra  | Blue Ridge Hostel |         101 |
+|          5 | Vikram     | NULL        | Nair      | Blue Ridge Hostel |         102 |
+|          6 | Ishita     | P           | Bansal    | Blue Ridge Hostel |         102 |
+|          7 | Arjun      | NULL        | Reddy     | Lake View Hostel  |         101 |
++------------+------------+-------------+-----------+-------------------+-------------+
+6 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

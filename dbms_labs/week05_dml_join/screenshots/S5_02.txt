@@ -1,0 +1,43 @@
+(PES1UG24AM387@root) [smart_hostel]> DESC room;
++-------------+---------+------+-----+---------+-------+
+| Field       | Type    | Null | Key | Default | Extra |
++-------------+---------+------+-----+---------+-------+
+| Hostel_ID   | int(11) | NO   | PRI | NULL    |       |
+| Room_Number | int(11) | NO   | PRI | NULL    |       |
+| Floor       | int(11) | NO   |     | 0       |       |
++-------------+---------+------+-----+---------+-------+
+3 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> DESC bed;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| Hostel_ID   | int(11)     | NO   | PRI | NULL    |       |
+| Room_Number | int(11)     | NO   | PRI | NULL    |       |
+| Bed_Number  | int(11)     | NO   | PRI | NULL    |       |
+| Status      | varchar(10) | NO   |     | Vacant  |       |
++-------------+-------------+------+-----+---------+-------+
+4 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> DESC student;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| Student_ID  | int(11)     | NO   | PRI | NULL    |       |
+| First_Name  | varchar(30) | NO   |     | NULL    |       |
+| Middle_Name | varchar(30) | YES  |     | NULL    |       |
+| Last_Name   | varchar(30) | NO   |     | NULL    |       |
+| Gender      | char(1)     | NO   |     | NULL    |       |
+| DOB         | date        | NO   |     | NULL    |       |
+| Email       | varchar(60) | NO   | UNI | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+7 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> DESC student_phone;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| Student_ID   | int(11)     | NO   | PRI | NULL    |       |
+| Phone_Number | varchar(15) | NO   | PRI | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+2 rows in set (0.001 sec)

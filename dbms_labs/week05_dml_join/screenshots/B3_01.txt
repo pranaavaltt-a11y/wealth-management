@@ -1,0 +1,21 @@
+(PES1UG24AM387@root) [smart_hostel]> SELECT p.Payment_ID, CONCAT(s.First_Name, '  ', s.Last_Name) AS Student_Name,
+    ->        p.Payment_Date, p.Amount, p.Payment_Type, r.Receipt_ID
+    -> FROM payment p
+    -> INNER JOIN student s ON s.Student_ID = p.Student_ID
+    -> LEFT JOIN receipt r ON r.Payment_ID = p.Payment_ID
+    -> ORDER BY p.Payment_ID;
++------------+----------------+--------------+----------+--------------+------------+
+| Payment_ID | Student_Name   | Payment_Date | Amount   | Payment_Type | Receipt_ID |
++------------+----------------+--------------+----------+--------------+------------+
+|          1 | Aditya Verma   | 2026-01-10   | 45000.00 | Online       |          1 |
+|          2 | Neha Kulkarni  | 2026-01-11   | 45000.00 | Cash         |          2 |
+|          3 | Rohan Shetty   | 2026-01-12   | 42000.00 | Card         |          3 |
+|          4 | Sanya Malhotra | 2026-01-10   | 48000.00 | Online       |          4 |
+|          5 | Vikram Nair    | 2026-01-13   | 48000.00 | Cheque       |          5 |
+|          6 | Ishita Bansal  | 2026-01-14   | 48000.00 | Online       |          6 |
+|          7 | Arjun Reddy    | 2026-01-15   | 40000.00 | Cash         |          7 |
+|          9 | Kabir Oberoi   | 2026-08-22   | 45000.00 | Online       |          8 |
++------------+----------------+--------------+----------+--------------+------------+
+8 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

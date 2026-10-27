@@ -1,0 +1,20 @@
+(PES1UG24AM387@root) [smart_hostel]> SELECT * FROM bed;
++-----------+-------------+------------+----------+
+| Hostel_ID | Room_Number | Bed_Number | Status   |
++-----------+-------------+------------+----------+
+|         1 |         101 |          1 | Occupied |
+|         1 |         101 |          2 | Occupied |
+|         1 |         102 |          1 | Occupied |
+|         1 |         102 |          2 | Vacant   |
+|         1 |         201 |          1 | Occupied |
+|         1 |         201 |          2 | Vacant   |
+|         2 |         101 |          1 | Occupied |
+|         2 |         101 |          2 | Vacant   |
+|         2 |         102 |          1 | Occupied |
+|         2 |         102 |          2 | Occupied |
+|         3 |         101 |          1 | Occupied |
+|         3 |         101 |          2 | Vacant   |
++-----------+-------------+------------+----------+
+12 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

@@ -1,0 +1,28 @@
+(PES1UG24AM387@root) [smart_hostel]> SELECT * FROM payment WHERE Payment_ID NOT  IN (SELECT Payment_ID FROM receipt);
++------------+------------+--------------+----------+--------------+
+| Payment_ID | Student_ID | Payment_Date | Amount   | Payment_Type |
++------------+------------+--------------+----------+--------------+
+|          8 |          1 | 2026-06-01   | 45000.00 | Online       |
++------------+------------+--------------+----------+--------------+
+1 row in set (0.002 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> DELETE FROM payment
+    -> WHERE Payment_ID NOT IN (SELECT Payment_ID FROM receipt);
+Query OK, 1 row affected (0.002 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> SELECT * FROM payment;
++------------+------------+--------------+----------+--------------+
+| Payment_ID | Student_ID | Payment_Date | Amount   | Payment_Type |
++------------+------------+--------------+----------+--------------+
+|          1 |          1 | 2026-01-10   | 45000.00 | Online       |
+|          2 |          2 | 2026-01-11   | 45000.00 | Cash         |
+|          3 |          3 | 2026-01-12   | 42000.00 | Card         |
+|          4 |          4 | 2026-01-10   | 48000.00 | Online       |
+|          5 |          5 | 2026-01-13   | 48000.00 | Cheque       |
+|          6 |          6 | 2026-01-14   | 48000.00 | Online       |
+|          7 |          7 | 2026-01-15   | 40000.00 | Cash         |
+|          9 |          9 | 2026-08-22   | 45000.00 | Online       |
++------------+------------+--------------+----------+--------------+
+8 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

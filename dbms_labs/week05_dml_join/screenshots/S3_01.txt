@@ -1,0 +1,47 @@
+(PES1UG24AM387@root) [smart_hostel]> CREATE TABLE student (
+    ->     Student_ID   INT         NOT NULL,
+    ->     First_Name   VARCHAR(30) NOT NULL,
+    ->     Middle_Name  VARCHAR(30) NULL,
+    ->     Last_Name    VARCHAR(30) NOT NULL,
+    ->     Gender       CHAR(1)     NOT NULL,
+    ->     DOB          DATE        NOT NULL,
+    ->     Email        VARCHAR(60) NOT NULL,
+    ->     CONSTRAINT pk_student PRIMARY KEY (Student_ID),
+    ->     CONSTRAINT uq_student_email UNIQUE (Email),
+    ->     CONSTRAINT chk_student_gender CHECK (Gender IN ('M', 'F', 'O'))
+    -> );
+Query OK, 0 rows affected, 1 warning (0.005 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> CREATE TABLE student_phone (
+    ->     Student_ID    INT         NOT NULL,
+    ->     Phone_Number  VARCHAR(15) NOT NULL,
+    ->     CONSTRAINT pk_student_phone PRIMARY KEY (Student_ID, Phone_Number),
+    ->     CONSTRAINT fk_phone_student FOREIGN KEY (Student_ID)
+    ->         REFERENCES student (Student_ID) ON DELETE CASCADE
+    -> );
+Query OK, 0 rows affected, 1 warning (0.011 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> CREATE TABLE facility (
+    ->     Facility_ID      INT         NOT NULL,
+    ->     Facility_Name    VARCHAR(40) NOT NULL,
+    ->     Operating_Hours  VARCHAR(30) DEFAULT '24x7',
+    ->     Hostel_ID        INT         NOT NULL,
+    ->     CONSTRAINT pk_facility PRIMARY KEY (Facility_ID),
+    ->     CONSTRAINT fk_facility_hostel FOREIGN KEY (Hostel_ID)
+    ->         REFERENCES hostel (Hostel_ID) ON DELETE CASCADE
+    -> );
+Query OK, 0 rows affected, 1 warning (0.006 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> CREATE TABLE uses (
+    ->     Student_ID   INT  NOT NULL,
+    ->     Facility_ID  INT  NOT NULL,
+    ->     Usage_Date   DATE NOT NULL,
+    ->     CONSTRAINT pk_uses PRIMARY KEY (Student_ID, Facility_ID, Usage_Date), 
+    ->     CONSTRAINT fk_uses_student FOREIGN KEY (Student_ID)
+    ->         REFERENCES student (Student_ID) ON DELETE CASCADE,
+    ->     CONSTRAINT fk_uses_facility FOREIGN KEY (Facility_ID)
+    ->         REFERENCES facility (Facility_ID) ON DELETE CASCADE
+    -> );
+Query OK, 0 rows affected, 1 warning (0.005 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

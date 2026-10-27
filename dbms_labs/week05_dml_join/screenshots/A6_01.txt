@@ -1,0 +1,19 @@
+(PES1UG24AM387@root) [smart_hostel]> INSERT INTO payment (Payment_ID, Student_ID , Payment_Date, Amount, Payment_Type)
+    -> VALUES (9, 9, '2026-08-22', 45000, 'Online');
+Query OK, 1 row affected (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> INSERT INTO receipt (Receipt_ID, Payment_ID , Receipt_Date)
+    -> VALUES (8, 9, '2026-08-22');
+Query OK, 1 row affected (0.002 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> SELECT p.*, r.Receipt_ID, r.Receipt_Date
+    -> FROM payment p JOIN receipt r ON r.Payment_ID = p.Payment_ID
+    -> WHERE p.Payment_ID = 9;
++------------+------------+--------------+----------+--------------+------------+--------------+
+| Payment_ID | Student_ID | Payment_Date | Amount   | Payment_Type | Receipt_ID | Receipt_Date |
++------------+------------+--------------+----------+--------------+------------+--------------+
+|          9 |          9 | 2026-08-22   | 45000.00 | Online       |          8 | 2026-08-22   |
++------------+------------+--------------+----------+--------------+------------+--------------+
+1 row in set (0.004 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

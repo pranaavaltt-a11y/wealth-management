@@ -1,0 +1,15 @@
+(PES1UG24AM387@root) [smart_hostel]> INSERT INTO student_phone (Student_ID, Phon e_Number)
+    -> VALUES (9, '9876500009'), (9, '9876500019');
+Query OK, 2 rows affected (0.001 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+(PES1UG24AM387@root) [smart_hostel]> SELECT * FROM student_phone WHERE Student_I D = 9;
++------------+--------------+
+| Student_ID | Phone_Number |
++------------+--------------+
+|          9 | 9876500009   |
+|          9 | 9876500019   |
++------------+--------------+
+2 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

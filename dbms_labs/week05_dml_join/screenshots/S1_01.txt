@@ -1,0 +1,9 @@
+(PES1UG24AM387@root) [(none)]> DROP DATABASE IF EXISTS smart_hostel;
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+(PES1UG24AM387@root) [(none)]> CREATE DATABASE smart_hostel;
+Query OK, 1 row affected (0.001 sec)
+
+(PES1UG24AM387@root) [(none)]> USE smart_hostel;
+Database changed
+(PES1UG24AM387@root) [smart_hostel]> 

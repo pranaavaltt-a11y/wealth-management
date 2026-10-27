@@ -1,0 +1,16 @@
+(PES1UG24AM387@root) [smart_hostel]> SELECT h.Hostel_ID, h.Hostel_Name, COALESCE (SUM(p.Amount), 0) AS Total_Revenue
+    -> FROM hostel h
+    -> LEFT JOIN allocation a ON a.Hostel_ID = h.Hostel_ID AND a.Check_out_Date  IS NULL
+    -> LEFT JOIN payment p ON p.Student_ID = a.Student_ID
+    -> GROUP BY h.Hostel_ID, h.Hostel_Name
+    -> ORDER BY h.Hostel_ID;
++-----------+-------------------+---------------+
+| Hostel_ID | Hostel_Name       | Total_Revenue |
++-----------+-------------------+---------------+
+|         1 | Sunrise Hostel    |      90000.00 |
+|         2 | Blue Ridge Hostel |     144000.00 |
+|         3 | Lake View Hostel  |      40000.00 |
++-----------+-------------------+---------------+
+3 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

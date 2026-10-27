@@ -1,0 +1,20 @@
+(PES1UG24AM387@root) [smart_hostel]> SELECT Staff_Name AS Name, 'Staff' AS Role
+    -> FROM staff
+    -> WHERE Hostel_ID = 1
+    -> UNION ALL
+    -> SELECT CONCAT(s.First_Name, ' ', s.Last_Name), 'Student'
+    -> FROM student s
+    -> JOIN allocation a ON a.Student_ID = s.Student_ID
+    -> WHERE a.Hostel_ID = 1 AND a.Check_out_Date IS NULL;
++---------------+---------+
+| Name          | Role    |
++---------------+---------+
+| Ramesh Iyer   | Staff   |
+| Sunil Kumar   | Staff   |
+| Geeta Rao     | Staff   |
+| Aditya Verma  | Student |
+| Neha Kulkarni | Student |
++---------------+---------+
+5 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

@@ -1,0 +1,19 @@
+(PES1UG24AM387@root) [smart_hostel]> SELECT e.Staff_ID, e.Staff_Name, e.Designat ion, m.Staff_Name AS Supervisor_Name
+    -> FROM staff e
+    -> LEFT JOIN staff m ON m.Staff_ID = e.Supervisor_ID
+    -> ORDER BY e.Staff_ID;
++----------+---------------+-------------+-----------------+
+| Staff_ID | Staff_Name    | Designation | Supervisor_Name |
++----------+---------------+-------------+-----------------+
+|        1 | Ramesh Iyer   | Warden      | NULL            |
+|        2 | Sunil Kumar   | Security    | Ramesh Iyer     |
+|        3 | Geeta Rao     | Cleaner     | Ramesh Iyer     |
+|        4 | Anita Sharma  | Warden      | NULL            |
+|        5 | Mohan Das     | Security    | Anita Sharma    |
+|        6 | Priya Menon   | Maintenance | Anita Sharma    |
+|        7 | Kiran Bose    | Warden      | NULL            |
+|        8 | Farhan Sheikh | Cleaner     | Kiran Bose      |
++----------+---------------+-------------+-----------------+
+8 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

@@ -1,0 +1,41 @@
+(PES1UG24AM387@root) [smart_hostel]> SHOW TABLES;
++------------------------+
+| Tables_in_smart_hostel |
++------------------------+
+| allocation             |
+| bed                    |
+| facility               |
+| hostel                 |
+| payment                |
+| receipt                |
+| room                   |
+| staff                  |
+| student                |
+| student_phone          |
+| uses                   |
++------------------------+
+11 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> DESC hostel;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| Hostel_ID   | int(11)      | NO   | PRI | NULL    |       |
+| Hostel_Name | varchar(50)  | NO   |     | NULL    |       |
+| Location    | varchar(100) | NO   |     | NULL    |       |
+| Capacity    | int(11)      | NO   |     | 0       |       |
++-------------+--------------+------+-----+---------+-------+
+4 rows in set (0.002 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> DESC staff;
++---------------+---------------+------+-----+---------------+-------+
+| Field         | Type          | Null | Key | Default       | Extra |
++---------------+---------------+------+-----+---------------+-------+
+| Staff_ID      | int(11)       | NO   | PRI | NULL          |       |
+| Staff_Name    | varchar(50)   | NO   |     | NULL          |       |
+| Salary        | decimal(10,2) | NO   |     | NULL          |       |
+| Designation   | varchar(30)   | NO   |     | Support Staff |       |
+| Hostel_ID     | int(11)       | NO   | MUL | NULL          |       |
+| Supervisor_ID | int(11)       | YES  | MUL | NULL          |       |
++---------------+---------------+------+-----+---------------+-------+
+6 rows in set (0.001 sec)

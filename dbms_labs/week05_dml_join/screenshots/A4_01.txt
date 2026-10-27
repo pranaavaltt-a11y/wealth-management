@@ -1,0 +1,15 @@
+(PES1UG24AM387@root) [smart_hostel]> UPDATE staff SET Salary = Salary * 1.10 WHE RE Designation = 'Warden';
+Query OK, 3 rows affected (0.002 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+(PES1UG24AM387@root) [smart_hostel]> SELECT Staff_ID, Staff_Name, Designation, S alary FROM staff WHERE Designation = 'Warden';
++----------+--------------+-------------+----------+
+| Staff_ID | Staff_Name   | Designation | Salary   |
++----------+--------------+-------------+----------+
+|        1 | Ramesh Iyer  | Warden      | 49500.00 |
+|        4 | Anita Sharma | Warden      | 50600.00 |
+|        7 | Kiran Bose   | Warden      | 48400.00 |
++----------+--------------+-------------+----------+
+3 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

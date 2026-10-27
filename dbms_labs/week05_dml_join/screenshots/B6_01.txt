@@ -1,0 +1,24 @@
+(PES1UG24AM387@root) [smart_hostel]> SELECT f.Facility_Name, CONCAT(s.First_Name , ' ', s.Last_Name) AS Student_Name, u.Usage_Date
+    -> FROM uses u
+    -> INNER JOIN facility f ON f.Facility_ID = u.Facility_ID
+    -> INNER JOIN student s ON s.Student_ID = u.Student_ID
+    -> ORDER BY f.Facility_Name, u.Usage_Date;
++---------------+----------------+------------+
+| Facility_Name | Student_Name   | Usage_Date |
++---------------+----------------+------------+
+| Common Room   | Arjun Reddy    | 2026-01-23 |
+| Common Room   | Kabir Oberoi   | 2026-08-23 |
+| Gym           | Sanya Malhotra | 2026-01-20 |
+| Gym           | Vikram Nair    | 2026-01-21 |
+| Gym           | Vikram Nair    | 2026-08-22 |
+| Laundry Room  | Aditya Verma   | 2026-01-21 |
+| Study Room    | Ishita Bansal  | 2026-01-22 |
+| Study Room    | Sanya Malhotra | 2026-01-25 |
+| WiFi Lounge   | Neha Kulkarni  | 2026-01-20 |
+| WiFi Lounge   | Aditya Verma   | 2026-01-20 |
+| WiFi Lounge   | Rohan Shetty   | 2026-01-22 |
+| WiFi Lounge   | Kabir Oberoi   | 2026-08-22 |
++---------------+----------------+------------+
+12 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 

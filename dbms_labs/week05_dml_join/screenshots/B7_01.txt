@@ -1,0 +1,19 @@
+(PES1UG24AM387@root) [smart_hostel]> SELECT r.Hostel_ID, r.Room_Number, COUNT(b. Bed_Number) AS Vacant_Beds
+    -> FROM room r
+    -> LEFT JOIN bed b ON b.Hostel_ID = r.Hostel_ID AND b.Room_Number = r.Room_N umber
+    ->                AND b.Status = 'Vacant'
+    -> GROUP BY r.Hostel_ID, r.Room_Number
+    -> ORDER BY r.Hostel_ID, r.Room_Number;
++-----------+-------------+-------------+
+| Hostel_ID | Room_Number | Vacant_Beds |
++-----------+-------------+-------------+
+|         1 |         101 |           0 |
+|         1 |         102 |           2 |
+|         1 |         201 |           1 |
+|         2 |         101 |           1 |
+|         2 |         102 |           0 |
+|         3 |         101 |           1 |
++-----------+-------------+-------------+
+6 rows in set (0.001 sec)
+
+(PES1UG24AM387@root) [smart_hostel]> 
