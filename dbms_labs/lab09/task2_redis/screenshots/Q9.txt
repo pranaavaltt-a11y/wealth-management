@@ -1,0 +1,31 @@
+127.0.0.1:6379> ECHO "PES1UG24AM387"
+"PES1UG24AM387"
+127.0.0.1:6379> FLUSHDB
+OK
+127.0.0.1:6379> DBSIZE
+(integer) 0
+127.0.0.1:6379> ZADD leaderboard:tokens 500 ava 800 ben 300 cara 600 dev
+(integer) 4
+127.0.0.1:6379> ZCARD leaderboard:tokens
+(integer) 4
+127.0.0.1:6379> ZREVRANGE leaderboard:tokens 0 -1
+1) "ben"
+2) "dev"
+3) "ava"
+4) "cara"
+127.0.0.1:6379> ZINCRBY leaderboard:tokens 400 ava
+"900"
+127.0.0.1:6379> ZREVRANK leaderboard:tokens ava
+(integer) 0
+127.0.0.1:6379> ZRANK leaderboard:tokens cara
+(integer) 0
+127.0.0.1:6379> ZREM leaderboard:tokens ben
+(integer) 1
+127.0.0.1:6379> ZREVRANGE leaderboard:tokens 0 -1 WITHSCORES
+1) "ava"
+2) "900"
+3) "dev"
+4) "600"
+5) "cara"
+6) "300"
+127.0.0.1:6379> 

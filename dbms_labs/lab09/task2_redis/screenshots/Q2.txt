@@ -1,0 +1,18 @@
+127.0.0.1:6379> ECHO "PES1UG24AM387"
+"PES1UG24AM387"
+127.0.0.1:6379> FLUSHDB
+OK
+127.0.0.1:6379> DBSIZE
+(integer) 0
+127.0.0.1:6379> RPUSH conv:101 "Hello" "Hi! How can I help?"
+(integer) 2
+127.0.0.1:6379> LRANGE conv:101 0 -1
+1) "Hello"
+2) "Hi! How can I help?"
+127.0.0.1:6379> LPUSH conv:101 "SYSTEM: be concise"
+(integer) 3
+127.0.0.1:6379> LRANGE conv:101 0 -1
+1) "SYSTEM: be concise"
+2) "Hello"
+3) "Hi! How can I help?"
+127.0.0.1:6379> 

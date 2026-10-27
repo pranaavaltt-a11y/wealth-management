@@ -1,0 +1,21 @@
+127.0.0.1:6379> ECHO "PES1UG24AM387"
+"PES1UG24AM387"
+127.0.0.1:6379> FLUSHDB
+OK
+127.0.0.1:6379> DBSIZE
+(integer) 0
+127.0.0.1:6379> SADD beta:gpt-next u1 u2 u3
+(integer) 3
+127.0.0.1:6379> SMEMBERS beta:gpt-next
+1) "u2"
+2) "u3"
+3) "u1"
+127.0.0.1:6379> SISMEMBER beta:gpt-next u3
+(integer) 1
+127.0.0.1:6379> SADD beta:gpt-next u2 u4
+(integer) 1
+127.0.0.1:6379> SCARD beta:gpt-next
+(integer) 4
+127.0.0.1:6379> SREM beta:gpt-next u4
+(integer) 1
+127.0.0.1:6379> 

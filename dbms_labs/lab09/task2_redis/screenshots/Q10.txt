@@ -1,0 +1,21 @@
+127.0.0.1:6379> ECHO "PES1UG24AM387"
+"PES1UG24AM387"
+127.0.0.1:6379> FLUSHDB
+OK
+127.0.0.1:6379> DBSIZE
+(integer) 0
+127.0.0.1:6379> SET otp:u5 "7781" EX 60
+OK
+127.0.0.1:6379> RPUSH conv:5 "Hi"
+(integer) 1
+127.0.0.1:6379> HSET user:5 name "Neha" plan "free"
+(integer) 2
+127.0.0.1:6379> SADD beta:gpt-next u5
+(integer) 1
+127.0.0.1:6379> ZADD leaderboard:tokens 250 u5
+(integer) 1
+127.0.0.1:6379> SADD beta:gpt-next u5
+(integer) 0
+127.0.0.1:6379> RPUSH user:5 "hello"
+(error) WRONGTYPE Operation against a key holding the wrong kind of value
+127.0.0.1:6379> 

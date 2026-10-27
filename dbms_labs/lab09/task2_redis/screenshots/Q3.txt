@@ -1,0 +1,22 @@
+127.0.0.1:6379> ECHO "PES1UG24AM387"
+"PES1UG24AM387"
+127.0.0.1:6379> FLUSHDB
+OK
+127.0.0.1:6379> DBSIZE
+(integer) 0
+127.0.0.1:6379> HSET user:1 name "Meera" plan "free" credits "10"
+(integer) 3
+127.0.0.1:6379> HGET user:1 plan
+"free"
+127.0.0.1:6379> HGETALL user:1
+1) "name"
+2) "Meera"
+3) "plan"
+4) "free"
+5) "credits"
+6) "10"
+127.0.0.1:6379> HINCRBY user:1 credits 50
+(integer) 60
+127.0.0.1:6379> HLEN user:1
+(integer) 3
+127.0.0.1:6379> 

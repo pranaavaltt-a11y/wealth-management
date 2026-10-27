@@ -1,0 +1,21 @@
+127.0.0.1:6379> ECHO "PES1UG24AM387"
+"PES1UG24AM387"
+127.0.0.1:6379> FLUSHDB
+OK
+127.0.0.1:6379> DBSIZE
+(integer) 0
+127.0.0.1:6379> SET otp:u1 "483920" EX 120
+OK
+127.0.0.1:6379> SET quota:u1 "20"
+OK
+127.0.0.1:6379> INCRBY quota:u1 -3
+(integer) 17
+127.0.0.1:6379> SET status:u1 "Online"
+OK
+127.0.0.1:6379> APPEND status:u1 " (busy)"
+(integer) 13
+127.0.0.1:6379> MGET otp:u1 quota:u1 quota:u99
+1) "483920"
+2) "17"
+3) (nil)
+127.0.0.1:6379> 
