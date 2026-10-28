@@ -1,0 +1,23 @@
+{
+  "additionalProperties": false,
+  "description": "POST /v1/runs/{run_id}/feedback request body.",
+  "properties": {
+    "satisfactory": {
+      "title": "Satisfactory",
+      "type": "boolean"
+    },
+    "reason": {
+      "default": "",
+      "maxLength": 500,
+      "title": "Reason",
+      "type": "string"
+    }
+  },
+  "required": [
+    "satisfactory"
+  ],
+  "title": "Feedback",
+  "type": "object",
+  "$id": "https://igr.local/contracts/feedback.schema.json",
+  "x-contract-version": "1.0.0"
+}

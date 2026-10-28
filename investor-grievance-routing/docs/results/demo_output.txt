@@ -1,0 +1,95 @@
+health: {'status': 'ok', 'uptime_s': 13.3, 'queue_depth': 0, 'checks': {'redis': 'ok', 'index': {'version': '058ddb378d03', 'built_at': '2026-10-28T15:35:41Z', 'chunks': 23, 'embedder': 'hash-uni-bi-768'}}}
+
+[10] The difficult case (section 4.1)
+  status=completed route=refer_to_other_regulator regulator=RBI verified=True degraded=False steps=6 tool_calls=3 latency=5.754s
+  basis: The complaint is against a bank about a fixed deposit. (e) complaints about products or services that fall under the purview of other regulators — for example complaints against banks about banking products such as bank 
+  reason: jurisdiction_rbi_bank_not_yet_approached
+  cite SEBI-SCORES/Annex-A: "(e) complaints about products or services that fall under the purview of other regulators — for example compla..."
+  cite RBI-IOS/Cl-3: "A complaint against a bank about any banking service, including deposit accounts such as savings and fixed dep..."
+  cite RBI-IOS/Cl-8: "Deficiency in service means a shortcoming or an inadequacy in any financial service which the Regulated Entity..."
+  cite RBI-IOS/Cl-10: "No complaint for deficiency in service shall lie under the Scheme where the complainant has not first made a w..."
+  escalation path: Complainant first complains in writing to the bank; if no reply within thirty days or the reply is unsatisfactory, lodge with the RBI Ombudsman under the Integrated Ombudsman Scheme.
+
+[2] Valid request -> routed recommendation with citations that resolve to retrieved text
+  status=completed route=assign_to_entity regulator=SEBI verified=True degraded=False steps=7 tool_calls=4 latency=7.12s
+  basis: The complaint is against a stock broker. A stock broker shall resolve complaints of clients relating to unauthorised trades, non-issue of contract notes, delay in payout of funds or securities, and wrong margin calls. A 
+  cite SEBI-BROKER/Grievance: "A stock broker shall resolve complaints of clients relating to unauthorised trades, non-issue of contract note..."
+  cite SEBI-SCORES/4: "A complaint lodged on SCORES is forwarded to the concerned entity, which shall resolve the complaint and uploa..."
+  escalation path: If unresolved: first review by the Designated Body, then SEBI; thereafter Online Dispute Resolution.
+  every citation found verbatim in retrieved text: True
+
+[3] Trace of run_05bfaae0ca58458a: every tool call, query, passage, prompt version, per-step latency and cost
+  submitted api       {"client_id": "demo"}
+  dequeued  worker    {"worker": "e26a2f9e8d54", "queue_wait_s": 0.002}
+  guard     guard     {"step": "input", "injection_score": 0.0, "injection_field": "complaint_text", "injection_hits": [], "toxicity": 0.0, "t
+  llm       intake    classify   prompt=triage@v2#7230c26bd2 1090ms tokens=343+98 cost=$0.000000 -> facts null
+  llm       research  plan-1     prompt=research@v2#8ca2375229 1154ms tokens=624+46 cost=$0.000000 -> search_corpus {"query": "I invested in a fixed deposit through my bank's app. The in
+  tool      research  search_corpus {"query": "I invested in a fixed deposit through my bank's app. The in 3ms -> ['SEBI-CHARTER/Dont', 'RBI-IOS/Cl-3', 'SEBI-CHARTER/Rights', 'SEBI-IA/Reg-15', 'RBI-IOS/FAQ-Deposits']
+  llm       research  plan-2     prompt=research@v2#8ca2375229 1137ms tokens=1777+20 cost=$0.000000 -> find_modifying_provisions {"clause_id": "SEBI-CHARTER/Dont"}
+  tool      research  find_modifying_provisions {"clause_id": "SEBI-CHARTER/Dont"} 1ms -> ['SEBI-SCORES/Annex-A']
+  llm       research  plan-3     prompt=research@v2#8ca2375229 1123ms tokens=2293+36 cost=$0.000000 -> search_corpus {"query": "fixed deposit bank deposit banking service complaint RBI Om
+  tool      research  search_corpus {"query": "fixed deposit bank deposit banking service complaint RBI Om 2ms -> ['RBI-IOS/FAQ-Deposits', 'RBI-IOS/Cl-3', 'RBI-IOS/Cl-8', 'RBI-IOS/Cl-11', 'RBI-IOS/Cl-10']
+  llm       research  plan-4     prompt=research@v2#8ca2375229 1174ms tokens=3502+690 cost=$0.000000 -> final null
+  verify    verifier  attempt=1 verified=True 17ms 
+  final     router    {"route": "refer_to_other_regulator", "regulator": "RBI"}
+  Jaeger: http://localhost:16686/search?service=agent-worker&tags=%7B%22run_id%22%3A%22run_05bfaae0ca58458a%22%7D
+
+[4] Malformed request -> rejected, quarantined, no agent run started
+  HTTP 422 run_started=False quarantine_id=q_6beea3718414
+    complaint_text: String should have at least 30 characters
+    entity_type_claimed: Input should be 'broker', 'mutual_fund', 'registrar', 'listed_company', 'depository_participant', 'depository', 'bank', 'nbfc', 'insurer', 'other' or 'unknown'
+    amount_involved_inr: Input should be greater than or equal to 0
+    incident_date: Value error, incident_date cannot be in the future
+  runs submitted 2->2, runs started 0->0 (unchanged)
+
+[5] A case the corpus cannot answer -> escalation, not a fabricated answer
+  status=escalated route=escalate_to_human regulator=IRDAI verified=True degraded=False steps=6 tool_calls=3 latency=4.875s
+  basis: The complaint concerns a insurance provided by an entity of type insurer, which falls under IRDAI. Matters under the purview of other regulators are not dealt with on SCORES. The corpus does not contain the IRDAI framewo
+  reason: entity_type_outside_corpus
+  cite SEBI-SCORES/Annex-A: "(f) complaints about products which are not regulated by SEBI, such as chit funds or crypto assets...."
+  escalation path: Grievance officer to confirm the IRDAI channel and advise the complainant.
+
+[6] Self-verification catches an unsupported answer and searches again
+  verifier attempt 1: draft route=assign_to_entity regulator=SEBI -> verified=False
+     x citations_resolve: not found verbatim in retrieved text: SEBI-SCORES/4
+     x facts_covered: cited passages never mention the product or entity (fixed deposit, bank)
+     x timeline_supported: timeline ['21'] not in cited text
+     x claims_grounded: groundedness=0.00; unsupported claims=0
+  retry with strategy=exclusion_search
+  verifier attempt 2: draft route=refer_to_other_regulator regulator=RBI -> verified=True
+  status=completed route=refer_to_other_regulator regulator=RBI verified=True degraded=False steps=9 tool_calls=4 latency=7.446s
+  basis: The complaint is against a bank about a fixed deposit. (e) complaints about products or services that fall under the purview of other regulators — for example complaints against banks about banking products such as bank 
+  reason: jurisdiction_rbi_bank_not_yet_approached
+  cite SEBI-SCORES/Annex-A: "(e) complaints about products or services that fall under the purview of other regulators — for example compla..."
+  cite RBI-IOS/Cl-3: "A complaint against a bank about any banking service, including deposit accounts such as savings and fixed dep..."
+  cite RBI-IOS/Cl-8: "Deficiency in service means a shortcoming or an inadequacy in any financial service which the Regulated Entity..."
+  cite RBI-IOS/Cl-10: "No complaint for deficiency in service shall lie under the Scheme where the complainant has not first made a w..."
+  escalation path: Complainant first complains in writing to the bank; if no reply within thirty days or the reply is unsatisfactory, lodge with the RBI Ombudsman under the Integrated Ombudsman Scheme.
+
+[7] Prompt injection attempt
+  guard: injection_score=1.0 field=complaint_text hits=2
+  status=escalated route=escalate_to_human regulator=None verified=False degraded=False steps=0 tool_calls=0 latency=0.007s
+  basis: The system could not produce a verified determination, so a grievance officer must decide.
+  reason: prompt_injection_suspected
+  escalation path: Queue for grievance officer review with the full run trace attached.
+
+[8] Circuit breaker opens when the provider is unavailable; degradation path
+  stub fault -> {'mode': 'down', 'since': 1793201784.474557}
+  status=escalated route=escalate_to_human regulator=None verified=True degraded=True steps=6 tool_calls=3 latency=6.778s
+  basis: The system could not produce a verified determination, so a grievance officer must decide.
+  reason: degraded_mode_provider_unavailable
+  cite SEBI-SCORES/Annex-A: "(e) complaints about products or services that fall under the purview of other regulators — for example compla..."
+  cite RBI-IOS/Cl-8: "Deficiency in service means a shortcoming or an inadequacy in any financial service which the Regulated Entity..."
+  cite RBI-IOS/Cl-8: "Deficiency in service means a shortcoming or an inadequacy in any financial service which the Regulated Entity..."
+  cite RBI-IOS/Cl-10: "No complaint for deficiency in service shall lie under the Scheme where the complainant has not first made a w..."
+  escalation path: Queue for grievance officer review with the full run trace attached.
+  status=escalated route=escalate_to_human regulator=None verified=True degraded=True steps=6 tool_calls=3 latency=0.032s
+  basis: The system could not produce a verified determination, so a grievance officer must decide.
+  reason: degraded_mode_provider_unavailable
+  cite SEBI-SCORES/Annex-A: "(e) complaints about products or services that fall under the purview of other regulators — for example compla..."
+  cite RBI-IOS/Cl-3: "A complaint against a bank about any banking service, including deposit accounts such as savings and fixed dep..."
+  cite RBI-IOS/Cl-8: "Deficiency in service means a shortcoming or an inadequacy in any financial service which the Regulated Entity..."
+  cite RBI-IOS/Cl-10: "No complaint for deficiency in service shall lie under the Scheme where the complainant has not first made a w..."
+  escalation path: Queue for grievance officer review with the full run trace attached.
+  circuit state is exported as igr_circuit_breaker_open by each worker (Grafana panel 'Circuit breaker open')
+  stub restore -> {'mode': 'ok', 'since': 1793201792.091179}

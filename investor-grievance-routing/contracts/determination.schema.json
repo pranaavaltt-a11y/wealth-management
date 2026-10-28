@@ -1,0 +1,162 @@
+{
+  "$defs": {
+    "Citation": {
+      "properties": {
+        "clause_id": {
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "quote": {
+          "title": "Quote",
+          "type": "string"
+        },
+        "document": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Document"
+        },
+        "reference": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reference"
+        }
+      },
+      "required": [
+        "clause_id",
+        "quote"
+      ],
+      "title": "Citation",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "route": {
+      "enum": [
+        "assign_to_entity",
+        "refer_to_other_regulator",
+        "not_maintainable",
+        "escalate_to_human"
+      ],
+      "title": "Route",
+      "type": "string"
+    },
+    "regulator": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Regulator"
+    },
+    "entity_type": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Entity Type"
+    },
+    "entity_name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Entity Name"
+    },
+    "designated_body": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Designated Body"
+    },
+    "timeline": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Timeline"
+    },
+    "basis": {
+      "title": "Basis",
+      "type": "string"
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reason"
+    },
+    "citations": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Citation"
+      },
+      "title": "Citations",
+      "type": "array"
+    },
+    "escalation_path": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Escalation Path"
+    }
+  },
+  "required": [
+    "route",
+    "basis"
+  ],
+  "title": "Determination",
+  "type": "object",
+  "$id": "https://igr.local/contracts/determination.schema.json",
+  "x-contract-version": "1.0.0"
+}

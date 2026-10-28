@@ -1,0 +1,171 @@
+# Securities Investor Grievance Routing Service
+#   cp .env.example .env    (optional; defaults run the whole system against the bundled stub model)
+#   docker compose up --build
+#   docker compose up --scale agent-worker=3
+#   docker compose --profile loadtest up locust
+#
+# Deployment boundaries (see docs/ARCHITECTURE.md): the API, the agent workers and the verifier have
+# different scaling, failure and release profiles, so each is its own service.
+
+x-app: &app
+  build:
+    context: .
+    args:
+      INSTALL_SENTENCE_TRANSFORMERS: ${INSTALL_SENTENCE_TRANSFORMERS:-false}
+  image: igr-app:latest
+  env_file:
+    - path: .env
+      required: false
+  environment: &app-env
+    REDIS_URL: redis://redis:6379/0
+    INDEX_DIR: /data/index
+    CORPUS_DIR: /app/corpus
+    EMBEDDING_BACKEND: ${EMBEDDING_BACKEND:-hash}
+    LLM_MODE: http
+    LLM_BASE_URL: ${LLM_BASE_URL:-http://llm-stub:8200/v1}
+    VERIFIER_URL: http://verifier:8100
+    OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
+  volumes:
+    - index-data:/data
+  restart: unless-stopped
+
+services:
+  redis:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "512mb", "--maxmemory-policy", "noeviction"]
+    volumes: [redis-data:/data]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  indexer:
+    <<: *app
+    command: ["python", "-m", "app.retrieval.ingest"]
+    environment:
+      <<: *app-env
+      SERVICE_NAME: indexer
+    restart: "no"
+
+  llm-stub:
+    <<: *app
+    command: ["uvicorn", "app.llm.stub_server:app", "--host", "0.0.0.0", "--port", "8200"]
+    environment:
+      SERVICE_NAME: llm-stub
+      STUB_DELAY_MEAN_MS: ${STUB_DELAY_MEAN_MS:-900}
+      STUB_DELAY_JITTER_MS: ${STUB_DELAY_JITTER_MS:-300}
+    ports: ["8200:8200"]
+    volumes: []
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys,urllib.request; urllib.request.urlopen(sys.argv[1], timeout=3)", "http://localhost:8200/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  verifier:
+    <<: *app
+    command: ["uvicorn", "app.verifier.server:app", "--host", "0.0.0.0", "--port", "8100"]
+    environment:
+      <<: *app-env
+      SERVICE_NAME: verifier
+    ports: ["8100:8100"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys,urllib.request; urllib.request.urlopen(sys.argv[1], timeout=3)", "http://localhost:8100/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    <<: *app
+    command: ["uvicorn", "app.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      <<: *app-env
+      SERVICE_NAME: api
+    ports: ["8000:8000"]
+    depends_on:
+      redis: {condition: service_healthy}
+      indexer: {condition: service_completed_successfully}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys,urllib.request; urllib.request.urlopen(sys.argv[1], timeout=3)", "http://localhost:8000/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  agent-worker:
+    <<: *app
+    command: ["python", "-m", "app.agents.worker"]
+    environment:
+      <<: *app-env
+      SERVICE_NAME: agent-worker
+      WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-1}
+    depends_on:
+      redis: {condition: service_healthy}
+      indexer: {condition: service_completed_successfully}
+      verifier: {condition: service_healthy}
+      llm-stub: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys,urllib.request; urllib.request.urlopen(sys.argv[1], timeout=3)", "http://localhost:9100/metrics"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    command: ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.retention.time=7d"]
+    volumes: ["./ops/prometheus.yml:/etc/prometheus/prometheus.yml:ro"]
+    ports: ["9090:9090"]
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:9090/-/healthy"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:11.3.0
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-change-me}
+    volumes:
+      - ./ops/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./ops/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports: ["3000:3000"]
+    depends_on:
+      prometheus: {condition: service_healthy}
+    restart: unless-stopped
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.62.0
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports: ["16686:16686", "4318:4318"]
+    restart: unless-stopped
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    privileged: true
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports: ["8080:8080"]
+    restart: unless-stopped
+
+  locust:
+    image: locustio/locust:2.32.4
+    profiles: ["loadtest"]
+    command: ["-f", "/mnt/loadtest/locustfile.py", "--host", "http://api:8000"]
+    environment:
+      UNIQUE: ${UNIQUE:-1}
+    volumes: ["./loadtest:/mnt/loadtest:ro", "./docs/results:/mnt/results"]
+    ports: ["8089:8089"]
+    depends_on:
+      api: {condition: service_healthy}
+
+volumes:
+  index-data:
+  redis-data:

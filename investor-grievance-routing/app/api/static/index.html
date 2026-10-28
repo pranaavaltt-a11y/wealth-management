@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grievance Routing</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 920px; margin: 24px auto; padding: 0 16px; color: #1d2733; }
+  h1 { font-size: 1.4rem; margin-bottom: 4px; }
+  .note { color: #5b6673; font-size: .9rem; }
+  label { display: block; margin-top: 10px; font-weight: 600; font-size: .9rem; }
+  textarea, input, select { width: 100%; box-sizing: border-box; padding: 6px; font: inherit; }
+  .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+  button { margin-top: 12px; padding: 8px 14px; font: inherit; cursor: pointer; }
+  .card { border: 1px solid #d5dbe1; border-radius: 6px; padding: 12px 14px; margin-top: 14px; }
+  .route { font-size: 1.1rem; font-weight: 700; }
+  .escalate { color: #9a4b00; } .ok { color: #116329; } .bad { color: #a40e26; }
+  blockquote { margin: 6px 0; padding: 6px 10px; border-left: 3px solid #8fa3b8; background: #f4f6f8; }
+  code { background: #f0f2f4; padding: 1px 4px; }
+  pre { white-space: pre-wrap; font-size: .8rem; background: #f7f8f9; padding: 8px; }
+</style>
+</head>
+<body>
+<h1>Securities Investor Grievance Routing</h1>
+<p class="note">Advisory routing only. A grievance officer decides. Use synthetic complaints only.</p>
+
+<label for="text">Complaint</label>
+<textarea id="text" rows="4">I invested in a fixed deposit through my bank's app. The interest credited is lower than what I was promised. I want to complain to SEBI.</textarea>
+<div class="row">
+  <div><label for="entity">Entity name</label><input id="entity" placeholder="optional"></div>
+  <div><label for="etype">Entity type (as claimed)</label>
+    <select id="etype"><option>unknown</option><option>broker</option><option>mutual_fund</option><option>registrar</option>
+      <option>listed_company</option><option>depository_participant</option><option>bank</option><option>nbfc</option><option>insurer</option><option>other</option></select></div>
+  <div><label for="date">Incident date</label><input id="date" type="date"></div>
+  <div><label for="approached">Approached entity first?</label><select id="approached"><option value="false">No</option><option value="true">Yes</option></select></div>
+  <div><label for="variant">Prompt variant</label><select id="variant"><option value="">server default</option><option>v2</option><option>v1</option></select></div>
+</div>
+<button id="submit">Submit complaint</button>
+<div id="status" class="note"></div>
+<div id="result"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+$("date").value = new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+
+$("submit").onclick = async () => {
+  $("result").innerHTML = "";
+  const body = {
+    complaint_text: $("text").value,
+    complainant: {name: "Demo Investor", state: "Karnataka"},
+    entity_name: $("entity").value || null,
+    entity_type_claimed: $("etype").value,
+    incident_date: $("date").value,
+    first_approached_entity: $("approached").value === "true",
+    options: $("variant").value ? {prompt_variant: $("variant").value} : {},
+  };
+  const res = await fetch("/v1/complaints", {method: "POST", headers: {"Content-Type": "application/json", "X-Client-Id": "web"}, body: JSON.stringify(body)});
+  const data = await res.json();
+  if (!res.ok) {
+    $("status").textContent = "";
+    $("result").innerHTML = `<div class="card bad"><b>Rejected (${res.status})</b>` +
+      (data.quarantine_id ? ` and quarantined as <code>${esc(data.quarantine_id)}</code>; no agent run started.` : "") +
+      `<pre>${esc(JSON.stringify(data.errors || data, null, 2))}</pre></div>`;
+    return;
+  }
+  poll(data.run_id, Date.now());
+};
+
+async function poll(runId, started) {
+  const run = await (await fetch(`/v1/runs/${runId}`)).json();
+  $("status").textContent = `Run ${runId}: ${run.status} (${((Date.now() - started) / 1000).toFixed(1)}s)`;
+  if (run.status === "queued" || run.status === "running") return setTimeout(() => poll(runId, started), 1000);
+  render(run);
+}
+
+function render(run) {
+  const d = run.determination || {};
+  const cls = d.route === "escalate_to_human" ? "escalate" : "ok";
+  const evidence = Object.fromEntries((run.evidence || []).map((p) => [p.clause_id, p]));
+  const cites = (d.citations || []).map((c) => `
+    <div><b>${esc(c.clause_id)}</b> <span class="note">${esc(c.reference || evidence[c.clause_id]?.reference || "")}</span>
+    <blockquote>${esc(c.quote)}</blockquote></div>`).join("") || "<p class='note'>No citations.</p>";
+  $("result").innerHTML = `
+    <div class="card">
+      <div class="route ${cls}">${esc(d.route)}${d.regulator ? " → " + esc(d.regulator) : ""}</div>
+      <p>${d.entity_type ? "Entity type: <b>" + esc(d.entity_type) + "</b>. " : ""}${d.designated_body ? "Designated body: " + esc(d.designated_body) + ". " : ""}
+         ${d.timeline ? "Timeline: " + esc(d.timeline) + "." : ""}</p>
+      <p><b>Basis.</b> ${esc(d.basis)}</p>
+      ${d.reason ? `<p><b>Reason.</b> <code>${esc(d.reason)}</code></p>` : ""}
+      <p><b>Escalation path.</b> ${esc(d.escalation_path || "-")}</p>
+      <p class="note">Verified: ${run.verified} · degraded: ${run.degraded} · steps: ${run.steps ?? "-"} · tool calls: ${run.tool_calls ?? "-"} ·
+        cost: $${(run.cost_usd ?? 0).toFixed(6)} · latency: ${run.latency_s ?? "-"}s · prompts: ${esc(Object.values(run.prompt_versions || {}).join(", "))}
+        ${run.cache_hit ? " · cache hit" : ""}</p>
+      <h3>Citations</h3>${cites}
+      <p><a href="/v1/runs/${run.run_id}/trace" target="_blank">Full run trace</a></p>
+      <button onclick="fb('${run.run_id}', true)">Satisfactory</button>
+      <button onclick="fb('${run.run_id}', false)">Not satisfactory</button>
+      <span id="fbmsg" class="note"></span>
+    </div>`;
+}
+
+async function fb(runId, ok) {
+  const reason = ok ? "" : (prompt("What was wrong?") || "");
+  await fetch(`/v1/runs/${runId}/feedback`, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({satisfactory: ok, reason})});
+  $("fbmsg").textContent = "Feedback recorded.";
+}
+</script>
+</body>
+</html>

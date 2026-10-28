@@ -1,0 +1,276 @@
+{
+  "$defs": {
+    "Citation": {
+      "properties": {
+        "clause_id": {
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "quote": {
+          "title": "Quote",
+          "type": "string"
+        },
+        "document": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Document"
+        },
+        "reference": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reference"
+        }
+      },
+      "required": [
+        "clause_id",
+        "quote"
+      ],
+      "title": "Citation",
+      "type": "object"
+    },
+    "Determination": {
+      "properties": {
+        "route": {
+          "enum": [
+            "assign_to_entity",
+            "refer_to_other_regulator",
+            "not_maintainable",
+            "escalate_to_human"
+          ],
+          "title": "Route",
+          "type": "string"
+        },
+        "regulator": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Regulator"
+        },
+        "entity_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Entity Type"
+        },
+        "entity_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Entity Name"
+        },
+        "designated_body": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Designated Body"
+        },
+        "timeline": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Timeline"
+        },
+        "basis": {
+          "title": "Basis",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "citations": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Citation"
+          },
+          "title": "Citations",
+          "type": "array"
+        },
+        "escalation_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Escalation Path"
+        }
+      },
+      "required": [
+        "route",
+        "basis"
+      ],
+      "title": "Determination",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "queued",
+        "running",
+        "completed",
+        "escalated",
+        "failed"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "determination": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Determination"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "verified": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Verified"
+    },
+    "degraded": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Degraded"
+    },
+    "prompt_versions": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Prompt Versions"
+    },
+    "index_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Index Version"
+    },
+    "cost_usd": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cost Usd"
+    },
+    "latency_s": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Latency S"
+    },
+    "notice": {
+      "default": "Advisory routing determination only. A grievance officer decides; the system never disposes of a complaint.",
+      "title": "Notice",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id",
+    "status"
+  ],
+  "title": "RunStatus",
+  "type": "object",
+  "$id": "https://igr.local/contracts/run_status.schema.json",
+  "x-contract-version": "1.0.0"
+}

@@ -1,0 +1,1241 @@
+{
+  "summary": {
+    "label": "prompt-v2",
+    "variant": "v2",
+    "scenarios": 24,
+    "index": "058ddb378d03",
+    "route_accuracy": 1.0,
+    "regulator_accuracy": 1.0,
+    "first_draft_route_accuracy": 1.0,
+    "expected_passage_recall": 1.0,
+    "expected_passage_cited": 0.958,
+    "groundedness": 1.0,
+    "context_relevance": 0.334,
+    "faithfulness": 1.0,
+    "hallucination_rate": 0.0,
+    "first_draft_faithfulness": 1.0,
+    "first_draft_hallucination_rate": 0.0,
+    "escalation_precision": 1.0,
+    "escalation_recall": 1.0,
+    "verification_retry_rate": 0.0,
+    "mean_steps": 6.12,
+    "mean_tool_calls": 3.25,
+    "mean_tokens": 11073.5,
+    "cost_per_100_runs_usd": 0.6643,
+    "tokens_by_agent": {
+      "intake": {
+        "prompt_tokens": 7767,
+        "completion_tokens": 2291,
+        "cost_usd": 0.006392420000000001,
+        "calls": 23
+      },
+      "research": {
+        "prompt_tokens": 244824,
+        "completion_tokens": 10881,
+        "cost_usd": 0.15304215000000002,
+        "calls": 101
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "S01-difficult-fd",
+      "tags": [
+        "difficult",
+        "section-4.1"
+      ],
+      "expected_route": "refer_to_other_regulator",
+      "route": "refer_to_other_regulator",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "refer_to_other_regulator",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 6,
+      "tool_calls": 3,
+      "tokens": 9415,
+      "cost_usd": 0.00573285,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 340,
+          "completion_tokens": 98,
+          "cost_usd": 0.00027802,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 8185,
+          "completion_tokens": 792,
+          "cost_usd": 0.00545483,
+          "calls": 4
+        }
+      },
+      "latency_s": 0.076,
+      "reason": "jurisdiction_rbi_bank_not_yet_approached",
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.395,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.395,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-SCORES/Annex-A",
+        "RBI-IOS/Cl-3",
+        "RBI-IOS/Cl-8",
+        "RBI-IOS/Cl-10"
+      ]
+    },
+    {
+      "id": "S02-broker-unauthorised",
+      "tags": [],
+      "expected_route": "assign_to_entity",
+      "route": "assign_to_entity",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "assign_to_entity",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 7,
+      "tool_calls": 4,
+      "tokens": 15041,
+      "cost_usd": 0.00898659,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 339,
+          "completion_tokens": 95,
+          "cost_usd": 0.00027506,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 14140,
+          "completion_tokens": 467,
+          "cost_usd": 0.008711529999999999,
+          "calls": 5
+        }
+      },
+      "latency_s": 0.012,
+      "reason": null,
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.352,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.352,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-BROKER/Grievance",
+        "SEBI-SCORES/4"
+      ]
+    },
+    {
+      "id": "S03-broker-payout",
+      "tags": [],
+      "expected_route": "assign_to_entity",
+      "route": "assign_to_entity",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "assign_to_entity",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 6,
+      "tool_calls": 3,
+      "tokens": 9696,
+      "cost_usd": 0.00582464,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 337,
+          "completion_tokens": 92,
+          "cost_usd": 0.00027151,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 8839,
+          "completion_tokens": 428,
+          "cost_usd": 0.00555313,
+          "calls": 4
+        }
+      },
+      "latency_s": 0.01,
+      "reason": null,
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.307,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.307,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-BROKER/Grievance",
+        "SEBI-SCORES/4"
+      ]
+    },
+    {
+      "id": "S04-mf-redemption",
+      "tags": [],
+      "expected_route": "assign_to_entity",
+      "route": "assign_to_entity",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "assign_to_entity",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 7,
+      "tool_calls": 4,
+      "tokens": 14131,
+      "cost_usd": 0.00846609,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 341,
+          "completion_tokens": 99,
+          "cost_usd": 0.0002794,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 13146,
+          "completion_tokens": 545,
+          "cost_usd": 0.00818669,
+          "calls": 5
+        }
+      },
+      "latency_s": 0.013,
+      "reason": null,
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.399,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.399,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-MF-REGS/Reg-53",
+        "SEBI-SCORES/4"
+      ]
+    },
+    {
+      "id": "S05-mf-sip-units",
+      "tags": [],
+      "expected_route": "assign_to_entity",
+      "route": "assign_to_entity",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "assign_to_entity",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 7,
+      "tool_calls": 4,
+      "tokens": 14191,
+      "cost_usd": 0.00850169,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 341,
+          "completion_tokens": 102,
+          "cost_usd": 0.00028177,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 13205,
+          "completion_tokens": 543,
+          "cost_usd": 0.008219919999999999,
+          "calls": 5
+        }
+      },
+      "latency_s": 0.012,
+      "reason": null,
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.306,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.306,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-MF-REGS/Reg-53",
+        "SEBI-SCORES/4"
+      ]
+    },
+    {
+      "id": "S06-mf-missold",
+      "tags": [],
+      "expected_route": "assign_to_entity",
+      "route": "assign_to_entity",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "assign_to_entity",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 7,
+      "tool_calls": 4,
+      "tokens": 13743,
+      "cost_usd": 0.00821957,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 338,
+          "completion_tokens": 99,
+          "cost_usd": 0.00027763,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 12849,
+          "completion_tokens": 457,
+          "cost_usd": 0.00794194,
+          "calls": 5
+        }
+      },
+      "latency_s": 0.02,
+      "reason": null,
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.373,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.373,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-MF-REGS/Sch-Code",
+        "SEBI-SCORES/4"
+      ]
+    },
+    {
+      "id": "S07-dp-debit",
+      "tags": [],
+      "expected_route": "assign_to_entity",
+      "route": "assign_to_entity",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "assign_to_entity",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 7,
+      "tool_calls": 4,
+      "tokens": 15472,
+      "cost_usd": 0.00925248,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 341,
+          "completion_tokens": 113,
+          "cost_usd": 0.00029046,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 14511,
+          "completion_tokens": 507,
+          "cost_usd": 0.00896202,
+          "calls": 5
+        }
+      },
+      "latency_s": 0.013,
+      "reason": null,
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.335,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.335,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-DP/Grievance",
+        "SEBI-SCORES/4"
+      ]
+    },
+    {
+      "id": "S08-dividend",
+      "tags": [],
+      "expected_route": "assign_to_entity",
+      "route": "assign_to_entity",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "assign_to_entity",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 6,
+      "tool_calls": 3,
+      "tokens": 10010,
+      "cost_usd": 0.0060249,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 340,
+          "completion_tokens": 101,
+          "cost_usd": 0.00028039,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 9075,
+          "completion_tokens": 494,
+          "cost_usd": 0.00574451,
+          "calls": 4
+        }
+      },
+      "latency_s": 0.011,
+      "reason": null,
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.3,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.3,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-MF-REGS/Reg-53",
+        "SEBI-SCORES/4"
+      ]
+    },
+    {
+      "id": "S09-rta-transmission",
+      "tags": [],
+      "expected_route": "assign_to_entity",
+      "route": "assign_to_entity",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "assign_to_entity",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 7,
+      "tool_calls": 4,
+      "tokens": 15035,
+      "cost_usd": 0.00899725,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 336,
+          "completion_tokens": 96,
+          "cost_usd": 0.00027408,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 14066,
+          "completion_tokens": 537,
+          "cost_usd": 0.008723169999999999,
+          "calls": 5
+        }
+      },
+      "latency_s": 0.013,
+      "reason": null,
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.367,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.367,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-RTA/Grievance",
+        "SEBI-SCORES/4"
+      ]
+    },
+    {
+      "id": "S10-ia-assured",
+      "tags": [],
+      "expected_route": "assign_to_entity",
+      "route": "assign_to_entity",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "assign_to_entity",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 7,
+      "tool_calls": 4,
+      "tokens": 14283,
+      "cost_usd": 0.00854337,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 340,
+          "completion_tokens": 111,
+          "cost_usd": 0.00028828999999999997,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 13361,
+          "completion_tokens": 471,
+          "cost_usd": 0.00825508,
+          "calls": 5
+        }
+      },
+      "latency_s": 0.013,
+      "reason": null,
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.256,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.256,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-IA/Reg-15",
+        "SEBI-SCORES/4"
+      ]
+    },
+    {
+      "id": "S11-upi-failure",
+      "tags": [],
+      "expected_route": "refer_to_other_regulator",
+      "route": "refer_to_other_regulator",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "refer_to_other_regulator",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 6,
+      "tool_calls": 3,
+      "tokens": 10059,
+      "cost_usd": 0.00612701,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 336,
+          "completion_tokens": 96,
+          "cost_usd": 0.00027408,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 8762,
+          "completion_tokens": 865,
+          "cost_usd": 0.00585293,
+          "calls": 4
+        }
+      },
+      "latency_s": 0.013,
+      "reason": "jurisdiction_rbi",
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.353,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.353,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-SCORES/Annex-A",
+        "RBI-IOS/Cl-3",
+        "RBI-IOS/Cl-8",
+        "RBI-IOS/Cl-10"
+      ]
+    },
+    {
+      "id": "S12-savings-charges",
+      "tags": [],
+      "expected_route": "refer_to_other_regulator",
+      "route": "refer_to_other_regulator",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "refer_to_other_regulator",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 6,
+      "tool_calls": 3,
+      "tokens": 10040,
+      "cost_usd": 0.0061132,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 335,
+          "completion_tokens": 98,
+          "cost_usd": 0.00027507,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 8757,
+          "completion_tokens": 850,
+          "cost_usd": 0.0058381299999999995,
+          "calls": 4
+        }
+      },
+      "latency_s": 0.013,
+      "reason": "jurisdiction_rbi_bank_not_yet_approached",
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.371,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.371,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-SCORES/Annex-A",
+        "RBI-IOS/Cl-8",
+        "RBI-IOS/Cl-8",
+        "RBI-IOS/Cl-10"
+      ]
+    },
+    {
+      "id": "S13-nbfc-loan",
+      "tags": [],
+      "expected_route": "refer_to_other_regulator",
+      "route": "refer_to_other_regulator",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "refer_to_other_regulator",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": false,
+      "verified": true,
+      "attempts": 1,
+      "steps": 6,
+      "tool_calls": 3,
+      "tokens": 10576,
+      "cost_usd": 0.00642924,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 338,
+          "completion_tokens": 92,
+          "cost_usd": 0.0002721,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 9291,
+          "completion_tokens": 855,
+          "cost_usd": 0.006157139999999999,
+          "calls": 4
+        }
+      },
+      "latency_s": 0.012,
+      "reason": "jurisdiction_rbi_bank_not_yet_approached",
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.5,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.5,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-SCORES/Annex-A",
+        "RBI-IOS/Cl-8",
+        "RBI-IOS/Cl-8",
+        "RBI-IOS/Cl-10"
+      ]
+    },
+    {
+      "id": "S14-insurance",
+      "tags": [
+        "out-of-corpus"
+      ],
+      "expected_route": "escalate_to_human",
+      "route": "escalate_to_human",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "escalate_to_human",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 6,
+      "tool_calls": 3,
+      "tokens": 8960,
+      "cost_usd": 0.0053558,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 334,
+          "completion_tokens": 98,
+          "cost_usd": 0.00027448,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 8279,
+          "completion_tokens": 249,
+          "cost_usd": 0.00508132,
+          "calls": 4
+        }
+      },
+      "latency_s": 0.01,
+      "reason": "entity_type_outside_corpus",
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.119,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.119,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-SCORES/Annex-A"
+      ]
+    },
+    {
+      "id": "S15-nps",
+      "tags": [
+        "out-of-corpus"
+      ],
+      "expected_route": "escalate_to_human",
+      "route": "escalate_to_human",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "escalate_to_human",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 6,
+      "tool_calls": 3,
+      "tokens": 9208,
+      "cost_usd": 0.00550312,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 337,
+          "completion_tokens": 99,
+          "cost_usd": 0.00027704,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 8519,
+          "completion_tokens": 253,
+          "cost_usd": 0.00522608,
+          "calls": 4
+        }
+      },
+      "latency_s": 0.01,
+      "reason": "entity_type_outside_corpus",
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.247,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.247,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-SCORES/Annex-A"
+      ]
+    },
+    {
+      "id": "S16-crypto",
+      "tags": [
+        "out-of-corpus"
+      ],
+      "expected_route": "escalate_to_human",
+      "route": "escalate_to_human",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "escalate_to_human",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 6,
+      "tool_calls": 3,
+      "tokens": 10447,
+      "cost_usd": 0.00623673,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 334,
+          "completion_tokens": 107,
+          "cost_usd": 0.00028159,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 9748,
+          "completion_tokens": 258,
+          "cost_usd": 0.005955139999999999,
+          "calls": 4
+        }
+      },
+      "latency_s": 0.01,
+      "reason": "entity_type_outside_corpus",
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.397,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.397,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-SCORES/Annex-A"
+      ]
+    },
+    {
+      "id": "S17-split-bank-amc",
+      "tags": [
+        "split"
+      ],
+      "expected_route": "escalate_to_human",
+      "route": "escalate_to_human",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "escalate_to_human",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 6,
+      "tool_calls": 3,
+      "tokens": 9652,
+      "cost_usd": 0.00576748,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 340,
+          "completion_tokens": 104,
+          "cost_usd": 0.00028276,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 8948,
+          "completion_tokens": 260,
+          "cost_usd": 0.005484719999999999,
+          "calls": 4
+        }
+      },
+      "latency_s": 0.01,
+      "reason": "split_across_regulators",
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.409,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.409,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "RBI-IOS/Cl-3"
+      ]
+    },
+    {
+      "id": "S18-split-broker-fd",
+      "tags": [
+        "split"
+      ],
+      "expected_route": "escalate_to_human",
+      "route": "escalate_to_human",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "escalate_to_human",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 6,
+      "tool_calls": 3,
+      "tokens": 8706,
+      "cost_usd": 0.00520634,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 339,
+          "completion_tokens": 101,
+          "cost_usd": 0.0002798,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 8018,
+          "completion_tokens": 248,
+          "cost_usd": 0.00492654,
+          "calls": 4
+        }
+      },
+      "latency_s": 0.01,
+      "reason": "split_across_regulators",
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.437,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.437,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "RBI-IOS/Cl-8"
+      ]
+    },
+    {
+      "id": "S19-subjudice",
+      "tags": [],
+      "expected_route": "not_maintainable",
+      "route": "not_maintainable",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "not_maintainable",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 6,
+      "tool_calls": 3,
+      "tokens": 10516,
+      "cost_usd": 0.00626984,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 338,
+          "completion_tokens": 96,
+          "cost_usd": 0.00027526,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 9851,
+          "completion_tokens": 231,
+          "cost_usd": 0.005994579999999999,
+          "calls": 4
+        }
+      },
+      "latency_s": 0.012,
+      "reason": "sub_judice",
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.386,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.386,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-SCORES/Annex-A"
+      ]
+    },
+    {
+      "id": "S20-unlisted",
+      "tags": [],
+      "expected_route": "not_maintainable",
+      "route": "not_maintainable",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "not_maintainable",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 6,
+      "tool_calls": 3,
+      "tokens": 8532,
+      "cost_usd": 0.00510228,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 337,
+          "completion_tokens": 102,
+          "cost_usd": 0.00027941,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 7853,
+          "completion_tokens": 240,
+          "cost_usd": 0.00482287,
+          "calls": 4
+        }
+      },
+      "latency_s": 0.013,
+      "reason": "unlisted_company",
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.351,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.351,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-SCORES/Annex-A"
+      ]
+    },
+    {
+      "id": "S21-time-barred",
+      "tags": [],
+      "expected_route": "not_maintainable",
+      "route": "not_maintainable",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "not_maintainable",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 7,
+      "tool_calls": 4,
+      "tokens": 14196,
+      "cost_usd": 0.00844804,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 335,
+          "completion_tokens": 92,
+          "cost_usd": 0.00027033,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 13499,
+          "completion_tokens": 270,
+          "cost_usd": 0.00817771,
+          "calls": 5
+        }
+      },
+      "latency_s": 0.016,
+      "reason": "time_barred",
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.277,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.277,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-SCORES/3"
+      ]
+    },
+    {
+      "id": "S22-injection",
+      "tags": [
+        "injection"
+      ],
+      "expected_route": "escalate_to_human",
+      "route": "escalate_to_human",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": null,
+      "first_draft_correct": null,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": false,
+      "attempts": 1,
+      "steps": 0,
+      "tool_calls": 0,
+      "tokens": 0,
+      "cost_usd": 0,
+      "usage": {},
+      "latency_s": 0.002,
+      "reason": "prompt_injection_suspected",
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.0,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": null,
+      "citations": []
+    },
+    {
+      "id": "S23-fd-renewal",
+      "tags": [
+        "difficult"
+      ],
+      "expected_route": "refer_to_other_regulator",
+      "route": "refer_to_other_regulator",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "refer_to_other_regulator",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 7,
+      "tool_calls": 4,
+      "tokens": 14582,
+      "cost_usd": 0.00878438,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 339,
+          "completion_tokens": 98,
+          "cost_usd": 0.00027743,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 13338,
+          "completion_tokens": 807,
+          "cost_usd": 0.00850695,
+          "calls": 5
+        }
+      },
+      "latency_s": 0.017,
+      "reason": "jurisdiction_rbi_bank_not_yet_approached",
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.469,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.469,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-SCORES/Annex-A",
+        "RBI-IOS/FAQ-Deposits",
+        "RBI-IOS/Cl-8",
+        "RBI-IOS/Cl-10"
+      ]
+    },
+    {
+      "id": "S24-chit",
+      "tags": [
+        "out-of-corpus"
+      ],
+      "expected_route": "escalate_to_human",
+      "route": "escalate_to_human",
+      "route_correct": true,
+      "regulator_correct": true,
+      "first_draft_route": "escalate_to_human",
+      "first_draft_correct": true,
+      "expected_passage_retrieved": true,
+      "expected_passage_cited": true,
+      "verified": true,
+      "attempts": 1,
+      "steps": 6,
+      "tool_calls": 3,
+      "tokens": 9272,
+      "cost_usd": 0.00554168,
+      "usage": {
+        "intake": {
+          "prompt_tokens": 332,
+          "completion_tokens": 102,
+          "cost_usd": 0.00027646,
+          "calls": 1
+        },
+        "research": {
+          "prompt_tokens": 8584,
+          "completion_tokens": 254,
+          "cost_usd": 0.005265219999999999,
+          "calls": 4
+        }
+      },
+      "latency_s": 0.012,
+      "reason": "entity_type_outside_corpus",
+      "final": {
+        "groundedness": 1.0,
+        "context_relevance": 0.311,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "first_draft": {
+        "groundedness": 1.0,
+        "context_relevance": 0.311,
+        "faithfulness": 1.0,
+        "hallucination": 0.0
+      },
+      "citations": [
+        "SEBI-SCORES/Annex-A"
+      ]
+    }
+  ]
+}

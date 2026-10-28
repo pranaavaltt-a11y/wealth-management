@@ -1,0 +1,244 @@
+{
+  "$defs": {
+    "Complainant": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "maxLength": 100,
+          "minLength": 2,
+          "title": "Name",
+          "type": "string"
+        },
+        "email": {
+          "anyOf": [
+            {
+              "maxLength": 254,
+              "pattern": "^[^@\\s]+@[^@\\s]+\\.[A-Za-z]{2,}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Email"
+        },
+        "state": {
+          "description": "Indian state or union territory of residence",
+          "maxLength": 40,
+          "minLength": 2,
+          "title": "State",
+          "type": "string"
+        },
+        "investor_type": {
+          "$ref": "#/$defs/InvestorType",
+          "default": "individual"
+        }
+      },
+      "required": [
+        "name",
+        "state"
+      ],
+      "title": "Complainant",
+      "type": "object"
+    },
+    "EntityType": {
+      "enum": [
+        "broker",
+        "mutual_fund",
+        "registrar",
+        "listed_company",
+        "depository_participant",
+        "depository",
+        "bank",
+        "nbfc",
+        "insurer",
+        "other",
+        "unknown"
+      ],
+      "title": "EntityType",
+      "type": "string"
+    },
+    "InvestorType": {
+      "enum": [
+        "individual",
+        "huf",
+        "nri",
+        "corporate"
+      ],
+      "title": "InvestorType",
+      "type": "string"
+    },
+    "Product": {
+      "enum": [
+        "equity_shares",
+        "mutual_fund_units",
+        "bonds_debentures",
+        "derivatives",
+        "fixed_deposit",
+        "savings_account",
+        "loan",
+        "insurance_policy",
+        "pension",
+        "other",
+        "unknown"
+      ],
+      "title": "Product",
+      "type": "string"
+    },
+    "RunOptions": {
+      "additionalProperties": false,
+      "properties": {
+        "prompt_variant": {
+          "anyOf": [
+            {
+              "enum": [
+                "v1",
+                "v2"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prompt Variant"
+        },
+        "demo_fault": {
+          "anyOf": [
+            {
+              "const": "unsupported_draft",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Accepted only when DEMO_FAULTS_ENABLED=true; forces a bad first draft",
+          "title": "Demo Fault"
+        }
+      },
+      "title": "RunOptions",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "POST /v1/complaints request body.",
+  "properties": {
+    "complaint_text": {
+      "maxLength": 4000,
+      "minLength": 30,
+      "title": "Complaint Text",
+      "type": "string"
+    },
+    "complainant": {
+      "$ref": "#/$defs/Complainant"
+    },
+    "entity_name": {
+      "anyOf": [
+        {
+          "maxLength": 200,
+          "minLength": 2,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Entity Name"
+    },
+    "entity_type_claimed": {
+      "$ref": "#/$defs/EntityType",
+      "default": "unknown"
+    },
+    "product": {
+      "$ref": "#/$defs/Product",
+      "default": "unknown"
+    },
+    "amount_involved_inr": {
+      "anyOf": [
+        {
+          "maximum": 10000000000.0,
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Amount Involved Inr"
+    },
+    "incident_date": {
+      "format": "date",
+      "title": "Incident Date",
+      "type": "string"
+    },
+    "first_approached_entity": {
+      "title": "First Approached Entity",
+      "type": "boolean"
+    },
+    "entity_response_date": {
+      "anyOf": [
+        {
+          "format": "date",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Entity Response Date"
+    },
+    "callback_url": {
+      "anyOf": [
+        {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Callback Url"
+    },
+    "client_reference": {
+      "anyOf": [
+        {
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9_.-]+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Client Reference"
+    },
+    "options": {
+      "$ref": "#/$defs/RunOptions",
+      "default": {
+        "prompt_variant": null,
+        "demo_fault": null
+      }
+    }
+  },
+  "required": [
+    "complaint_text",
+    "complainant",
+    "incident_date",
+    "first_approached_entity"
+  ],
+  "title": "ComplaintRequest",
+  "type": "object",
+  "$id": "https://igr.local/contracts/complaint_request.schema.json",
+  "x-contract-version": "1.0.0"
+}

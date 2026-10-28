@@ -1,0 +1,39 @@
+{
+  "properties": {
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "queued",
+        "completed"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "status_url": {
+      "title": "Status Url",
+      "type": "string"
+    },
+    "cache_hit": {
+      "default": false,
+      "title": "Cache Hit",
+      "type": "boolean"
+    },
+    "contract_version": {
+      "default": "1.0.0",
+      "title": "Contract Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id",
+    "status",
+    "status_url"
+  ],
+  "title": "SubmitResponse",
+  "type": "object",
+  "$id": "https://igr.local/contracts/submit_response.schema.json",
+  "x-contract-version": "1.0.0"
+}
