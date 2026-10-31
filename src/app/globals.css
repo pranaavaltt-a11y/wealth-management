@@ -23,13 +23,13 @@
   --bg-inset:    #eae5da;
   --fg:          #3a3733;
   --fg-muted:    #6b655c;
-  --fg-faint:    #948d82;
+  --fg-faint:    #726b64;   /* darkened for WCAG AA small text (#24) */
   --line:        #e4ded2;
   --line-strong: #d2cabb;
 
   /* Light-mode accents: deeper steps, so they hold up on a pale ground. */
   --accent:       #b0663a;   /* clay   — primary actions      */
-  --accent-hover: #8f5028;
+  --accent-hover: #78441f;
   --accent-fg:    #fbf9f5;
   --positive:     #5f8449;   /* sage   — income, gains        */
   --negative:     #8e3c3c;   /* rose   — expense, overdue     */
@@ -37,6 +37,21 @@
   --info:         #3f6a92;   /* dusk   — informational        */
   --purple:       #59447a;   /* lilac                         */
   --aqua:         #2c635f;   /* teal                          */
+
+  /* Text-grade variants of the accent & semantic hues (#24). The hues above
+     are tuned as chart FILLS — 3:1 graphical contrast plus colour-blind
+     separation (see chart-colors.ts) — which leaves several of them below the
+     4.5:1 WCAG AA floor for small text. These darker steps clear AA on every
+     paper surface and are what the UI uses for coloured text, borders and the
+     primary button; charts keep reading the fill hues above, so the validated
+     palette is untouched. */
+  --accent-text:   #8f5028;
+  --positive-text: #4d6b3a;
+  --negative-text: #8e3c3c;
+  --warning-text:  #7e5e18;
+  --info-text:     #3f6a92;
+  --purple-text:   #59447a;
+  --aqua-text:     #2c635f;
 
   --ring: rgba(176, 102, 58, 0.28);
   --shadow-soft: 0 1px 2px rgba(58, 55, 51, 0.04), 0 1px 3px rgba(58, 55, 51, 0.03);
@@ -55,7 +70,7 @@
   --bg-inset:    #191d20;
   --fg:          #e8e4dc;
   --fg-muted:    #b3ada3;
-  --fg-faint:    #857f76;
+  --fg-faint:    #9a938a;   /* lightened for WCAG AA small text (#24) */
   --line:        #343a3e;
   --line-strong: #464d52;
 
@@ -69,6 +84,16 @@
   --info:         #8fb2d0;
   --purple:       #9885bb;
   --aqua:         #5a9490;
+
+  /* Text-grade variants (#24): on dark most fills already clear AA, so only
+     the three lightest-weight hues are nudged up. See the light block above. */
+  --accent-text:   #e09b6b;
+  --positive-text: #a6c48a;
+  --negative-text: #d98585;
+  --warning-text:  #e8c878;
+  --info-text:     #8fb2d0;
+  --purple-text:   #a695c4;
+  --aqua-text:     #6fa9a4;
 
   --ring: rgba(224, 155, 107, 0.30);
   --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.20), 0 1px 3px rgba(0, 0, 0, 0.14);
@@ -120,14 +145,16 @@ body {
   .btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--ring); }
 
   .btn-primary {
-    background: var(--accent);
-    border-color: var(--accent);
+    /* accent-text, not accent: the label is white, and the brand clay fill is
+       only 4.15:1 against it — below AA. The deeper step clears 4.5:1. (#24) */
+    background: var(--accent-text);
+    border-color: var(--accent-text);
     color: var(--accent-fg);
   }
   .btn-primary:hover:not(:disabled) { background: var(--accent-hover); border-color: var(--accent-hover); }
 
-  .btn-danger { color: var(--negative); border-color: var(--line-strong); }
-  .btn-danger:hover:not(:disabled) { background: var(--negative); border-color: var(--negative); color: var(--bg-raised); }
+  .btn-danger { color: var(--negative-text); border-color: var(--line-strong); }
+  .btn-danger:hover:not(:disabled) { background: var(--negative-text); border-color: var(--negative-text); color: var(--bg); }
 
   .input, .select {
     @apply w-full rounded-md border px-2.5 py-1.5 text-sm outline-none transition-all duration-150;
@@ -139,7 +166,7 @@ body {
   .input::placeholder { color: var(--fg-faint); }
 
   .label { @apply mb-1 block text-[11px] font-medium uppercase tracking-[0.08em]; color: var(--fg-muted); }
-  .field-error { @apply mt-1 text-xs; color: var(--negative); }
+  .field-error { @apply mt-1 text-xs; color: var(--negative-text); }
 
   /* Data-dense but unhurried: roomy rows, hairline separators, no zebra. */
   .table { @apply w-full border-collapse text-sm; }

@@ -11,6 +11,8 @@
     "db:migrate": "tsx scripts/migrate.ts",
     "db:seed": "tsx scripts/seed.ts",
     "db:reset": "tsx scripts/migrate.ts --reset && tsx scripts/seed.ts",
+    "db:backup": "tsx scripts/backup.ts",
+    "db:restore": "tsx scripts/restore.ts",
     "test": "npm run test:unit && npm run test:db",
     "test:unit": "tsx --test \"tests/unit/**/*.test.ts\"",
     "test:db": "tsx scripts/test-db.ts && tsx --test --test-concurrency=1 \"tests/db/**/*.test.ts\"",

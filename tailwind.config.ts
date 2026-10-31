@@ -27,17 +27,23 @@ const config: Config = {
           DEFAULT: 'var(--line)',
           strong: 'var(--line-strong)',
         },
+        // Semantic utilities (text-/bg-/border-accent, -positive, …) map to the
+        // text-grade hues so coloured text clears WCAG AA (#24). The chart fill
+        // hues live on --accent/--positive/… and are read straight from CSS by
+        // chart-colors.ts, so charts are unaffected. `accent.brand` exposes the
+        // fill clay for the few places that want it (e.g. the focus ring).
         accent: {
-          DEFAULT: 'var(--accent)',
+          DEFAULT: 'var(--accent-text)',
+          brand: 'var(--accent)',
           hover: 'var(--accent-hover)',
           fg: 'var(--accent-fg)',
         },
-        positive: 'var(--positive)',
-        negative: 'var(--negative)',
-        warning: 'var(--warning)',
-        info: 'var(--info)',
-        purple: 'var(--purple)',
-        aqua: 'var(--aqua)',
+        positive: 'var(--positive-text)',
+        negative: 'var(--negative-text)',
+        warning: 'var(--warning-text)',
+        info: 'var(--info-text)',
+        purple: 'var(--purple-text)',
+        aqua: 'var(--aqua-text)',
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],

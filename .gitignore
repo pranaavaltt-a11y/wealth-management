@@ -11,3 +11,7 @@ next-env.d.ts
 tsconfig.tsbuildinfo
 /public/uploads/*
 !/public/uploads/.gitkeep
+
+# Database backups contain real data — keep the folder, never the dumps.
+/backups/*
+!/backups/.gitkeep
