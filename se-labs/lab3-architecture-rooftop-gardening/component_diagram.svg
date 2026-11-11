@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="860" viewBox="0 0 1200 860" font-family="Segoe UI, Arial, sans-serif">
+<rect width="1200" height="860" fill="#ffffff"/>
+<text x="600.0" y="40" text-anchor="middle" font-size="25" font-weight="700" fill="#102a43">Urban Rooftop Gardening Co-op App &#8212; UML Component Diagram</text>
+<text x="600.0" y="66" text-anchor="middle" font-size="15" fill="#486581">Architectural Style: Client-Server &#160;|&#160; Pranaav P &#160;|&#160; SRN: PES1UG24AM387</text>
+<rect x="24" y="92" width="1152" height="158" rx="10" fill="#f7fafc" stroke="#d0d9e0" stroke-dasharray="6 5"/>
+<text x="42" y="114" font-size="13" font-weight="700" fill="#829ab1" letter-spacing="1">CLIENT TIER  (gardeners&#8217; / leaders&#8217; mobile devices)</text>
+<rect x="24" y="272" width="1152" height="300" rx="10" fill="#f5faf6" stroke="#d0d9e0" stroke-dasharray="6 5"/>
+<text x="42" y="294" font-size="13" font-weight="700" fill="#829ab1" letter-spacing="1">APPLICATION / SERVER TIER  (central backend)</text>
+<rect x="24" y="590" width="1152" height="220" rx="10" fill="#fffaf2" stroke="#d0d9e0" stroke-dasharray="6 5"/>
+<text x="42" y="612" font-size="13" font-weight="700" fill="#829ab1" letter-spacing="1">DATA TIER</text>
+<rect x="270.0" y="126.0" width="320" height="100" rx="6" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+<text x="430" y="154.0" text-anchor="middle" font-size="13" fill="#486581" font-style="italic">&#171;component&#187;</text>
+<text x="430" y="176.0" text-anchor="middle" font-size="15.5" font-weight="700" fill="#102a43">Gardener / Leader</text>
+<text x="430" y="197.0" text-anchor="middle" font-size="15.5" font-weight="700" fill="#102a43">Mobile Client</text>
+<rect x="556.0" y="137.0" width="22" height="16" fill="#fff" stroke="#1976d2" stroke-width="1.5"/>
+<rect x="550.0" y="140.0" width="12" height="4" fill="#fff" stroke="#1976d2" stroke-width="1.5"/>
+<rect x="550.0" y="146.0" width="12" height="4" fill="#fff" stroke="#1976d2" stroke-width="1.5"/>
+<rect x="280.0" y="300.0" width="300" height="96" rx="6" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+<text x="430" y="328.0" text-anchor="middle" font-size="13" fill="#486581" font-style="italic">&#171;component&#187;</text>
+<text x="430" y="350.0" text-anchor="middle" font-size="15.5" font-weight="700" fill="#102a43">API Gateway</text>
+<text x="430" y="371.0" text-anchor="middle" font-size="15.5" font-weight="700" fill="#102a43">(Auth &amp; Routing)</text>
+<rect x="546.0" y="311.0" width="22" height="16" fill="#fff" stroke="#2e7d32" stroke-width="1.5"/>
+<rect x="540.0" y="314.0" width="12" height="4" fill="#fff" stroke="#2e7d32" stroke-width="1.5"/>
+<rect x="540.0" y="320.0" width="12" height="4" fill="#fff" stroke="#2e7d32" stroke-width="1.5"/>
+<rect x="76.0" y="445.0" width="296" height="110" rx="6" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+<text x="224" y="473.0" text-anchor="middle" font-size="13" fill="#486581" font-style="italic">&#171;component&#187;</text>
+<text x="224" y="495.0" text-anchor="middle" font-size="15.5" font-weight="700" fill="#102a43">Plot &amp; Harvest</text>
+<text x="224" y="516.0" text-anchor="middle" font-size="15.5" font-weight="700" fill="#102a43">Service</text>
+<rect x="338.0" y="456.0" width="22" height="16" fill="#fff" stroke="#2e7d32" stroke-width="1.5"/>
+<rect x="332.0" y="459.0" width="12" height="4" fill="#fff" stroke="#2e7d32" stroke-width="1.5"/>
+<rect x="332.0" y="465.0" width="12" height="4" fill="#fff" stroke="#2e7d32" stroke-width="1.5"/>
+<rect x="518.0" y="445.0" width="300" height="110" rx="6" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+<text x="668" y="473.0" text-anchor="middle" font-size="13" fill="#486581" font-style="italic">&#171;component&#187;</text>
+<text x="668" y="495.0" text-anchor="middle" font-size="15.5" font-weight="700" fill="#102a43">Trade &amp; Community</text>
+<text x="668" y="516.0" text-anchor="middle" font-size="15.5" font-weight="700" fill="#102a43">Service</text>
+<rect x="784.0" y="456.0" width="22" height="16" fill="#fff" stroke="#2e7d32" stroke-width="1.5"/>
+<rect x="778.0" y="459.0" width="12" height="4" fill="#fff" stroke="#2e7d32" stroke-width="1.5"/>
+<rect x="778.0" y="465.0" width="12" height="4" fill="#fff" stroke="#2e7d32" stroke-width="1.5"/>
+<rect x="281.0" y="650.0" width="330" height="100" rx="6" fill="#fff3e0" stroke="#ef6c00" stroke-width="2"/>
+<text x="446" y="678.0" text-anchor="middle" font-size="13" fill="#486581" font-style="italic">&#171;component&#187;</text>
+<text x="446" y="700.0" text-anchor="middle" font-size="15.5" font-weight="700" fill="#102a43">Data Repository</text>
+<text x="446" y="721.0" text-anchor="middle" font-size="15.5" font-weight="700" fill="#102a43">(shared database)</text>
+<rect x="577.0" y="661.0" width="22" height="16" fill="#fff" stroke="#ef6c00" stroke-width="1.5"/>
+<rect x="571.0" y="664.0" width="12" height="4" fill="#fff" stroke="#ef6c00" stroke-width="1.5"/>
+<rect x="571.0" y="670.0" width="12" height="4" fill="#fff" stroke="#ef6c00" stroke-width="1.5"/>
+<path d="M 430 226 L 430 300" fill="none" stroke="#486581" stroke-width="2"/>
+<path d="M 418.0 260.0 A 12 12 0 0 1 442.0 260.0" fill="none" stroke="#334e68" stroke-width="2.4"/>
+<circle cx="430.0" cy="282.0" r="11" fill="#fff" stroke="#334e68" stroke-width="2.4"/>
+<rect x="480.0" y="218" width="160.0" height="20" rx="4" fill="#fff" stroke="#bcccdc"/>
+<text x="560" y="232" text-anchor="middle" font-size="12.5" fill="#243b53" font-weight="600">IAppAPI (HTTPS/REST)</text>
+<path d="M 355 396 L 224 445" fill="none" stroke="#486581" stroke-width="2"/>
+<path d="M 257.3 419.7 A 12 12 0 0 1 265.7 442.2" fill="none" stroke="#334e68" stroke-width="2.4"/>
+<circle cx="240.9" cy="438.7" r="11" fill="#fff" stroke="#334e68" stroke-width="2.4"/>
+<rect x="204.2" y="391" width="101.6" height="20" rx="4" fill="#fff" stroke="#bcccdc"/>
+<text x="255" y="405" text-anchor="middle" font-size="12.5" fill="#243b53" font-weight="600">IPlotHarvest</text>
+<path d="M 505 396 L 668 445" fill="none" stroke="#486581" stroke-width="2"/>
+<path d="M 626.2 445.0 A 12 12 0 0 1 633.1 422.0" fill="none" stroke="#334e68" stroke-width="2.4"/>
+<circle cx="650.8" cy="439.8" r="11" fill="#fff" stroke="#334e68" stroke-width="2.4"/>
+<rect x="572.9" y="391" width="94.3" height="20" rx="4" fill="#fff" stroke="#bcccdc"/>
+<text x="620" y="405" text-anchor="middle" font-size="12.5" fill="#243b53" font-weight="600">ITradeBoard</text>
+<path d="M 224 555 L 380 650" fill="none" stroke="#486581" stroke-width="2"/>
+<path d="M 339.6 639.4 A 12 12 0 0 1 352.1 618.9" fill="none" stroke="#334e68" stroke-width="2.4"/>
+<circle cx="364.6" cy="640.6" r="11" fill="#fff" stroke="#334e68" stroke-width="2.4"/>
+<rect x="222.8" y="598" width="94.3" height="20" rx="4" fill="#fff" stroke="#bcccdc"/>
+<text x="270" y="612" text-anchor="middle" font-size="12.5" fill="#243b53" font-weight="600">IDataAccess</text>
+<path d="M 668 555 L 515 650" fill="none" stroke="#486581" stroke-width="2"/>
+<path d="M 542.7 618.7 A 12 12 0 0 1 555.3 639.1" fill="none" stroke="#334e68" stroke-width="2.4"/>
+<circle cx="530.3" cy="640.5" r="11" fill="#fff" stroke="#334e68" stroke-width="2.4"/>
+<rect x="580.9" y="598" width="94.3" height="20" rx="4" fill="#fff" stroke="#bcccdc"/>
+<text x="628" y="612" text-anchor="middle" font-size="12.5" fill="#243b53" font-weight="600">IDataAccess</text>
+<line x1="60" y1="256" x2="1140" y2="256" stroke="#b91c1c" stroke-width="1.6" stroke-dasharray="9 6"/>
+<rect x="712" y="246" width="368" height="22" rx="11" fill="#fff5f5" stroke="#e0a0a0"/>
+<text x="896" y="261" text-anchor="middle" font-size="12" fill="#b91c1c" font-weight="600">Client &#8596; Server boundary &#183; HTTPS / TLS (NFR-001)</text>
+<rect x="812" y="452" width="352" height="26" rx="13" fill="#eef2f7" stroke="#9fb3c8" stroke-dasharray="4 3"/>
+<text x="988" y="469" text-anchor="middle" font-size="11.5" fill="#486581">real-time listing push &#8594; clients (&#8804; 2s)</text>
+<rect x="812" y="620" width="300" height="150" rx="8" fill="#fff" stroke="#bcccdc"/>
+<text x="828" y="646" font-size="14" font-weight="700" fill="#102a43">Legend</text>
+<circle cx="838" cy="672" r="9" fill="#fff" stroke="#334e68" stroke-width="2.2"/>
+<text x="858" y="676" font-size="13" fill="#334e68">Provided interface (ball)</text>
+<path d="M 838.0 712.0 A 10 10 0 0 1 838.0 692.0" fill="none" stroke="#334e68" stroke-width="2.4"/>
+<text x="858" y="706" font-size="13" fill="#334e68">Required interface (socket)</text>
+<line x1="828" y1="730" x2="850" y2="730" stroke="#486581" stroke-width="2"/>
+<text x="858" y="734" font-size="13" fill="#334e68">Assembly connector</text>
+<text x="828" y="758" font-size="11.5" fill="#829ab1">5 components &#183; 5 interfaces</text>
+</svg>
