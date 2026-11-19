@@ -110,7 +110,6 @@ products.
 ```bash
 npm run dev          # http://localhost:3000
 npm run build && npm start
-npm run typecheck
 npm test             # 28 unit + 39 database tests, against a separate wealthwise_test DB
 npm run docs:generate   # re-derive the diagrams and data dictionary from the live schema
 ```
@@ -123,16 +122,16 @@ Each layer only talks to the one below it. No React component ever issues a
 query; no route handler ever writes SQL inline.
 
 ```
-  src/app/**/page.tsx          UI — server components fetch, client components interact
+  src/app/**/page.jsx          UI — server components fetch, client components interact
         │                      (components call /api/*, never the database)
         ▼
-  src/app/api/**/route.ts      API layer — auth check, Zod validation, error mapping
+  src/app/api/**/route.js      API layer — auth check, Zod validation, error mapping
         │
         ▼
-  src/lib/services/*.ts        business logic — auth, valuation history
+  src/lib/services/*.js        business logic — auth, valuation history
         │
         ▼
-  src/lib/db/*.ts              data access — one module per entity, raw SQL only
+  src/lib/db/*.js              data access — one module per entity, raw SQL only
         │
         ▼
   PostgreSQL  +  MongoDB       constraints, functions, triggers, views
@@ -149,20 +148,27 @@ src/
     login/  signup/  globals.css        design tokens
   components/              presentational only
   lib/
-    auth/                  jwt.ts  password.ts  session.ts  cookie.ts
-    db/                    postgres.ts  mongo.ts  users.ts  assets.ts  loans.ts
-                           transactions.ts  networth.ts
-    services/              auth-service.ts  valuation-service.ts
-    validation/schemas.ts  Zod schemas mirroring the DB CHECK constraints
-    api.ts  client.ts  format.ts  chart-colors.ts
+    auth/                  jwt.js  password.js  session.js  cookie.js
+    db/                    postgres.js  mongo.js  users.js  assets.js  loans.js
+                           transactions.js  networth.js
+    services/              auth-service.js  valuation-service.js
+    validation/schemas.js  Zod schemas mirroring the DB CHECK constraints
+    api.js  client.js  format.js  chart-colors.js
 db/migrations/             001_core_schema  002_indexes  003_emi_functions
                            004_networth_trigger
-scripts/                   migrate.ts  seed.ts
+scripts/                   migrate.js  seed.js
 ```
+
+**Language.** The application is written in modern JavaScript (ES2022, React
+JSX) on Next.js 14 — no TypeScript. Data shapes are documented with JSDoc
+(`@typedef`, `@param`, `@returns`), so editors still show types and hover
+docs; correctness at runtime comes from Zod validation at the API boundary and
+CHECK / NOT NULL / foreign-key constraints in the database, neither of which
+depends on a compiler. See [`docs/JS_CONVERSION_REPORT.md`](docs/JS_CONVERSION_REPORT.md).
 
 **Why no ORM.** Postgres is reached through the `pg` driver with hand-written,
 parameterised SQL. Every JOIN, GROUP BY, window function and stored-procedure
-call is visible in `src/lib/db/*.ts` and explainable line by line — which is the
+call is visible in `src/lib/db/*.js` and explainable line by line — which is the
 point of the exercise. Mongo uses the native `mongodb` driver for the same
 reason.
 
@@ -210,13 +216,13 @@ document rather than a row are in §7 and §9.4 of the
 
 | Operation | What must land together | Where |
 |---|---|---|
-| Create loan | `INSERT INTO loans` + `fn_generate_emi_schedule()` — a loan can never exist without its schedule | `src/lib/db/loans.ts` → `createLoan` |
+| Create loan | `INSERT INTO loans` + `fn_generate_emi_schedule()` — a loan can never exist without its schedule | `src/lib/db/loans.js` → `createLoan` |
 | Edit loan terms | `UPDATE loans` + full schedule regeneration | `updateLoan` |
 | Pay an EMI | flip installment → `paid`, write the ledger entry, auto-close the loan if it was the last one | `payInstallment` |
-| Migrations | each `.sql` file inside `BEGIN`/`COMMIT` | `scripts/migrate.ts` |
-| Seed | the entire seed is one transaction | `scripts/seed.ts` |
+| Migrations | each `.sql` file inside `BEGIN`/`COMMIT` | `scripts/migrate.js` |
+| Seed | the entire seed is one transaction | `scripts/seed.js` |
 
-`withTransaction()` in `src/lib/db/postgres.ts` takes a single pooled client
+`withTransaction()` in `src/lib/db/postgres.js` takes a single pooled client
 through `BEGIN` → callback → `COMMIT`, rolling back on any throw.
 
 ### 2. Stored procedures / functions
@@ -325,7 +331,7 @@ per-user filter and the sort/rollup are served by one index.
 
 Keyword rules live in `categorization_rules`, not in application code, so a
 user can add one without a redeploy and matching is a query rather than a loop
-in TypeScript.
+in JavaScript.
 
 `fn_categorize(user_id, description)` resolves a bank narration to a category.
 Precedence is encoded in the ORDER BY: the user's own rule beats every system
@@ -522,7 +528,7 @@ nothing shouts, and red means "this needs attention" rather than alarm. No
 default shadcn or Tailwind colours.
 
 Tokens are CSS variables in `src/app/globals.css`, so light/dark is a single
-`data-theme` swap on `<html>`, and `src/lib/chart-colors.ts` resolves the same
+`data-theme` swap on `<html>`, and `src/lib/chart-colors.js` resolves the same
 variables at runtime — a category is the same colour in the table, the chart
 and the legend, in both themes.
 
@@ -545,7 +551,7 @@ enough to separate surfaces, never heavy. Amounts use Indian digit grouping
 (`₹92,00,000`, `₹1.06 Cr`), not thousands separators.
 
 Theme choice persists to `localStorage`, and an inline script in
-`src/app/layout.tsx` applies it before first paint so there is no flash of the
+`src/app/layout.jsx` applies it before first paint so there is no flash of the
 wrong theme.
 
 ---

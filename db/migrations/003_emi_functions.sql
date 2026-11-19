@@ -1,7 +1,7 @@
 -- =============================================================================
 -- 003_emi_functions.sql — EMI amortisation as Postgres functions.
 --
--- Why in the database and not in TypeScript?
+-- Why in the database and not in JavaScript?
 --   * The schedule is written in the same transaction that creates the loan, so
 --     a loan can never exist without its schedule.
 --   * Prepayment recalculation (Phase 4) reuses the identical maths, so there

@@ -28,7 +28,7 @@ CREATE INDEX IF NOT EXISTS idx_txn_import_batch
 
 -- Keyword rules live in the database, not in application code, so that a user
 -- can add their own without a redeploy and so matching is a JOIN rather than a
--- loop in TypeScript.
+-- loop in JavaScript.
 --
 -- user_id NULL  = system rule, applies to everyone
 -- user_id SET   = that user's own rule, and it beats every system rule

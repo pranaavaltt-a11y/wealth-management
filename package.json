@@ -7,14 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit",
-    "db:migrate": "tsx scripts/migrate.ts",
-    "db:seed": "tsx scripts/seed.ts",
-    "db:reset": "tsx scripts/migrate.ts --reset && tsx scripts/seed.ts",
+    "db:migrate": "tsx --tsconfig jsconfig.json scripts/migrate.js",
+    "db:seed": "tsx --tsconfig jsconfig.json scripts/seed.js",
+    "db:reset": "tsx --tsconfig jsconfig.json scripts/migrate.js --reset && tsx --tsconfig jsconfig.json scripts/seed.js",
     "test": "npm run test:unit && npm run test:db",
-    "test:unit": "tsx --test \"tests/unit/**/*.test.ts\"",
-    "test:db": "tsx scripts/test-db.ts && tsx --test --test-concurrency=1 \"tests/db/**/*.test.ts\"",
-    "docs:generate": "tsx scripts/generate-docs.ts"
+    "test:unit": "tsx --tsconfig jsconfig.json --test \"tests/unit/**/*.test.js\"",
+    "test:db": "tsx --tsconfig jsconfig.json scripts/test-db.js && tsx --tsconfig jsconfig.json --test --test-concurrency=1 \"tests/db/**/*.test.js\"",
+    "docs:generate": "tsx --tsconfig jsconfig.json scripts/generate-docs.js"
   },
   "dependencies": {
     "@tesseract.js-data/eng": "^1.0.0",
@@ -32,17 +31,10 @@
   },
   "devDependencies": {
     "@hpcc-js/wasm-graphviz": "^1.29.2",
-    "@types/bcryptjs": "^2.4.6",
-    "@types/node": "^22.9.0",
-    "@types/pdfkit": "^0.17.6",
-    "@types/pg": "^8.11.10",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
     "dotenv": "^16.4.5",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
-    "tsx": "^4.19.2",
-    "typescript": "^5.6.3"
+    "tsx": "^4.19.2"
   }
 }

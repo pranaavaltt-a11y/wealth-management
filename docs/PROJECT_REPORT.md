@@ -7,7 +7,7 @@ DBMS Experiential Learning — Level 3 Project · SQL + NoSQL (Option 1: Postgre
 |---|---|
 | Team | _Member 1 name, SRN_ · _Member 2 name, SRN_ |
 | Repository | `pranaavaltt-a11y/wealth-management` |
-| Stack | Next.js 14 (App Router) · TypeScript · PostgreSQL 16 · MongoDB 6+ · Tailwind CSS |
+| Stack | Next.js 14 (App Router) · JavaScript (ES2022, JSX, JSDoc) · PostgreSQL 16 · MongoDB 6+ · Tailwind CSS |
 | Database objects | 11 tables · 11 views · 14 functions · 1 stored procedure · 8 triggers · 35 indexes · 41 CHECK constraints · 13 foreign keys · 9 enum types · 4 MongoDB collections |
 | Tests | 67 automated tests (28 unit, 39 database integration), all passing |
 
@@ -113,7 +113,7 @@ and stores no real account credentials.
 
 | ID | Requirement | Phase | Implemented by |
 |---|---|---|---|
-| FR-1 | Sign up and log in; passwords hashed; JWT session; two roles | 1 | `auth-service.ts`, bcrypt (12 rounds), httpOnly JWT cookie |
+| FR-1 | Sign up and log in; passwords hashed; JWT session; two roles | 1 | `auth-service.js`, bcrypt (12 rounds), httpOnly JWT cookie |
 | FR-2 | Create, read, update and delete assets, with liquidity and valuation history | 1 | `assets` table, `asset_valuation_history` (Mongo) |
 | FR-3 | Create loans; the full EMI schedule is generated automatically | 1 | `fn_generate_emi_schedule()` inside one transaction |
 | FR-4 | Mark an EMI paid, atomically, with a ledger entry and auto-close | 1 | `payInstallment()` transaction |
@@ -133,7 +133,7 @@ and stores no real account credentials.
 | FR-18 | Loan product recommendations | 4 | `fn_recommend_loan_products()` |
 | FR-19 | News feed with "how does this affect my loans?" | 4 | `news_articles` (Mongo) × floating-rate loans (Postgres) |
 | FR-20 | Financial-year reporting (April–March) | 5 | `v_fy_*` views, expression index |
-| FR-21 | Downloadable net worth PDF statement | 5 | `statement-pdf.ts` (pdfkit) |
+| FR-21 | Downloadable net worth PDF statement | 5 | `statement-pdf.js` (pdfkit) |
 | FR-22 | EMI reminders | 5 | `notifications`, `fn_generate_emi_reminders()` |
 | FR-23 | Ledger full-text search | 3 | Generated `tsvector` column + GIN index |
 | FR-24 | Advisor view of assigned clients | 4 | `/advisor`, role check before any query |
@@ -321,7 +321,7 @@ Summary of what the database enforces:
 ## 9. Database implementation
 
 Eight migrations, applied in order by a transactional runner
-(`scripts/migrate.ts`). Each file runs in its own transaction and is recorded in
+(`scripts/migrate.js`). Each file runs in its own transaction and is recorded in
 `schema_migrations`.
 
 | Migration | Contents |
@@ -559,13 +559,13 @@ SELECT l.lender, fn_calculate_emi(o.outstanding, l.interest_rate,             r.
  Browser ── Next.js pages (React, server + client components)
                │   components never query a database; they call /api/*
                ▼
-           API layer — src/app/api/**/route.ts (35 route handlers)
+           API layer — src/app/api/**/route.js (35 route handlers)
                │   auth (JWT cookie) · role checks · Zod validation · error mapping
                ▼
-           Service layer — src/lib/services/*.ts
+           Service layer — src/lib/services/*.js
                │   auth, CSV parsing, OCR, import orchestration, vault, news, PDF
                ▼
-           Data-access layer — src/lib/db/*.ts (one module per entity, raw SQL, no ORM)
+           Data-access layer — src/lib/db/*.js (one module per entity, raw SQL, no ORM)
                │
         ┌──────┴────────────────────────────┐
         ▼                                   ▼
@@ -586,6 +586,24 @@ SELECT l.lender, fn_calculate_emi(o.outstanding, l.interest_rate,             r.
   complete (without the raw audit copy), the news feed serves labelled sample
   data, and the vault shows an explicit "MongoDB not reachable" panel. A failed
   connection is cached for 60 seconds so requests do not stall.
+
+### Implementation language
+
+The application is written in **JavaScript (ES2022) with React JSX on
+Next.js 14**: `.js` for the server, data-access and service layers and the
+API route handlers, `.jsx` for pages and components. It began in TypeScript
+and was converted (see [`JS_CONVERSION_REPORT.md`](JS_CONVERSION_REPORT.md)).
+
+Removing the compiler does not remove the checks that matter for this
+project, because none of them depended on it:
+
+| Concern | Where it is enforced |
+|---|---|
+| Malformed API input | **Zod** schemas at every route handler (runtime) |
+| Invalid stored data | **PostgreSQL** CHECK, NOT NULL, UNIQUE and foreign-key constraints |
+| Business rules | Stored functions and procedures, with `WWnnn` errors |
+| Data shapes for developers | **JSDoc**: 78 `@typedef` blocks and `@param`/`@returns` on 210 functions, read by editors for hover docs and autocompletion |
+| Regressions | The 67-test suite, unchanged by the conversion and still passing |
 
 ### Security
 
@@ -665,6 +683,7 @@ themes. Selected results:
 | Receipt OCR on a pharmacy bill | 94% confidence, 1.5 s; merchant, ₹455.28, date and GSTIN all correct |
 | +25 bps repo rate on the seeded user | EMIs +₹665.37 a month, about ₹96,295 over the remaining tenure |
 | PDF statement | 2 pages, embedded fonts, 83 ₹ glyphs rendered, PAN masked |
+| TypeScript → JavaScript conversion | 50 of 50 API responses identical before and after (all endpoints and error paths); 10 of 10 browser interactions pass with no runtime errors; 67 of 67 tests pass |
 
 ### 13.3 Defects found by testing, and fixed
 
@@ -740,11 +759,11 @@ of them.
 |---|---|---|
 | Relational schema, constraints, indexes | | `db/migrations/001`, `002` |
 | EMI functions, triggers, views | | `003`, `004`, `005` |
-| Import, categorisation, full-text search | | `006`, `src/lib/services/csv-parser.ts`, `src/lib/db/imports.ts` |
-| Smart features (prepayment, score, recommendations, projection) | | `008`, `src/lib/db/insights.ts` |
-| MongoDB model and aggregation (vault, imports, news) | | `src/lib/db/mongo.ts`, `src/lib/services/*-service.ts` |
+| Import, categorisation, full-text search | | `006`, `src/lib/services/csv-parser.js`, `src/lib/db/imports.js` |
+| Smart features (prepayment, score, recommendations, projection) | | `008`, `src/lib/db/insights.js` |
+| MongoDB model and aggregation (vault, imports, news) | | `src/lib/db/mongo.js`, `src/lib/services/*-service.js` |
 | API layer, auth and roles | | `src/app/api/**`, `src/lib/auth/**` |
 | UI, design system, charts | | `src/components/**`, `src/app/globals.css` |
-| OCR and PDF statement | | `ocr-service.ts`, `statement-pdf.ts` |
+| OCR and PDF statement | | `ocr-service.js`, `statement-pdf.js` |
 | Tests | | `tests/**` |
 | Documentation | | `README.md`, `docs/**` |

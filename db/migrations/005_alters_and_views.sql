@@ -6,7 +6,7 @@
 --       dashboard's emergency-fund metric needs.
 --   (b) Create the reporting views the analytics screens read from, so the
 --       aggregation logic lives in the database rather than being re-derived
---       in TypeScript on every request.
+--       in JavaScript on every request.
 -- =============================================================================
 
 -- =========================================================== PART A — ALTER
